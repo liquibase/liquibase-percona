@@ -11,6 +11,10 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 
+/**
+ * Wraps a {@link DatabaseConnection} to have easy access
+ * to its connection properties like host, port, user and password.
+ */
 public class DatabaseConnectionUtil {
     static String passwordForTests = null;
 
@@ -54,18 +58,18 @@ public class DatabaseConnectionUtil {
             try {
                 // for MySQL, jdbcCon would be JDBC4Connection and superclass
                 // would be ConnectionImpl
-                Field field = jdbcCon.getClass().getSuperclass().getDeclaredField("props");
-                field.setAccessible(true);
-                Properties o = (Properties) field.get(jdbcCon);
-                String pw = o.getProperty("password");
-                if (pw != null && !pw.trim().isEmpty()) {
-                    return pw;
+                Field propsField = jdbcCon.getClass().getSuperclass().getDeclaredField("props");
+                propsField.setAccessible(true);
+                Properties props = (Properties) propsField.get(jdbcCon);
+                String password = props.getProperty("password");
+                if (password != null && !password.trim().isEmpty()) {
+                    return password;
                 }
             } catch (Exception e) {
                 log.warning("Couldn't determine the password from JdbcConnection", e);
             }
         } else if (passwordForTests != null) {
-            log.warning("Using passwordForTest");
+            log.warning("Using passwordForTests");
             return passwordForTests;
         }
         return null;

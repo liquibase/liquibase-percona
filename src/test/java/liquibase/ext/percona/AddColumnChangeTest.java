@@ -82,7 +82,7 @@ public class AddColumnChangeTest {
 
     @Test
     public void testConvertColumnToSql() {
-        Assert.assertEquals("ADD COLUMN new_column INT NULL", c.convertToSql(c.getColumns().get(0), database));
+        Assert.assertEquals("ADD COLUMN new_column INT NULL", c.convertColumnToSql(c.getColumns().get(0), database));
 
         AddColumnConfig column = new AddColumnConfig();
         column.setName("email");
@@ -90,15 +90,15 @@ public class AddColumnChangeTest {
         ConstraintsConfig constraints = new ConstraintsConfig();
         constraints.setNullable(false);
         column.setConstraints(constraints);
-        Assert.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL", c.convertToSql(column, database));
+        Assert.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL", c.convertColumnToSql(column, database));
 
         column.setDefaultValue("no-email@example.org");
         Assert.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT 'no-email@example.org'",
-                c.convertToSql(column, database));
+                c.convertColumnToSql(column, database));
 
         column.setRemarks("that is the email");
         Assert.assertEquals(
                 "ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT 'no-email@example.org' COMMENT 'that is the email'",
-                c.convertToSql(column, database));
+                c.convertColumnToSql(column, database));
     }
 }

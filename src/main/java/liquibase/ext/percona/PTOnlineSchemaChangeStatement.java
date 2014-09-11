@@ -16,6 +16,10 @@ import liquibase.sql.Sql;
 import liquibase.statement.core.RuntimeStatement;
 import liquibase.util.StreamUtil;
 
+/**
+ * Statement to run {@code pt-online-schema-change} in order
+ * to alter a database table.
+ */
 public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     public static final String COMMAND = "pt-online-schema-change";
     private static String perconaToolkitVersion = null;
@@ -31,6 +35,11 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         this.alterStatement = alterStatement;
     }
 
+    /**
+     * Builds the command line arguments that will be executed.
+     * @param database the database - needed to get the connection info.
+     * @return the command line arguments including {@link #COMMAND}
+     */
     List<String> buildCommand(Database database) {
         List<String> commands = new ArrayList<String>();
         commands.add(PTOnlineSchemaChangeStatement.COMMAND);
@@ -52,11 +61,22 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         return commands;
     }
 
+    /**
+     * Generates the command line that would be executed and return it as a single string.
+     * The password will be masked.
+     * @param database the database - needed to get the connection info
+     * @return the string
+     */
     public String printCommand(Database database) {
         List<String> command = buildCommand(database);
         return filterCommands(command);
     }
 
+    /**
+     * Converts the given command list into a single string and mask the password
+     * @param command the command line arguments that would be used for pt-online-schema-change
+     * @return the string with masked password
+     */
     private String filterCommands(List<String> command) {
         StringBuilder sb = new StringBuilder();
         for (String s : command) {
@@ -73,6 +93,10 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         return sb.substring(1).toString();
     }
 
+    /**
+     * Actually executes pt-online-schema change. Does not generate any Sql.
+     * @return always <code>null</code>
+     */
     @Override
     public Sql[] generate(Database database) {
         List<String> cmndline = buildCommand(database);
@@ -106,6 +130,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             int exitCode = p.waitFor();
             reader.join(5000);
             reader2.join(5000);
+            // log the remaining output
             log.info(outputStream.toString());
 
             if (exitCode != 0) {
@@ -129,7 +154,8 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
 
     @Override
     public String toString() {
-        return PTOnlineSchemaChangeStatement.class.getSimpleName() + "[alterStatement: " + alterStatement + "]";
+        return PTOnlineSchemaChangeStatement.class.getSimpleName()
+                + "[table: " + tableName + ", alterStatement: " + alterStatement + "]";
     }
 
     private static class IOThread extends Thread {
@@ -159,13 +185,21 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         return perconaToolkitVersion;
     }
 
+    /**
+     * Checks whether the command is available and can be started.
+     * <p>
+     * <em>Implementation detail:</em>
+     * This is lazily detected once and then cached.
+     * </p>
+     * @return <code>true</code> if it is available and executable, <code>false</code> otherwise
+     * @see #COMMAND
+     */
     public static synchronized boolean isAvailable() {
         if (available != null) {
             return available.booleanValue();
         }
         checkIsAvailableAndGetVersion();
         return available.booleanValue();
-
     }
 
     private static void checkIsAvailableAndGetVersion() {
