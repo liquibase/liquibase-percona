@@ -210,6 +210,9 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             p = pb.start();
             p.waitFor();
             perconaToolkitVersion = StreamUtil.getStreamContents(p.getInputStream());
+            if (perconaToolkitVersion != null) {
+                perconaToolkitVersion = perconaToolkitVersion.replaceAll("\n|\r", "");
+            }
             available = true;
         } catch (IOException e) {
             available = false;

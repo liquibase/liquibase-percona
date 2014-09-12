@@ -5,14 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import liquibase.change.AddColumnConfig;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
+import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
-import liquibase.executor.Executor;
-import liquibase.executor.ExecutorService;
-import liquibase.executor.LoggingExecutor;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.statement.SqlStatement;
@@ -51,7 +51,7 @@ public class AddColumnChange extends liquibase.change.core.AddColumnChange {
                         getTableName(),
                         generateAlterStatement(database));
 
-                if (isDryRun(database)) {
+                if (ChangeUtil.isDryRun(database)) {
                     CommentStatement commentStatement = new CommentStatement(statement.printCommand(database));
 
                     if (Configuration.noAlterSqlDryMode()) {
@@ -74,20 +74,6 @@ public class AddColumnChange extends liquibase.change.core.AddColumnChange {
         }
 
         return statements.toArray(new SqlStatement[statements.size()]);
-    }
-
-    /**
-     * Determines whether *SQL (updateSQL/rollbackSQL) is executed or whether
-     * the statements should be executed directly.
-     * @param database the database
-     * @return <code>true</code> if dry-run is enabled and the statements should *not* be executed.
-     */
-    private boolean isDryRun(Database database) {
-        Executor executor = ExecutorService.getInstance().getExecutor(database);
-        if (executor instanceof LoggingExecutor) {
-            return true;
-        }
-        return false;
     }
 
     String generateAlterStatement(Database database) {
@@ -124,4 +110,29 @@ public class AddColumnChange extends liquibase.change.core.AddColumnChange {
                 + defaultValue
                 + comment;
     }
+
+    @Override
+    protected Change[] createInverses() {
+        List<Change> inverses = new ArrayList<Change>();
+
+        for (ColumnConfig aColumn : getColumns()) {
+            if (aColumn.hasDefaultValue()) {
+                DropDefaultValueChange dropChange = new DropDefaultValueChange();
+                dropChange.setTableName(getTableName());
+                dropChange.setColumnName(aColumn.getName());
+                dropChange.setSchemaName(getSchemaName());
+                inverses.add(dropChange);
+            }
+
+            // that's the percona drop column change.
+            DropColumnChange inverse = new DropColumnChange();
+            inverse.setSchemaName(getSchemaName());
+            inverse.setColumnName(aColumn.getName());
+            inverse.setTableName(getTableName());
+            inverses.add(inverse);
+        }
+
+        return inverses.toArray(new Change[inverses.size()]);
+    }
+
 }
