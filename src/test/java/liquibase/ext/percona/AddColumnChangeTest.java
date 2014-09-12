@@ -41,6 +41,8 @@ public class AddColumnChangeTest {
         ExecutorService.getInstance().setExecutor(database, new JdbcExecutor());
 
         PTOnlineSchemaChangeStatement.available = true;
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
+        System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
     }
 
     @Test
@@ -49,6 +51,14 @@ public class AddColumnChangeTest {
         SqlStatement[] statements = c.generateStatements(database);
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testWithoutPerconaAndFail() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        PTOnlineSchemaChangeStatement.available = false;
+
+        c.generateStatements(database);
     }
 
     @Test
@@ -67,6 +77,16 @@ public class AddColumnChangeTest {
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
         Assert.assertEquals(AddColumnStatement.class, statements[2].getClass());
+    }
+
+    @Test
+    public void testUpdateSQLNoAlterSqlDryMode() {
+        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
+
+        SqlStatement[] statements = c.generateStatements(database);
+        Assert.assertEquals(1, statements.length);
+        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
     }
 
     @Test
