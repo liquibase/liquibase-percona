@@ -23,16 +23,15 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::3::Alice: Columns email(varchar(255)),age(int) added to person")
-assert buildLogText.contains("Columns address(varchar(255)) added to person");
+assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::2::Alice: Column person.age dropped")
 assert buildLogText.contains("Altering `testdb`.`person`...")
 assert buildLogText.contains("Successfully altered `testdb`.`person`.")
-assert buildLogText.contains("Columns email(varchar(255)),age(int) added to person")
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
 def sqlText = sql.text;
 assert sqlText.contains("pt-online-schema-change")
+assert sqlText.contains("--  pt-online-schema-change --alter=\"DROP COLUMN age\" --host=127.0.0.1 --port=3306 --user=root --password=*** --execute D=testdb,t=person;");
 assert !sqlText.contains("password=${config_password}")
 
 def con, s;
@@ -49,8 +48,7 @@ try {
     assertColumn(r, "address", "varchar(255)", "YES", null)
     assert r.next()
     assertColumn(r, "email", "varchar(255)", "YES", null)
-    assert r.next()
-    assertColumn(r, "age", "int(11)", "YES", null)
+    assert r.isLast()
     r.close()
 } finally {
     s?.close();
