@@ -25,7 +25,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     private static String perconaToolkitVersion = null;
     static Boolean available = null;
 
-    private Logger log = LogFactory.getInstance().getLog();
+    private static Logger log = LogFactory.getInstance().getLog();
 
     private String tableName;
     private String alterStatement;
@@ -209,11 +209,13 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         try {
             p = pb.start();
             p.waitFor();
+
             perconaToolkitVersion = StreamUtil.getStreamContents(p.getInputStream());
             if (perconaToolkitVersion != null) {
                 perconaToolkitVersion = perconaToolkitVersion.replaceAll("\n|\r", "");
             }
             available = true;
+            log.info("Using percona toolkit: " + perconaToolkitVersion);
         } catch (IOException e) {
             available = false;
         } catch (InterruptedException e) {

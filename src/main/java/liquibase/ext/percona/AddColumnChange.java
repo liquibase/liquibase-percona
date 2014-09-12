@@ -46,7 +46,6 @@ public class AddColumnChange extends liquibase.change.core.AddColumnChange {
 
         if (database instanceof MySQLDatabase) {
             if (PTOnlineSchemaChangeStatement.isAvailable()) {
-                log.info("Using percona toolkit: " + PTOnlineSchemaChangeStatement.getVersion());
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
                         getTableName(),
                         generateAlterStatement(database));

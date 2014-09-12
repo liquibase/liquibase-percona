@@ -40,7 +40,6 @@ public class DropColumnChange extends liquibase.change.core.DropColumnChange {
 
         if (database instanceof MySQLDatabase) {
             if (PTOnlineSchemaChangeStatement.isAvailable()) {
-                log.info("Using percona toolkit: " + PTOnlineSchemaChangeStatement.getVersion());
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
                         getTableName(),
                         generateAlterStatement());
