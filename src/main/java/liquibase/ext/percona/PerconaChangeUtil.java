@@ -17,47 +17,45 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import liquibase.change.ChangeMetaData;
-import liquibase.change.DatabaseChange;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
+import liquibase.executor.Executor;
+import liquibase.executor.ExecutorService;
+import liquibase.executor.LoggingExecutor;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
 
-/**
- * Subclasses the original {@link liquibase.change.core.DropColumnChange} to
- * integrate with pt-online-schema-change.
- * @see PTOnlineSchemaChangeStatement
- */
-@DatabaseChange(name = "dropColumn", description = "Drop an existing column", priority = DropColumnChange.PRIORITY,
-    appliesTo = "column")
-public class DropColumnChange extends liquibase.change.core.DropColumnChange {
-    public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
+public class PerconaChangeUtil {
 
-    private Logger log = LogFactory.getInstance().getLog();
+    private static Logger log = LogFactory.getInstance().getLog();
 
     /**
-     * Generates the statements required for the drop column change.
-     * In case of a MySQL database, percona toolkit will be used.
-     * In case of generating the SQL statements for review (updateSQL) the command
-     * will be added as a comment.
+     * Determines whether *SQL (updateSQL/rollbackSQL) is executed or whether
+     * the statements should be executed directly.
      * @param database the database
-     * @return the list of statements
-     * @see PTOnlineSchemaChangeStatement
+     * @return <code>true</code> if dry-run is enabled and the statements should *not* be executed.
      */
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-        List<SqlStatement> statements = new ArrayList<SqlStatement>(Arrays.asList(super.generateStatements(database)));
+    private static boolean isDryRun(Database database) {
+        Executor executor = ExecutorService.getInstance().getExecutor(database);
+        if (executor instanceof LoggingExecutor) {
+            return true;
+        }
+        return false;
+    }
+
+    public static SqlStatement[] generateStatements(Database database, SqlStatement[] originalStatements,
+            String tableName, String alterStatement) {
+        List<SqlStatement> statements = new ArrayList<SqlStatement>(Arrays.asList(originalStatements));
 
         if (database instanceof MySQLDatabase) {
             if (PTOnlineSchemaChangeStatement.isAvailable()) {
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
-                        getTableName(),
-                        generateAlterStatement());
+                        tableName,
+                        alterStatement);
 
-                if (ChangeUtil.isDryRun(database)) {
+                if (isDryRun(database)) {
                     CommentStatement commentStatement = new CommentStatement(statement.printCommand(database));
 
                     if (Configuration.noAlterSqlDryMode()) {
@@ -80,11 +78,5 @@ public class DropColumnChange extends liquibase.change.core.DropColumnChange {
         }
 
         return statements.toArray(new SqlStatement[statements.size()]);
-    }
-
-    String generateAlterStatement() {
-        StringBuilder alter = new StringBuilder();
-        alter.append("DROP COLUMN ").append(getColumnName());
-        return alter.toString();
     }
 }

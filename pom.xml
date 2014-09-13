@@ -8,6 +8,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
 
+    <inceptionYear>2014</inceptionYear>
     <licenses>
         <license>
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
@@ -20,7 +21,18 @@
         <url>https://github.com/adangel/liquibase-percona</url>
     </scm>
 
+    <developers>
+        <developer>
+            <id>adangel</id>
+            <name>Andreas Dangel</name>
+            <email>adangel at users.sourceforge.net</email>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <config_host>127.0.0.1</config_host>
         <config_port>3306</config_port>
         <config_user>root</config_user>
@@ -96,6 +108,36 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.2</version>
+                <executions>
+                    <execution>
+                        <id>pmd</id>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>findbugs</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <distributionManagement>

@@ -18,6 +18,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +124,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             @Override
             public void write(int b) throws IOException {
                 if (b == '\n') {
-                    log.info(outputStream.toString());
+                    log.info(outputStream.toString(Charset.defaultCharset().toString()));
                     outputStream.reset();
                 } else {
                     super.write(b);
@@ -144,7 +145,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             reader.join(5000);
             reader2.join(5000);
             // log the remaining output
-            log.info(outputStream.toString());
+            log.info(outputStream.toString(Charset.defaultCharset().toString()));
 
             if (exitCode != 0) {
                 throw new RuntimeException("Percona exited with " + exitCode);

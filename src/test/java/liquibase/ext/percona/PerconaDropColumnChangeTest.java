@@ -29,14 +29,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DropColumnChangeTest {
+public class PerconaDropColumnChangeTest {
 
-    private DropColumnChange c;
+    private PerconaDropColumnChange c;
     private Database database;
 
     @Before
     public void setup() {
-        c = new DropColumnChange();
+        c = new PerconaDropColumnChange();
         c.setColumnName("col_test");
         c.setTableName("person");
 

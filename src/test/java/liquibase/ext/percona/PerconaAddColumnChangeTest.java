@@ -33,14 +33,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AddColumnChangeTest {
+public class PerconaAddColumnChangeTest {
 
-    private AddColumnChange c;
+    private PerconaAddColumnChange c;
     private Database database;
 
     @Before
     public void setup() {
-        c = new AddColumnChange();
+        c = new PerconaAddColumnChange();
         AddColumnConfig column = new AddColumnConfig();
         column.setName("new_column");
         column.setType("INT");
