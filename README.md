@@ -4,8 +4,17 @@ Extension to support the tool `pt-online-schema-change` from Percona Toolkit.
 This extension replaces the default *AddColumn* and *DropColumn* changes to use `pt-online-schema-change` instead
 of SQL. This allows to perform a non-locking database upgrade.
 
+
+## Supported Databases
+
+MySQL is the only supported database.
 The extension checks whether it is being run against a MySQL database. If not, it falls back to the default
 AddColumn/DropColumn change of liquibase-core.
+
+
+## Liquibase version(s) tested against
+
+Liquibase 3.2.0
 
 
 ## Example
