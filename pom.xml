@@ -7,6 +7,7 @@
     <name>Liquibase Percona Extension</name>
     <version>1.0.0-SNAPSHOT</version>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
+    <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
 
     <inceptionYear>2014</inceptionYear>
     <licenses>
