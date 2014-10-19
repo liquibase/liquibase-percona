@@ -84,7 +84,8 @@
                         <mavenExecutorId>forked-path</mavenExecutorId>
                         <useReleaseProfile>false</useReleaseProfile>
                         <pushChanges>false</pushChanges>
-                        <arguments>${arguments} -Psonatype-oss-release</arguments>
+                        <localCheckout>true</localCheckout>
+                        <arguments>-Psonatype-oss-release</arguments>
                     </configuration>
                 </plugin>
 
