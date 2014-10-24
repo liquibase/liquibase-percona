@@ -14,6 +14,7 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 import liquibase.change.ChangeMetaData;
+import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.core.DropColumnChange;
 import liquibase.database.Database;
@@ -48,7 +49,18 @@ public class PerconaDropColumnChange extends DropColumnChange {
 
     String generateAlterStatement() {
         StringBuilder alter = new StringBuilder();
-        alter.append("DROP COLUMN ").append(getColumnName());
+        if (getColumns() != null && !getColumns().isEmpty()) {
+            boolean first = true;
+            for (ColumnConfig column : getColumns()) {
+                if (!first) {
+                    alter.append(", ");
+                }
+                alter.append("DROP COLUMN ").append(column.getName());
+                first = false;
+            }
+        } else {
+            alter.append("DROP COLUMN ").append(getColumnName());
+        }
         return alter.toString();
     }
 }

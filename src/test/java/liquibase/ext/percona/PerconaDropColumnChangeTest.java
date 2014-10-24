@@ -15,6 +15,7 @@ package liquibase.ext.percona;
  */
 import java.io.StringWriter;
 
+import liquibase.change.ColumnConfig;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MySQLDatabase;
@@ -39,6 +40,7 @@ public class PerconaDropColumnChangeTest {
         c = new PerconaDropColumnChange();
         c.setColumnName("col_test");
         c.setTableName("person");
+        c.getColumns().clear();
 
         DatabaseConnectionUtil.passwordForTests = "root";
 
@@ -57,6 +59,18 @@ public class PerconaDropColumnChangeTest {
     @Test
     public void testGenerateAlterStatement() {
         Assert.assertEquals("DROP COLUMN col_test", c.generateAlterStatement());
+    }
+
+    @Test
+    public void testGeneralteAlterStatementMultipleColumns() {
+        ColumnConfig col1 = new ColumnConfig();
+        col1.setName("col1_test");
+        c.addColumn(col1);
+        ColumnConfig col2 = new ColumnConfig();
+        col2.setName("col2_test");
+        c.addColumn(col2);
+
+        Assert.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", c.generateAlterStatement());
     }
 
     @Test
