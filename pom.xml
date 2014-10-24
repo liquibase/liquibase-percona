@@ -34,6 +34,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <liquibase.version>3.2.0</liquibase.version>
+        <mysql.version>5.1.32</mysql.version>
+
         <config_host>127.0.0.1</config_host>
         <config_port>3306</config_port>
         <config_user>root</config_user>
@@ -45,7 +48,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.2.0</version>
+            <version>${liquibase.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -57,7 +60,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.32</version>
+            <version>${mysql.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
