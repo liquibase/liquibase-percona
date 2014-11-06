@@ -14,7 +14,8 @@ AddColumn/DropColumn change of liquibase-core.
 
 ## Liquibase version(s) tested against
 
-Liquibase 3.2.0
+* Liquibase 3.2.0 (liquibase-percona 1.0.0)
+* Liquibase 3.3.0 (liquibase-percona 1.1.0)
 
 
 ## Example
@@ -73,3 +74,4 @@ connection details.
 
 * [Percona](http://www.percona.com/)
 * [Percona Toolkit Documentation: pt-online-schema-change](http://www.percona.com/doc/percona-toolkit/2.2/pt-online-schema-change.html)
+* [Liquibase Percona Extension](https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change)
