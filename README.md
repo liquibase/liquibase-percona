@@ -50,6 +50,29 @@ The extension supports the following java system properties:
   If this property is set to `true`, then no such SQL statements will be output into the migration file.
 
 
+## Using / Installing the extension
+
+### Command line liquibase
+
+After extracting the zip file of liquibase, place `liquibase-percona-1.1.0.jar` file in the sub directory `lib`.
+The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
+
+### Via maven
+
+Add the following dependency to your project's pom file:
+
+    <project>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.adangel.liquibase.ext</groupId>
+                <artifactId>liquibase-percona</artifactId>
+                <!-- use 1.0.0 or 1.1.0 -->
+                <version>1.1.0</version>
+                <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+    </project>
+
 ## Notes
 
 The non-locking update is achieved using triggers. First a new temporary table is created, including the added or
@@ -69,6 +92,19 @@ Simply run `mvn clean install`.
 In order to execute the integration tests, run `mvn clean install -Prun-its`.
 Please note, that a MySQL server/Percona server is needed. See the properties *config_...* in `pom.xml` for
 connection details.
+
+## Common Problems
+
+#### NoSuchMethodError: PerconaDropColumnChange.getColumns()Ljava/util/List
+
+The full error message:
+
+    Unexpected error running Liquibase: liquibase.exception.UnexpectedLiquibaseException:
+    java.lang.NoSuchMethodError: liquibase.ext.percona.PerconaDropColumnChange.getColumns()Ljava/util/List;
+
+This means, you are trying to use version 1.1.0 of the extension with liquibase 3.2.x. This is an unsupported
+combination. For Liquibase 3.2.x, you'll need to use liquibase-percona 1.0.0
+
 
 ## References
 
