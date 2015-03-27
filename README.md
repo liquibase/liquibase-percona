@@ -111,3 +111,4 @@ combination. For Liquibase 3.2.x, you'll need to use liquibase-percona 1.0.0
 * [Percona](http://www.percona.com/)
 * [Percona Toolkit Documentation: pt-online-schema-change](http://www.percona.com/doc/percona-toolkit/2.2/pt-online-schema-change.html)
 * [Liquibase Percona Extension](https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change)
+* [DZone: Avoiding MySQL ALTER Table Downtime](http://java.dzone.com/articles/avoiding-mysql-alter-table)
