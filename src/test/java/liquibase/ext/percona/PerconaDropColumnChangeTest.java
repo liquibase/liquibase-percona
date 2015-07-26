@@ -95,6 +95,7 @@ public class PerconaDropColumnChangeTest {
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+                + "--alter-foreign-keys-method=auto "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
     }
@@ -107,6 +108,7 @@ public class PerconaDropColumnChangeTest {
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+                + "--alter-foreign-keys-method=auto "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -122,6 +124,7 @@ public class PerconaDropColumnChangeTest {
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+                + "--alter-foreign-keys-method=auto "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }
