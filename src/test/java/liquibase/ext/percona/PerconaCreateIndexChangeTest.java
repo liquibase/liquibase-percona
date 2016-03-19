@@ -62,7 +62,7 @@ public class PerconaCreateIndexChangeTest
         SqlStatement[] statements = c.generateStatements(database);
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"CREATE UNIQUE INDEX theIndexName ON person(indexedColumn)\" "
+        Assert.assertEquals("pt-online-schema-change --alter=\"ADD UNIQUE INDEX theIndexName (indexedColumn)\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));

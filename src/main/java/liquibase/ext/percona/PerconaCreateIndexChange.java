@@ -39,15 +39,11 @@ public class PerconaCreateIndexChange extends CreateIndexChange
                     generateAlterStatement(database));
     }
 
-    /**
-     * @param database
-     * @return
-     */
     private String generateAlterStatement( Database database )
     {
         StringBuilder alter = new StringBuilder();
         
-        alter.append( "CREATE ");
+        alter.append( "ADD ");
         if (this.isUnique() != null && this.isUnique()) {
             alter.append( "UNIQUE " );
         }
@@ -57,8 +53,7 @@ public class PerconaCreateIndexChange extends CreateIndexChange
             alter.append(database.escapeIndexName(this.getCatalogName(), this.getSchemaName(), this.getIndexName())).append(" ");
         }
 
-        alter.append( "ON " );
-        alter.append(database.escapeTableName(this.getCatalogName(), this.getSchemaName(), this.getTableName())).append("(");
+        alter.append("(");
         Iterator<AddColumnConfig> iterator = this.getColumns().iterator();
         while (iterator.hasNext()) {
             AddColumnConfig column = iterator.next();
@@ -79,6 +74,4 @@ public class PerconaCreateIndexChange extends CreateIndexChange
 
         return alter.toString();
     }
-    
-    
 }
