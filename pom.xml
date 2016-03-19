@@ -214,6 +214,52 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.14.1</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>mysql:5.7</name>
+                                    <alias>liquibase-percona-mysql</alias>
+                                    <run>
+                                        <env>
+                                            <MYSQL_ROOT_PASSWORD>${config_password}</MYSQL_ROOT_PASSWORD>
+                                        </env>
+                                        <namingStrategy>alias</namingStrategy>
+                                        <ports>
+                                            <port>config_port:3306</port>
+                                        </ports>
+                                        <wait>
+                                            <tcp>
+                                                <ports>
+                                                    <port>${config_port}</port>
+                                                </ports>
+                                            </tcp>
+                                            <time>180000</time>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-docker</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-docker</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <artifactId>maven-invoker-plugin</artifactId>
                         <version>1.9</version>
                         <configuration>

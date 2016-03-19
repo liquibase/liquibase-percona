@@ -112,9 +112,19 @@ The command `pt-online-schema-change` is searched only on the `PATH`.
 
 Simply run `mvn clean install`.
 
+
+### Integration testing
+
 In order to execute the integration tests, run `mvn clean install -Prun-its`.
-Please note, that a MySQL server/Percona server is needed. See the properties *config_...* in `pom.xml` for
-connection details.
+
+Please note, that you'll need:
+
+1.  [docker](https://www.docker.com/).
+    During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) will be started.
+2.  [percona toolkit](https://www.percona.com/downloads/percona-toolkit/).
+    The command line tools need to be available on your PATH.
+
+See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 
 ## Common Problems
 
