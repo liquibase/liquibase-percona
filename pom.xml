@@ -38,7 +38,12 @@
         <mysql.version>5.1.32</mysql.version>
 
         <config_host>127.0.0.1</config_host>
+        <!--
+        Docker will choose a random free port for the mysql instance
+        and the docker-maven-plugin will store it in this property.
+        If you want a fixed port, just define the property here.
         <config_port>3306</config_port>
+         -->
         <config_user>root</config_user>
         <config_password>root</config_password>
         <config_dbname>testdb</config_dbname>
@@ -233,7 +238,7 @@
                                         <wait>
                                             <tcp>
                                                 <ports>
-                                                    <port>${config_port}</port>
+                                                    <port>3306</port>
                                                 </ports>
                                             </tcp>
                                             <time>180000</time>
