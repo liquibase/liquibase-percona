@@ -48,7 +48,7 @@ public class PerconaCreateIndexChange extends CreateIndexChange
         StringBuilder alter = new StringBuilder();
         
         alter.append( "CREATE ");
-        if (this.isUnique()) {
+        if (this.isUnique() != null && this.isUnique()) {
             alter.append( "UNIQUE " );
         }
         alter.append( "INDEX " );
