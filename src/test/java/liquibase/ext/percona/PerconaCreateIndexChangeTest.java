@@ -125,4 +125,17 @@ public class PerconaCreateIndexChangeTest
         SqlStatement[] statements = c.generateRollbackStatements(database);
         assertPerconaChange(statements, "DROP INDEX theIndexName");
     }
+
+    @Test
+    public void testWithComputedColumn() {
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName("computedName", true);
+        AddColumnConfig column2 = new AddColumnConfig();
+        column2.setName("computed2", false);
+        c.getColumns().clear();
+        c.addColumn(column);
+        c.addColumn(column2);
+        SqlStatement[] statements = c.generateStatements(database);
+        assertPerconaChange(statements, "ADD UNIQUE INDEX theIndexName (computedName, computed2)");
+    }
 }
