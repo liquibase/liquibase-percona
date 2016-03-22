@@ -17,6 +17,7 @@ package liquibase.ext.percona;
 import java.util.Iterator;
 
 import liquibase.change.AddColumnConfig;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.core.CreateIndexChange;
@@ -29,7 +30,7 @@ import liquibase.statement.SqlStatement;
 public class PerconaCreateIndexChange extends CreateIndexChange
 {
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
-    
+
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
@@ -73,5 +74,16 @@ public class PerconaCreateIndexChange extends CreateIndexChange
         alter.append(")");
 
         return alter.toString();
+    }
+
+    @Override
+    protected Change[] createInverses() {
+        PerconaDropIndexChange inverse = new PerconaDropIndexChange();
+        inverse.setIndexName(getIndexName());
+        inverse.setCatalogName(getCatalogName());
+        inverse.setSchemaName(getSchemaName());
+        inverse.setTableName(getTableName());
+
+        return new Change[] { inverse };
     }
 }

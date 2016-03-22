@@ -24,6 +24,7 @@ import liquibase.change.AddColumnConfig;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MySQLDatabase;
+import liquibase.exception.RollbackImpossibleException;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
 import liquibase.executor.jvm.JdbcExecutor;
@@ -118,5 +119,10 @@ public class PerconaCreateIndexChangeTest
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
         Assert.assertEquals(CreateIndexStatement.class, statements[2].getClass());
     }
+
+    @Test
+    public void testRollback() throws RollbackImpossibleException {
+        SqlStatement[] statements = c.generateRollbackStatements(database);
+        assertPerconaChange(statements, "DROP INDEX theIndexName");
     }
 }
