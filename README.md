@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/adangel/liquibase-percona.svg?branch=master)](https://travis-ci.org/adangel/liquibase-percona)
 
 Extension to support the tool `pt-online-schema-change` from Percona Toolkit.
-This extension replaces the default *AddColumn* and *DropColumn* changes to use `pt-online-schema-change` instead
-of SQL. This allows to perform a non-locking database upgrade.
+This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
+This allows to perform a non-locking database upgrade.
 
 
 ## Supported Databases
@@ -20,9 +20,17 @@ AddColumn/DropColumn change of liquibase-core.
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
 
 
-## Example
+## Supported Changes and examples
 
-This changeset
+The following changes are supported:
+
+### AddColumn
+
+Since: liquibase-percona 1.0.0
+
+Automatic rollback supported? yes
+
+Example:
 
     <changeSet id="2" author="Alice">
         <addColumn tableName="person">
@@ -30,20 +38,73 @@ This changeset
         </addColumn>
     </changeSet>
 
-will execute the following command:
+Corresponding command:
 
-    pt-online-schema-change --alter="ADD COLUMN address VARCHAR(255)" --alter-foreign-keys-method=auto --host=127.0.0.1 --port=3306 --user=root --password=** --execute D=testdb,t=person
+    pt-online-schema-change --alter="ADD COLUMN address VARCHAR(255)" ...
+
+
+### CreateIndex
+
+Since: liquibase-percona 1.2.0
+
+Automatic rollback supported? yes
+
+Example:
+
+    <changeSet id="2" author="Alice">
+        <createIndex indexName="emailIdx" tableName="person" unique="true">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="ADD UNIQUE INDEX emailIdx (email)" ...
+
+
+### DropColumn
+
+Since: liquibase-percona 1.0.0
+
+Automatic rollback supported? no
+
+Example:
+
+    <changeSet id="2" author="Alice">
+        <dropColumn tableName="person" columnName="age"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="DROP COLUMN age" ...
+
+
+### DropIndex
+
+Since: liquibase-percona 1.2.0
+
+Automatic rollback supported? no
+
+Example:
+
+    <changeSet id="3" author="Alice">
+        <dropIndex indexName="emailIdx" tableName="person"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="DROP INDEX emailIdx" ...
 
 
 ## Configuration
 
 The extension supports the following java system properties:
 
-* `liquibase.percona.failIfNoPT`: true/false. Default: false.
-  If set to true, the database upate will fail, if the command `pt-online-schema-change` is not found.
+* `liquibase.percona.failIfNoPT`: true/false. **Default: false**.
+  If set to true, the database update will fail, if the command `pt-online-schema-change` is not found.
   This can be used, to enforce, that percona toolkit is used.
 
-* `liquibase.percona.noAlterSqlDryMode`: true/false. Default: false.
+* `liquibase.percona.noAlterSqlDryMode`: true/false. **Default: false**.
   When running *updateSQL* or *rollbackSQL* in order to generate a migration SQL file, the command line, that would
   be executed, will be added as a comment.
   In addition, the SQL statements (as produced by liquibase-core) will also be generated and output into the migration
@@ -53,6 +114,10 @@ The extension supports the following java system properties:
 
 
 ## Changelog
+
+### Version 1.2.0 (???)
+
+*   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
 
 ### Version 1.1.1 (2015-07-26)
 
@@ -72,7 +137,7 @@ The extension supports the following java system properties:
 
 The jar files can be downloaded manually from maven:
 
-<http://repo1.maven.org/maven2/com/github/adangel/liquibase/ext/liquibase-percona/>
+<http://repo.maven.apache.org/maven2/com/github/adangel/liquibase/ext/liquibase-percona/>
 
 
 ### Command line liquibase
@@ -80,7 +145,7 @@ The jar files can be downloaded manually from maven:
 After extracting the zip file of liquibase, place `liquibase-percona-1.1.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
-### Via maven
+### Via Maven
 
 Add the following dependency to your project's pom file:
 
@@ -96,33 +161,69 @@ Add the following dependency to your project's pom file:
         </dependencies>
     </project>
 
+### Using snapshots
+
+Snapshot builds contain the latest features which are not yet available in a release.
+
+Download: <https://oss.sonatype.org/content/repositories/snapshots/com/github/adangel/liquibase/ext/liquibase-percona/>
+
+Via Maven:
+
+    <project>
+        <repositories>
+            <repository>
+                <id>sonatype-nexus-snapshots</id>
+                <name>Sonatype Nexus Snapshots</name>
+                <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                <releases>
+                    <enabled>false</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        </repositories>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.adangel.liquibase.ext</groupId>
+                <artifactId>liquibase-percona</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+    </project>
+
+
 ## Notes
 
 The non-locking update is achieved using triggers. First a new temporary table is created, including the added or
-dropped columns. Then the data is copied in chunks. While to copy is in progress, any newly created or deleted or
+dropped columns. Then the data is copied in chunks. While the copy is in progress, any newly created or deleted or
 updated rows are copied, too. This is done by adding triggers to the original table. After the copy is finished, the
 original table is dropped and the temporary table is renamed.
 
-This means, that *pt-online-schema-change* cannot be used, if the table already uses triggers.
+This means, that *pt-online-schema-change* **cannot be used**, if the table already uses triggers.
 
-The command `pt-online-schema-change` is searched only on the `PATH`.
+The command `pt-online-schema-change` is searched only on the `PATH`. Depending on the property
+`liquibase.percona.failIfNoPT` the update will fail or will just run without using pt-online-schema-change and
+potentially lock the table for the duration of the update.
 
 
 ## Building this extension
 
-Simply run `mvn clean install`.
+Simply run `mvn clean verify`.
+You'll find the jar-file in the `target/` subdirectory.
 
 
 ### Integration testing
 
-In order to execute the integration tests, run `mvn clean install -Prun-its`.
+In order to execute the integration tests, run `mvn clean verify -Prun-its`.
 
 Please note, that you'll need:
 
 1.  [docker](https://www.docker.com/).
     During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) will be started.
 2.  [percona toolkit](https://www.percona.com/downloads/percona-toolkit/).
-    The command line tools need to be available on your PATH.
+    The command line tools need to be available on your `PATH`.
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 

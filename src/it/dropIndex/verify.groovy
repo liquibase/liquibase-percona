@@ -28,7 +28,7 @@ assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml:
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
 def sqlText = sql.text;
-assert sqlText.contains("pt-online-schema-change --alter=\"ADD UNIQUE INDEX emailIdx (email)\"")
+assert sqlText.contains("pt-online-schema-change --alter=\"DROP INDEX emailIdx\"")
 assert !sqlText.contains("password=${config_password}")
 
 def con, s;

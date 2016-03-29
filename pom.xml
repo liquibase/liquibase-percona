@@ -305,4 +305,8 @@
             </build>
         </profile>
     </profiles>
+    <issueManagement>
+        <url>https://github.com/adangel/liquibase-percona/issues</url>
+        <system>github</system>
+    </issueManagement>
 </project>
