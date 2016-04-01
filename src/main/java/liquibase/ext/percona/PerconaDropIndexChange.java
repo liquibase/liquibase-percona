@@ -20,16 +20,18 @@ import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
 
-@DatabaseChange(name="dropIndex",
+@DatabaseChange(name = PerconaDropIndexChange.NAME,
     description = "Drops an existing index",
     priority = PerconaDropIndexChange.PRIORITY, appliesTo = "index")
 public class PerconaDropIndexChange extends DropIndexChange {
+    public static final String NAME = "dropIndex";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
-        return PerconaChangeUtil.generateStatements(database,
+        return PerconaChangeUtil.generateStatements(PerconaDropIndexChange.NAME,
+                    database,
                     super.generateStatements(database),
                     getTableName(),
                     generateAlterStatement(database));

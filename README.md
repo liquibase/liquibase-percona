@@ -118,17 +118,33 @@ Corresponding command:
 
 The extension supports the following java system properties:
 
-* `liquibase.percona.failIfNoPT`: true/false. **Default: false**.
-  If set to true, the database update will fail, if the command `pt-online-schema-change` is not found.
-  This can be used, to enforce, that percona toolkit is used.
+*   `liquibase.percona.failIfNoPT`: true/false. **Default: false**.
+    If set to true, the database update will fail, if the command `pt-online-schema-change` is not found.
+    This can be used, to enforce, that percona toolkit is used.
 
-* `liquibase.percona.noAlterSqlDryMode`: true/false. **Default: false**.
-  When running *updateSQL* or *rollbackSQL* in order to generate a migration SQL file, the command line, that would
-  be executed, will be added as a comment.
-  In addition, the SQL statements (as produced by liquibase-core) will also be generated and output into the migration
-  file. This allows to simply execute the generated migration SQL to perform an update. However, the Percona toolkit
-  won't be used.
-  If this property is set to `true`, then no such SQL statements will be output into the migration file.
+*   `liquibase.percona.noAlterSqlDryMode`: true/false. **Default: false**.
+    When running *updateSQL* or *rollbackSQL* in order to generate a migration SQL file, the command line, that would
+    be executed, will be added as a comment.
+    In addition, the SQL statements (as produced by liquibase-core) will also be generated and output into the migration
+    file. This allows to simply execute the generated migration SQL to perform an update. However, the Percona toolkit
+    won't be used.
+    If this property is set to `true`, then no such SQL statements will be output into the migration file.
+
+*   `liquibase.percona.skipChanges`: comma separated list of changes. **Default: <empty>**.
+    This option can be used in order to selectively disable one or more changes. If a change is disabled, then
+    the change will be executed by the default liquibase core implementation and *percona toolkit won't be used*.
+    By default, this property is empty, so that all supported changes are executed using the percona toolkit.
+    Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
+
+
+You can set these properties by using the standard java `-D` option:
+
+    java -Dliquibase.percona.skipChanges=createIndex,dropColumn -jar liquibase.jar ...
+
+Note: You'll have to call liquibase via "java -jar" as otherwise the system property cannot be set.
+
+When executing liquibase through maven, you can use the [Properties Maven Plugin](http://www.mojohaus.org/properties-maven-plugin/usage.html#set-system-properties) to set the system property. An example can be found in the "createIndexSkipped"
+integration test.
 
 
 ## Changelog
@@ -137,6 +153,7 @@ The extension supports the following java system properties:
 
 *   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
 *   Fixed [#3](https://github.com/adangel/liquibase-percona/issues/3): Altering column data types via pt-online-schema-change
+*   Added configuration property "liquibase.percona.skipChanges"
 
 ### Version 1.1.1 (2015-07-26)
 

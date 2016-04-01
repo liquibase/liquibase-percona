@@ -22,16 +22,18 @@ import liquibase.datatype.DataTypeFactory;
 import liquibase.statement.SqlStatement;
 
 
-@DatabaseChange(name="modifyDataType",
+@DatabaseChange(name = PerconaModifyDataTypeChange.NAME,
     description = "Modify data type",
     priority = PerconaModifyDataTypeChange.PRIORITY, appliesTo = "column")
 public class PerconaModifyDataTypeChange extends ModifyDataTypeChange {
+    public static final String NAME = "modifyDataType";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
-        return PerconaChangeUtil.generateStatements(database,
+        return PerconaChangeUtil.generateStatements(PerconaModifyDataTypeChange.NAME,
+                    database,
                     super.generateStatements(database),
                     getTableName(),
                     generateAlterStatement(database));

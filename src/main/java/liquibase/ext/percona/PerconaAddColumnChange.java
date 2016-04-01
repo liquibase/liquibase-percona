@@ -32,10 +32,10 @@ import liquibase.statement.SqlStatement;
  * integrate with pt-online-schema-change.
  * @see PTOnlineSchemaChangeStatement
  */
-@DatabaseChange(name="addColumn", description = "Adds a new column to an existing table",
+@DatabaseChange(name = PerconaAddColumnChange.NAME, description = "Adds a new column to an existing table",
     priority = PerconaAddColumnChange.PRIORITY, appliesTo = "table")
 public class PerconaAddColumnChange extends AddColumnChange {
-
+    public static final String NAME= "addColumn";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     /**
@@ -49,7 +49,8 @@ public class PerconaAddColumnChange extends AddColumnChange {
      */
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        return PerconaChangeUtil.generateStatements(database,
+        return PerconaChangeUtil.generateStatements(PerconaAddColumnChange.NAME,
+                database,
                 super.generateStatements(database),
                 getTableName(),
                 generateAlterStatement(database));

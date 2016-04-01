@@ -15,7 +15,9 @@ package liquibase.ext.percona;
  */
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
@@ -30,6 +32,7 @@ import liquibase.statement.core.CommentStatement;
 public class PerconaChangeUtil {
 
     private static Logger log = LogFactory.getInstance().getLog();
+    private static Map<String, Boolean> alreadyLogged = new HashMap<String, Boolean>();
 
     /**
      * Determines whether *SQL (updateSQL/rollbackSQL) is executed or whether
@@ -45,8 +48,16 @@ public class PerconaChangeUtil {
         return false;
     }
 
-    public static SqlStatement[] generateStatements(Database database, SqlStatement[] originalStatements,
+    public static SqlStatement[] generateStatements(String changeName,
+            Database database, SqlStatement[] originalStatements,
             String tableName, String alterStatement) {
+
+        if (Configuration.skipChange(changeName)) {
+            maybeLog("Not using percona toolkit, because skipChange for "
+                    + changeName + " is active (property: " + Configuration.SKIP_CHANGES + ")!");
+            return originalStatements;
+        }
+
         List<SqlStatement> statements = new ArrayList<SqlStatement>(Arrays.asList(originalStatements));
 
         if (database instanceof MySQLDatabase) {
@@ -73,10 +84,20 @@ public class PerconaChangeUtil {
                 if (Configuration.failIfNoPT()) {
                     throw new RuntimeException("No percona toolkit found!");
                 }
-                log.warning("Not using percona toolkit, because it is not available!");
+                maybeLog("Not using percona toolkit, because it is not available!");
             }
         }
 
         return statements.toArray(new SqlStatement[statements.size()]);
+    }
+
+    /**
+     * Logs a warning only if it hasn't been logged yet to prevent logging the same warning over and over again.
+     */
+    private static void maybeLog(String message) {
+        if (!alreadyLogged.containsKey(message)) {
+            log.warning(message);
+            alreadyLogged.put(message, Boolean.TRUE);
+        }
     }
 }

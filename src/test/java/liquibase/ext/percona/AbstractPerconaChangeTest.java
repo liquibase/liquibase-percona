@@ -60,6 +60,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         PTOnlineSchemaChangeStatement.available = true;
         System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
+        System.setProperty(Configuration.SKIP_CHANGES, "");
 
         setupChange(change);
     }

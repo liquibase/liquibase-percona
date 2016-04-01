@@ -24,17 +24,19 @@ import liquibase.change.core.CreateIndexChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
 
-@DatabaseChange(name="createIndex",
+@DatabaseChange(name = PerconaCreateIndexChange.NAME,
     description = "Creates an index on an existing column or set of columns.",
     priority = PerconaCreateIndexChange.PRIORITY, appliesTo = "index")
 public class PerconaCreateIndexChange extends CreateIndexChange
 {
+    public static final String NAME = "createIndex";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
-        return PerconaChangeUtil.generateStatements(database,
+        return PerconaChangeUtil.generateStatements(PerconaCreateIndexChange.NAME,
+                    database,
                     super.generateStatements(database),
                     getTableName(),
                     generateAlterStatement(database));

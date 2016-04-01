@@ -25,9 +25,12 @@ import liquibase.statement.SqlStatement;
  * integrate with pt-online-schema-change.
  * @see PTOnlineSchemaChangeStatement
  */
-@DatabaseChange(name = "dropColumn", description = "Drop an existing column", priority = PerconaDropColumnChange.PRIORITY,
+@DatabaseChange(name = PerconaDropColumnChange.NAME,
+    description = "Drop an existing column",
+    priority = PerconaDropColumnChange.PRIORITY,
     appliesTo = "column")
 public class PerconaDropColumnChange extends DropColumnChange {
+    public static final String NAME = "dropColumn";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     /**
@@ -41,7 +44,8 @@ public class PerconaDropColumnChange extends DropColumnChange {
      */
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        return PerconaChangeUtil.generateStatements(database,
+        return PerconaChangeUtil.generateStatements(PerconaDropColumnChange.NAME,
+                database,
                 super.generateStatements(database),
                 getTableName(),
                 generateAlterStatement());

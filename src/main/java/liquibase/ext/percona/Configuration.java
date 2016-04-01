@@ -22,6 +22,8 @@ public final class Configuration {
     public static final String FAIL_IF_NO_PT = "liquibase.percona.failIfNoPT";
     /** Do not generate the alter table statements in dry mode (updateSQL / rollbackSQL) */
     public static final String NO_ALTER_SQL_DRY_MODE = "liquibase.percona.noAlterSqlDryMode";
+    /** Do not use percona for the given changes, separated by comma. */
+    public static final String SKIP_CHANGES = "liquibase.percona.skipChanges";
 
     public static boolean failIfNoPT() {
         return Boolean.getBoolean(FAIL_IF_NO_PT);
@@ -29,5 +31,9 @@ public final class Configuration {
 
     public static boolean noAlterSqlDryMode() {
         return Boolean.getBoolean(NO_ALTER_SQL_DRY_MODE);
+    }
+
+    public static boolean skipChange(String change) {
+        return System.getProperty(SKIP_CHANGES, "").contains(change);
     }
 }

@@ -175,4 +175,12 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 "ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT 'no-email@example.org' COMMENT 'that is the email'",
                 c.convertColumnToSql(column, database));
     }
+
+    @Test
+    public void testSkipAddColumnChange() {
+        System.setProperty(Configuration.SKIP_CHANGES, "addColumn");
+        SqlStatement[] statements = generateStatements();
+        Assert.assertEquals(1, statements.length);
+        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+    }
 }
