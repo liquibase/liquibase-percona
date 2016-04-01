@@ -11,7 +11,7 @@ This allows to perform a non-locking database upgrade.
 
 MySQL is the only supported database.
 The extension checks whether it is being run against a MySQL database. If not, it falls back to the default
-AddColumn/DropColumn change of liquibase-core.
+changes provided by liquibase-core.
 
 
 ## Liquibase version(s) tested against
@@ -96,6 +96,24 @@ Corresponding command:
     pt-online-schema-change --alter="DROP INDEX emailIdx" ...
 
 
+## ModifyDataType
+
+Since: liquibase-percona 1.2.0
+
+Automatic rollback supported? no
+
+Example:
+
+    <changeSet id="2" author="Alice">
+        <modifyDataType tableName="person" columnName="email" newDataType="VARCHAR(400)"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="MODIFY email VARCHAR(400)" ...
+
+
+
 ## Configuration
 
 The extension supports the following java system properties:
@@ -118,6 +136,7 @@ The extension supports the following java system properties:
 ### Version 1.2.0 (???)
 
 *   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
+*   Fixed [#3](https://github.com/adangel/liquibase-percona/issues/3): Altering column data types via pt-online-schema-change
 
 ### Version 1.1.1 (2015-07-26)
 
