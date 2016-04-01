@@ -18,6 +18,7 @@ changes provided by liquibase-core.
 
 * Liquibase 3.2.0 (liquibase-percona 1.0.0)
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
+* Liquibase 3.4.2 (liquibase-percona 1.2.0)
 
 
 ## Supported Changes and examples
@@ -154,6 +155,7 @@ integration test.
 *   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
 *   Fixed [#3](https://github.com/adangel/liquibase-percona/issues/3): Altering column data types via pt-online-schema-change
 *   Added configuration property "liquibase.percona.skipChanges"
+*   Upgraded liquibase to 3.4.2
 
 ### Version 1.1.1 (2015-07-26)
 
