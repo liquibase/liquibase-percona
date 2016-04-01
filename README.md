@@ -18,7 +18,7 @@ changes provided by liquibase-core.
 
 * Liquibase 3.2.0 (liquibase-percona 1.0.0)
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
-* Liquibase 3.4.2 (liquibase-percona 1.2.0)
+* Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.0)
 
 
 ## Supported Changes and examples
@@ -97,7 +97,7 @@ Corresponding command:
     pt-online-schema-change --alter="DROP INDEX emailIdx" ...
 
 
-## ModifyDataType
+### ModifyDataType
 
 Since: liquibase-percona 1.2.0
 
