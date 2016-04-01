@@ -142,7 +142,8 @@ You can set these properties by using the standard java `-D` option:
 
     java -Dliquibase.percona.skipChanges=createIndex,dropColumn -jar liquibase.jar ...
 
-Note: You'll have to call liquibase via "java -jar" as otherwise the system property cannot be set.
+Note: You'll have to call liquibase via "java -jar" as otherwise the system property cannot be set. You'll also
+need to make sure, that the liquibase-percona.jar file is on the classpath via the "--classpath" option.
 
 When executing liquibase through maven, you can use the [Properties Maven Plugin](http://www.mojohaus.org/properties-maven-plugin/usage.html#set-system-properties) to set the system property. An example can be found in the "createIndexSkipped"
 integration test.
@@ -185,19 +186,14 @@ The shell script `liquibase` / `liquibase.bat` will automatically pick this up a
 
 ### Via Maven
 
-Add the following dependency to your project's pom file:
+Add the following dependency to the liquibase plugin:
 
-    <project>
-        <dependencies>
-            <dependency>
-                <groupId>com.github.adangel.liquibase.ext</groupId>
-                <artifactId>liquibase-percona</artifactId>
-                <!-- use 1.0.0 or 1.1.1 -->
-                <version>1.1.1</version>
-                <scope>runtime</scope>
-            </dependency>
-        </dependencies>
-    </project>
+    <dependency>
+        <groupId>com.github.adangel.liquibase.ext</groupId>
+        <artifactId>liquibase-percona</artifactId>
+        <version>1.1.1</version>
+    </dependency>
+
 
 ### Using snapshots
 
@@ -205,7 +201,7 @@ Snapshot builds contain the latest features which are not yet available in a rel
 
 Download: <https://oss.sonatype.org/content/repositories/snapshots/com/github/adangel/liquibase/ext/liquibase-percona/>
 
-Via Maven:
+Enable the snapshot repository via Maven:
 
     <project>
         <repositories>
@@ -221,15 +217,16 @@ Via Maven:
                 </snapshots>
             </repository>
         </repositories>
-        <dependencies>
-            <dependency>
-                <groupId>com.github.adangel.liquibase.ext</groupId>
-                <artifactId>liquibase-percona</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>runtime</scope>
-            </dependency>
-        </dependencies>
     </project>
+
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.2.0-SNAPSHOT`:
+
+    <dependency>
+        <groupId>com.github.adangel.liquibase.ext</groupId>
+        <artifactId>liquibase-percona</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
+    </dependency>
+
 
 
 ## Notes
