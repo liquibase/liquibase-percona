@@ -13,57 +13,38 @@ package liquibase.ext.percona;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.StringWriter;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ConstraintsConfig;
 import liquibase.database.Database;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.core.MySQLDatabase;
 import liquibase.exception.RollbackImpossibleException;
-import liquibase.executor.ExecutorService;
-import liquibase.executor.LoggingExecutor;
-import liquibase.executor.jvm.JdbcExecutor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.AddColumnStatement;
 import liquibase.statement.core.CommentStatement;
 import liquibase.statement.core.DropColumnStatement;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<PerconaAddColumnChange> {
 
-public class PerconaAddColumnChangeTest {
+    public PerconaAddColumnChangeTest() {
+        super(PerconaAddColumnChange.class);
+    }
 
-    private PerconaAddColumnChange c;
-    private Database database;
-
-    @Before
-    public void setup() {
-        c = new PerconaAddColumnChange();
+    @Override
+    protected void setupChange(PerconaAddColumnChange change) {
         AddColumnConfig column = new AddColumnConfig();
         column.setName("new_column");
         column.setType("INT");
-        c.addColumn(column);
-        c.setTableName("person");
-        DatabaseConnectionUtil.passwordForTests = "root";
-
-        database = new MySQLDatabase();
-        database.setLiquibaseSchemaName("testdb");
-        DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb",
-                "user@localhost");
-        database.setConnection(conn);
-        ExecutorService.getInstance().setExecutor(database, new JdbcExecutor());
-
-        PTOnlineSchemaChangeStatement.available = true;
-        System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
-        System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
+        change.addColumn(column);
+        change.setTableName("person");
     }
 
     @Test
     public void testWithoutPercona() {
         PTOnlineSchemaChangeStatement.available = false;
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
@@ -71,7 +52,7 @@ public class PerconaAddColumnChangeTest {
     @Test
     public void testWithoutPerconaRollback() throws RollbackImpossibleException {
         PTOnlineSchemaChangeStatement.available = false;
-        SqlStatement[] statements = c.generateRollbackStatements(database);
+        SqlStatement[] statements = generateRollbackStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(DropColumnStatement.class, statements[0].getClass());
     }
@@ -81,7 +62,7 @@ public class PerconaAddColumnChangeTest {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        c.generateStatements(database);
+        generateStatements();
     }
 
     @Test(expected = RuntimeException.class)
@@ -89,36 +70,24 @@ public class PerconaAddColumnChangeTest {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        c.generateRollbackStatements(database);
+        generateRollbackStatements();
     }
 
     @Test
     public void testReal() {
-        SqlStatement[] statements = c.generateStatements(database);
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
-                + "--alter-foreign-keys-method=auto "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+        assertPerconaChange("ADD COLUMN new_column INT NULL");
     }
 
     @Test
     public void testRealRollback() throws RollbackImpossibleException {
-        SqlStatement[] statements = c.generateRollbackStatements(database);
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
-                + "--alter-foreign-keys-method=auto "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+        assertPerconaRollbackChange("DROP COLUMN new_column");
     }
 
     @Test
     public void testUpdateSQL() {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
 
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
@@ -131,9 +100,9 @@ public class PerconaAddColumnChangeTest {
 
     @Test
     public void testRollbackSQL() throws RollbackImpossibleException {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
 
-        SqlStatement[] statements = c.generateRollbackStatements(database);
+        SqlStatement[] statements = generateRollbackStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
@@ -146,10 +115,10 @@ public class PerconaAddColumnChangeTest {
 
     @Test
     public void testUpdateSQLNoAlterSqlDryMode() {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
@@ -160,10 +129,10 @@ public class PerconaAddColumnChangeTest {
 
     @Test
     public void testRollbackSQLNoAlterSqlDryMode() throws RollbackImpossibleException {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
-        SqlStatement[] statements = c.generateRollbackStatements(database);
+        SqlStatement[] statements = generateRollbackStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
@@ -177,14 +146,16 @@ public class PerconaAddColumnChangeTest {
         AddColumnConfig column = new AddColumnConfig();
         column.setName("email");
         column.setType("varchar(255)");
-        c.addColumn(column);
+        getChange().addColumn(column);
 
         Assert.assertEquals("ADD COLUMN new_column INT NULL, ADD COLUMN email VARCHAR(255) NULL",
-                c.generateAlterStatement(database));
+                getChange().generateAlterStatement(getDatabase()));
     }
 
     @Test
     public void testConvertColumnToSql() {
+        PerconaAddColumnChange c = getChange();
+        Database database = getDatabase();
         Assert.assertEquals("ADD COLUMN new_column INT NULL", c.convertColumnToSql(c.getColumns().get(0), database));
 
         AddColumnConfig column = new AddColumnConfig();

@@ -14,55 +14,22 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import liquibase.database.Database;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.core.MySQLDatabase;
-import liquibase.executor.ExecutorService;
-import liquibase.executor.jvm.JdbcExecutor;
-import liquibase.statement.SqlStatement;
+public class PerconaDropIndexChangeTest extends AbstractPerconaChangeTest<PerconaDropIndexChange> {
 
-public class PerconaDropIndexChangeTest {
-    private PerconaDropIndexChange c;
-    private Database database;
-
-    @Before
-    public void setup() {
-        c = new PerconaDropIndexChange();
-        c.setTableName( "person" );
-        c.setIndexName( "theIndexName" );
-
-        DatabaseConnectionUtil.passwordForTests = "root";
-
-        database = new MySQLDatabase();
-        database.setLiquibaseSchemaName("testdb");
-        DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb",
-                "user@localhost");
-        database.setConnection(conn);
-        ExecutorService.getInstance().setExecutor(database, new JdbcExecutor());
-
-        PTOnlineSchemaChangeStatement.available = true;
-        System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
-        System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
-        
+    public PerconaDropIndexChangeTest() {
+        super(PerconaDropIndexChange.class);
     }
 
-    private void assertPerconaChange(SqlStatement[] statements, String alter) {
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
-                + "--alter-foreign-keys-method=auto "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+    @Override
+    protected void setupChange(PerconaDropIndexChange change) {
+        change.setTableName( "person" );
+        change.setIndexName( "theIndexName" );
     }
 
     @Test
     public void testDropIndexReal() {
-        SqlStatement[] statements = c.generateStatements(database);
-        assertPerconaChange(statements, "DROP INDEX theIndexName");
+        assertPerconaChange("DROP INDEX theIndexName");
     }
-
 }

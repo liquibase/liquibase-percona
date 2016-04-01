@@ -14,84 +14,48 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import java.io.StringWriter;
-
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import liquibase.change.AddColumnConfig;
-import liquibase.database.Database;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.core.MySQLDatabase;
 import liquibase.exception.RollbackImpossibleException;
-import liquibase.executor.ExecutorService;
-import liquibase.executor.LoggingExecutor;
-import liquibase.executor.jvm.JdbcExecutor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
 import liquibase.statement.core.CreateIndexStatement;
 
-public class PerconaCreateIndexChangeTest
-{
+public class PerconaCreateIndexChangeTest extends AbstractPerconaChangeTest<PerconaCreateIndexChange> {
 
-    private PerconaCreateIndexChange c;
-    private Database database;
-
-    @Before
-    public void setup() {
-        c = new PerconaCreateIndexChange();
-        AddColumnConfig column = new AddColumnConfig();
-        column.setName( "indexedColumn" );
-        c.addColumn( column );
-        c.setTableName( "person" );
-        c.setIndexName( "theIndexName" );
-        c.setUnique( true );
-
-        DatabaseConnectionUtil.passwordForTests = "root";
-
-        database = new MySQLDatabase();
-        database.setLiquibaseSchemaName("testdb");
-        DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb",
-                "user@localhost");
-        database.setConnection(conn);
-        ExecutorService.getInstance().setExecutor(database, new JdbcExecutor());
-
-        PTOnlineSchemaChangeStatement.available = true;
-        System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
-        System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
-        
+    public PerconaCreateIndexChangeTest() {
+        super(PerconaCreateIndexChange.class);
     }
 
-    private void assertPerconaChange(SqlStatement[] statements, String alter) {
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
-                + "--alter-foreign-keys-method=auto "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+    @Override
+    protected void setupChange(PerconaCreateIndexChange change) {
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName( "indexedColumn" );
+        change.addColumn( column );
+        change.setTableName( "person" );
+        change.setIndexName( "theIndexName" );
+        change.setUnique( true );
     }
 
     @Test
     public void testCreateNewIndexReal() {
-        SqlStatement[] statements = c.generateStatements(database);
-        assertPerconaChange(statements, "ADD UNIQUE INDEX theIndexName (indexedColumn)");
+        assertPerconaChange("ADD UNIQUE INDEX theIndexName (indexedColumn)");
     }
 
     @Test
     public void testCreateIndexNonUnique() {
-        c.setUnique(false);
-        SqlStatement[] statements = c.generateStatements(database);
-        assertPerconaChange(statements, "ADD INDEX theIndexName (indexedColumn)");
+        getChange().setUnique(false);
+        assertPerconaChange("ADD INDEX theIndexName (indexedColumn)");
     }
 
     @Test
     public void testCreateIndexMultipleColumns() {
         AddColumnConfig column2 = new AddColumnConfig();
         column2.setName("otherColumn");
-        c.addColumn(column2);
-        SqlStatement[] statements = c.generateStatements(database);
-        assertPerconaChange(statements, "ADD UNIQUE INDEX theIndexName (indexedColumn, otherColumn)");
+        getChange().addColumn(column2);
+        assertPerconaChange("ADD UNIQUE INDEX theIndexName (indexedColumn, otherColumn)");
     }
 
     @Test
@@ -99,17 +63,16 @@ public class PerconaCreateIndexChangeTest
         AddColumnConfig column = new AddColumnConfig();
         column.setName("otherIntColumn");
         column.setType("INT");
-        c.getColumns().clear();
-        c.addColumn(column);
-        SqlStatement[] statements = c.generateStatements(database);
-        assertPerconaChange(statements, "ADD UNIQUE INDEX theIndexName (otherIntColumn)");
+        getChange().getColumns().clear();
+        getChange().addColumn(column);
+        assertPerconaChange("ADD UNIQUE INDEX theIndexName (otherIntColumn)");
     }
 
     @Test
     public void testUpdateSQL() {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
 
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"ADD UNIQUE INDEX theIndexName (indexedColumn)\" "
@@ -122,8 +85,7 @@ public class PerconaCreateIndexChangeTest
 
     @Test
     public void testRollback() throws RollbackImpossibleException {
-        SqlStatement[] statements = c.generateRollbackStatements(database);
-        assertPerconaChange(statements, "DROP INDEX theIndexName");
+        assertPerconaRollbackChange("DROP INDEX theIndexName");
     }
 
     @Test
@@ -132,10 +94,9 @@ public class PerconaCreateIndexChangeTest
         column.setName("computedName", true);
         AddColumnConfig column2 = new AddColumnConfig();
         column2.setName("computed2", false);
-        c.getColumns().clear();
-        c.addColumn(column);
-        c.addColumn(column2);
-        SqlStatement[] statements = c.generateStatements(database);
-        assertPerconaChange(statements, "ADD UNIQUE INDEX theIndexName (computedName, computed2)");
+        getChange().getColumns().clear();
+        getChange().addColumn(column);
+        getChange().addColumn(column2);
+        assertPerconaChange("ADD UNIQUE INDEX theIndexName (computedName, computed2)");
     }
 }

@@ -14,6 +14,8 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.io.StringWriter;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +24,9 @@ import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MySQLDatabase;
+import liquibase.exception.RollbackImpossibleException;
 import liquibase.executor.ExecutorService;
+import liquibase.executor.LoggingExecutor;
 import liquibase.executor.jvm.JdbcExecutor;
 import liquibase.statement.SqlStatement;
 
@@ -69,15 +73,31 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         return database;
     }
 
+    protected void assertPerconaRollbackChange(String alter) throws RollbackImpossibleException {
+        assertPerconaChange(alter, generateRollbackStatements());
+    }
     protected void assertPerconaChange(String alter) {
-        SqlStatement[] statements = change.generateStatements(database);
+        assertPerconaChange(alter, generateStatements());
+    }
 
+    private void assertPerconaChange(String alter, SqlStatement[] statements) {
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+    }
+
+    protected SqlStatement[] generateStatements() {
+        return change.generateStatements(database);
+    }
+    protected SqlStatement[] generateRollbackStatements() throws RollbackImpossibleException {
+        return change.generateRollbackStatements(database);
+    }
+
+    protected void enableLogging() {
+        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
     }
 
     @Test

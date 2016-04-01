@@ -13,70 +13,49 @@ package liquibase.ext.percona;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.StringWriter;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import liquibase.change.ColumnConfig;
-import liquibase.database.Database;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.core.MySQLDatabase;
-import liquibase.executor.ExecutorService;
-import liquibase.executor.LoggingExecutor;
-import liquibase.executor.jvm.JdbcExecutor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
 import liquibase.statement.core.DropColumnStatement;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<PerconaDropColumnChange> {
 
-public class PerconaDropColumnChangeTest {
+    public PerconaDropColumnChangeTest() {
+        super(PerconaDropColumnChange.class);
+    }
 
-    private PerconaDropColumnChange c;
-    private Database database;
-
-    @Before
-    public void setup() {
-        c = new PerconaDropColumnChange();
-        c.setColumnName("col_test");
-        c.setTableName("person");
-        c.getColumns().clear();
-
-        DatabaseConnectionUtil.passwordForTests = "root";
-
-        database = new MySQLDatabase();
-        database.setLiquibaseSchemaName("testdb");
-        DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb",
-                "user@localhost");
-        database.setConnection(conn);
-        ExecutorService.getInstance().setExecutor(database, new JdbcExecutor());
-
-        PTOnlineSchemaChangeStatement.available = true;
-        System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
-        System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
+    @Override
+    protected void setupChange(PerconaDropColumnChange change) {
+        change.setColumnName("col_test");
+        change.setTableName("person");
+        change.getColumns().clear();
     }
 
     @Test
     public void testGenerateAlterStatement() {
-        Assert.assertEquals("DROP COLUMN col_test", c.generateAlterStatement());
+        Assert.assertEquals("DROP COLUMN col_test", getChange().generateAlterStatement());
     }
 
     @Test
     public void testGeneralteAlterStatementMultipleColumns() {
         ColumnConfig col1 = new ColumnConfig();
         col1.setName("col1_test");
-        c.addColumn(col1);
+        getChange().addColumn(col1);
         ColumnConfig col2 = new ColumnConfig();
         col2.setName("col2_test");
-        c.addColumn(col2);
+        getChange().addColumn(col2);
 
-        Assert.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", c.generateAlterStatement());
+        Assert.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", getChange().generateAlterStatement());
     }
 
     @Test
     public void testWithoutPercona() {
         PTOnlineSchemaChangeStatement.available = false;
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(DropColumnStatement.class, statements[0].getClass());
     }
@@ -86,25 +65,19 @@ public class PerconaDropColumnChangeTest {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        c.generateStatements(database);
+        generateStatements();
     }
 
     @Test
     public void testReal() {
-        SqlStatement[] statements = c.generateStatements(database);
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
-                + "--alter-foreign-keys-method=auto "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+        assertPerconaChange("DROP COLUMN col_test");
     }
 
     @Test
     public void testUpdateSQL() {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
 
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
@@ -117,10 +90,10 @@ public class PerconaDropColumnChangeTest {
 
     @Test
     public void testUpdateSQLNoAlterSqlDryMode() {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        enableLogging();
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
-        SqlStatement[] statements = c.generateStatements(database);
+        SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
