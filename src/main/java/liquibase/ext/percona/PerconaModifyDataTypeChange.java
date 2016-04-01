@@ -45,8 +45,10 @@ public class PerconaModifyDataTypeChange extends ModifyDataTypeChange {
         alter.append(columnName);
 
         alter.append(' ');
-        String dataType = String.valueOf(DataTypeFactory.getInstance().fromDescription(getNewDataType(), database).toDatabaseDataType(database));
-        alter.append(dataType);
+        if (getNewDataType() != null) {
+            String dataType = String.valueOf(DataTypeFactory.getInstance().fromDescription(getNewDataType(), database).toDatabaseDataType(database));
+            alter.append(dataType);
+        }
 
         return alter.toString();
     }

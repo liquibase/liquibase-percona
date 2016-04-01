@@ -16,6 +16,7 @@ package liquibase.ext.percona;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import liquibase.change.Change;
 import liquibase.database.Database;
@@ -29,10 +30,13 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
 
     private Database database;
     private T change;
+    private final Class<T> changeClazz;
 
     public AbstractPerconaChangeTest(Class<T> clazz) {
+        changeClazz = clazz;
+
         try {
-            change = clazz.newInstance();
+            change = changeClazz.newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -74,5 +78,11 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
                 + "--alter-foreign-keys-method=auto "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
+    }
+
+    @Test
+    public void testUnitializedChange() throws Exception {
+        change = changeClazz.newInstance();
+        change.generateStatements(database);
     }
 }
