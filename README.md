@@ -151,7 +151,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.2.0 (???)
+### Version 1.2.0 (2016-04-02)
 
 *   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
 *   Fixed [#3](https://github.com/adangel/liquibase-percona/issues/3): Altering column data types via pt-online-schema-change
@@ -181,7 +181,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.1.1.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.2.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -191,7 +191,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.1.1</version>
+        <version>1.2.0</version>
     </dependency>
 
 
@@ -219,12 +219,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.2.0-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.2.1-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.2.1-SNAPSHOT</version>
     </dependency>
 
 
