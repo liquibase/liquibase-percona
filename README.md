@@ -274,6 +274,12 @@ The full error message:
 This means, you are trying to use version 1.1.1 of the extension with liquibase 3.2.x. This is an unsupported
 combination. For Liquibase 3.2.x, you'll need to use liquibase-percona 1.0.0
 
+## Sponsors
+
+Some development has been sponsored by [billforward.net](http://www.billforward.net/),
+a highly flexible & unified billing platform.
+
+
 
 ## References
 
