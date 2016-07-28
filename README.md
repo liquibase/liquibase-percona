@@ -160,6 +160,10 @@ integration test.
 
 ## Changelog
 
+### Version 1.2.1 (???)
+
+*   [PR #4](https://github.com/adangel/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
+
 ### Version 1.2.0 (2016-04-02)
 
 *   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
