@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -50,6 +52,21 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     }
 
     /**
+     * Tokenizes the given options into separate arguments, so that it can be
+     * fed into the {@link ProcessBuilder}'s commands.
+     * @param options the options as one single string
+     * @return the list of arguments
+     */
+    private List<String> tokenize(String options) {
+        StringTokenizer stringTokenizer = new StringTokenizer(options);
+        List<String> result = new LinkedList<String>();
+        while (stringTokenizer.hasMoreTokens()) {
+            result.add(stringTokenizer.nextToken());
+        }
+        return result;
+    }
+
+    /**
      * Builds the command line arguments that will be executed.
      * @param database the database - needed to get the connection info.
      * @return the command line arguments including {@link #COMMAND}
@@ -58,8 +75,9 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         List<String> commands = new ArrayList<String>();
         commands.add(PTOnlineSchemaChangeStatement.COMMAND);
 
-        if (!Configuration.getAdditionalOptions().isEmpty())
-            commands.add(Configuration.getAdditionalOptions());
+        if (!Configuration.getAdditionalOptions().isEmpty()) {
+            commands.addAll(tokenize(Configuration.getAdditionalOptions()));
+        }
 
         commands.add("--alter=" + alterStatement);
         commands.add("--alter-foreign-keys-method=auto");

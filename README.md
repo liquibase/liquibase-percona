@@ -140,6 +140,9 @@ The extension supports the following java system properties:
 *   `liquibase.percona.options`: String of options. **Default: <empty>**.
     This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
     be used in complication replication setup to change the way salves are detected and how their state is used.
+    You can also specify a percona configuration file via `--config file.conf`,
+    see [Configuration Files](https://www.percona.com/doc/percona-toolkit/2.2/configuration_files.html).
+
 
 
 You can set these properties by using the standard java `-D` option:
