@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -50,6 +52,55 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     }
 
     /**
+     * Tokenizes the given options into separate arguments, so that it can be
+     * fed into the {@link ProcessBuilder}'s commands.
+     * @param options the options as one single string
+     * @return the list of arguments
+     */
+    private List<String> tokenize(String options) {
+        StringTokenizer stringTokenizer = new StringTokenizer(options);
+        List<String> result = new LinkedList<String>();
+        while (stringTokenizer.hasMoreTokens()) {
+            result.add(stringTokenizer.nextToken());
+        }
+        return joinQuotedArguments(result);
+    }
+
+    /**
+     * Very simplistic approach to join together any quoted arguments.
+     * Only double quotes are supported and the join character is a space.
+     * @param tokenizedArguments the arguments tokenized by space
+     * @return the filtered arguments, maybe joined
+     */
+    private List<String> joinQuotedArguments(List<String> tokenizedArguments) {
+        final String joinCharacters = " ";
+        List<String> filtered = new LinkedList<String>();
+        boolean inQuotes = false;
+        for (int i = 0; i < tokenizedArguments.size(); i++) {
+            String arg = tokenizedArguments.get(i);
+            if (!inQuotes) {
+                if (arg.startsWith("\"")) {
+                    inQuotes = true;
+                    arg = arg.substring(1);
+                }
+                if (arg.endsWith("\"")) {
+                    inQuotes = false;
+                    arg = arg.substring(0, arg.length() - 1);
+                }
+                filtered.add(arg);
+            } else {
+                if (arg.endsWith("\"")) {
+                    inQuotes = false;
+                    arg = arg.substring(0, arg.length() - 1);
+                }
+                String last = filtered.get(filtered.size() - 1);
+                filtered.set(filtered.size() - 1, last + joinCharacters + arg);
+            }
+        }
+        return filtered;
+    }
+
+    /**
      * Builds the command line arguments that will be executed.
      * @param database the database - needed to get the connection info.
      * @return the command line arguments including {@link #COMMAND}
@@ -57,6 +108,11 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     List<String> buildCommand(Database database) {
         List<String> commands = new ArrayList<String>();
         commands.add(PTOnlineSchemaChangeStatement.COMMAND);
+
+        if (!Configuration.getAdditionalOptions().isEmpty()) {
+            commands.addAll(tokenize(Configuration.getAdditionalOptions()));
+        }
+
         commands.add("--alter=" + alterStatement);
         commands.add("--alter-foreign-keys-method=auto");
 

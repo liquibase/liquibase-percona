@@ -24,6 +24,8 @@ public final class Configuration {
     public static final String NO_ALTER_SQL_DRY_MODE = "liquibase.percona.noAlterSqlDryMode";
     /** Do not use percona for the given changes, separated by comma. */
     public static final String SKIP_CHANGES = "liquibase.percona.skipChanges";
+    /** Additional command line options that are passed to pt-online-schema-change. */
+    public static final String ADDITIONAL_OPTIONS = "liquibase.percona.options";
 
     public static boolean failIfNoPT() {
         return Boolean.getBoolean(FAIL_IF_NO_PT);
@@ -35,5 +37,9 @@ public final class Configuration {
 
     public static boolean skipChange(String change) {
         return System.getProperty(SKIP_CHANGES, "").contains(change);
+    }
+
+    public static String getAdditionalOptions() {
+        return System.getProperty(ADDITIONAL_OPTIONS, "");
     }
 }

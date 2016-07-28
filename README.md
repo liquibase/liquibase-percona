@@ -136,6 +136,15 @@ The extension supports the following java system properties:
     the change will be executed by the default liquibase core implementation and *percona toolkit won't be used*.
     By default, this property is empty, so that all supported changes are executed using the percona toolkit.
     Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
+    
+*   `liquibase.percona.options`: String of options. **Default: <empty>**.
+    This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
+    be used in complication replication setup to change the way slaves are detected and how their state is used.
+    You can also specify a percona configuration file via `--config file.conf`,
+    see [Configuration Files](https://www.percona.com/doc/percona-toolkit/2.2/configuration_files.html).
+    Multiple options are separated by space. If argument itself contains a space, it must be quoted with
+    double-quotes, e.g. `--config "filename with spaces.conf`.
+
 
 
 You can set these properties by using the standard java `-D` option:
@@ -150,6 +159,10 @@ integration test.
 
 
 ## Changelog
+
+### Version 1.2.1 (???)
+
+*   [PR #4](https://github.com/adangel/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
 
 ### Version 1.2.0 (2016-04-02)
 
