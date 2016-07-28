@@ -88,4 +88,34 @@ public class PTOnlineSchemaChangeStatementTest {
                 "[pt-online-schema-change, --config, /tmp/percona.conf, --alter=ADD COLUMN new_column INT NULL, --alter-foreign-keys-method=auto, --host=localhost, --port=3306, --user=user, --password=root, --execute, D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
     }
+
+    @Test
+    public void testMultipleAdditionalOptions() {
+        System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config /tmp/percona.conf --alter-foreign-keys-method=auto");
+        PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("person",
+                "ADD COLUMN new_column INT NULL");
+        Assert.assertEquals(
+                "[pt-online-schema-change, --config, /tmp/percona.conf, --alter-foreign-keys-method=auto, --alter=ADD COLUMN new_column INT NULL, --alter-foreign-keys-method=auto, --host=localhost, --port=3306, --user=user, --password=root, --execute, D=testdb,t=person]",
+                String.valueOf(statement.buildCommand(database)));
+    }
+
+    @Test
+    public void testAdditionalOptionsWithSpaces() {
+        System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config \"/tmp/file with spaces.conf\"");
+        PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("person",
+                "ADD COLUMN new_column INT NULL");
+        Assert.assertEquals(
+                "[pt-online-schema-change, --config, /tmp/file with spaces.conf, --alter=ADD COLUMN new_column INT NULL, --alter-foreign-keys-method=auto, --host=localhost, --port=3306, --user=user, --password=root, --execute, D=testdb,t=person]",
+                String.valueOf(statement.buildCommand(database)));
+    }
+
+    @Test
+    public void testAdditionalOptionsWithQuotes() {
+        System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config \"/tmp/percona.conf\"");
+        PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("person",
+                "ADD COLUMN new_column INT NULL");
+        Assert.assertEquals(
+                "[pt-online-schema-change, --config, /tmp/percona.conf, --alter=ADD COLUMN new_column INT NULL, --alter-foreign-keys-method=auto, --host=localhost, --port=3306, --user=user, --password=root, --execute, D=testdb,t=person]",
+                String.valueOf(statement.buildCommand(database)));
+    }
 }

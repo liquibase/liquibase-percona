@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -63,7 +64,41 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         while (stringTokenizer.hasMoreTokens()) {
             result.add(stringTokenizer.nextToken());
         }
-        return result;
+        return joinQuotedArguments(result);
+    }
+
+    /**
+     * Very simplistic approach to join together any quoted arguments.
+     * Only double quotes are supported and the join character is a space.
+     * @param tokenizedArguments the arguments tokenized by space
+     * @return the filtered arguments, maybe joined
+     */
+    private List<String> joinQuotedArguments(List<String> tokenizedArguments) {
+        final String joinCharacters = " ";
+        List<String> filtered = new LinkedList<String>();
+        boolean inQuotes = false;
+        for (int i = 0; i < tokenizedArguments.size(); i++) {
+            String arg = tokenizedArguments.get(i);
+            if (!inQuotes) {
+                if (arg.startsWith("\"")) {
+                    inQuotes = true;
+                    arg = arg.substring(1);
+                }
+                if (arg.endsWith("\"")) {
+                    inQuotes = false;
+                    arg = arg.substring(0, arg.length() - 1);
+                }
+                filtered.add(arg);
+            } else {
+                if (arg.endsWith("\"")) {
+                    inQuotes = false;
+                    arg = arg.substring(0, arg.length() - 1);
+                }
+                String last = filtered.get(filtered.size() - 1);
+                filtered.set(filtered.size() - 1, last + joinCharacters + arg);
+            }
+        }
+        return filtered;
     }
 
     /**
