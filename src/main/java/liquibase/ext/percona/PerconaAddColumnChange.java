@@ -84,11 +84,16 @@ public class PerconaAddColumnChange extends AddColumnChange {
         if (column.getRemarks() != null) {
             comment += " COMMENT '" + column.getRemarks() + "'";
         }
+        String after = "";
+        if (column.getAfterColumn() != null) {
+            comment += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
+        }
         return "ADD COLUMN " + database.escapeColumnName(null, null, null, column.getName())
                 + " " + DataTypeFactory.getInstance().fromDescription(column.getType(), database).toDatabaseDataType(database)
                 + nullable
                 + defaultValue
-                + comment;
+                + comment
+                + after;
     }
 
     @Override
