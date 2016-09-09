@@ -163,6 +163,7 @@ integration test.
 ### Version 1.2.1 (???)
 
 *   [PR #4](https://github.com/adangel/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
+*   [PR #5](https://github.com/adangel/liquibase-percona/pull/5): Support afterColum attribute
 
 ### Version 1.2.0 (2016-04-02)
 

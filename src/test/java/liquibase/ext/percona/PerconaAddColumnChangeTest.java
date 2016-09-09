@@ -183,4 +183,26 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
+
+    @Test
+    public void testConvertColumnToSqlWithAfter() {
+        PerconaAddColumnChange c = getChange();
+        Database database = getDatabase();
+
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName("new_column");
+        column.setType("INT");
+        column.setAfterColumn("other_column");
+
+        Assert.assertEquals("ADD COLUMN new_column INT NULL AFTER other_column",
+                c.convertColumnToSql(column, database));
+
+        column.setAfterColumn("other column");
+        Assert.assertEquals("ADD COLUMN new_column INT NULL AFTER `other column`",
+                c.convertColumnToSql(column, database));
+
+        column.setAfterColumn("");
+        Assert.assertEquals("ADD COLUMN new_column INT NULL",
+                c.convertColumnToSql(column, database));
+    }
 }
