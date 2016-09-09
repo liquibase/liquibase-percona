@@ -85,8 +85,8 @@ public class PerconaAddColumnChange extends AddColumnChange {
             comment += " COMMENT '" + column.getRemarks() + "'";
         }
         String after = "";
-        if (column.getAfterColumn() != null) {
-            comment += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
+        if (column.getAfterColumn() != null && !column.getAfterColumn().isEmpty()) {
+            after += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
         }
         return "ADD COLUMN " + database.escapeColumnName(null, null, null, column.getName())
                 + " " + DataTypeFactory.getInstance().fromDescription(column.getType(), database).toDatabaseDataType(database)
