@@ -160,6 +160,9 @@ integration test.
 
 ## Changelog
 
+### Version 1.2.2 (?????)
+
+
 ### Version 1.2.1 (2016-09-13)
 
 *   [PR #4](https://github.com/adangel/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
@@ -233,12 +236,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.2.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.2.2-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.2-SNAPSHOT</version>
     </dependency>
 
 
