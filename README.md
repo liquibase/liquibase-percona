@@ -18,7 +18,7 @@ changes provided by liquibase-core.
 
 * Liquibase 3.2.0 (liquibase-percona 1.0.0)
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
-* Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.0)
+* Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.1)
 
 
 ## Supported Changes and examples
@@ -160,7 +160,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.2.1 (???)
+### Version 1.2.1 (2016-09-13)
 
 *   [PR #4](https://github.com/adangel/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
 *   [PR #5](https://github.com/adangel/liquibase-percona/pull/5): Support afterColum attribute
@@ -195,7 +195,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.2.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.2.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -205,7 +205,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </dependency>
 
 
