@@ -31,7 +31,8 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>@mysql.version@</version>
+                        <!-- uses the old mysql connector version, to have this covered. -->
+                        <version>5.1.38</version>
                     </dependency>
                 </dependencies>
                 <configuration>

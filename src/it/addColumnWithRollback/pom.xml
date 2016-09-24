@@ -37,7 +37,8 @@
                 <configuration>
                     <changeLogFile>test-changelog.xml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://@config_host@:@config_port@/@config_dbname@</url>
+                    <!-- ?nullNamePatternMatchesAll=true - see https://liquibase.jira.com/browse/CORE-2723 -->
+                    <url>jdbc:mysql://@config_host@:@config_port@/@config_dbname@?nullNamePatternMatchesAll=true</url>
                     <username>@config_user@</username>
                     <password>@config_password@</password>
                 </configuration>

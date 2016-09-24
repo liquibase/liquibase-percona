@@ -1,5 +1,7 @@
 package liquibase.ext.percona;
 
+import java.lang.reflect.Field;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +16,7 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class DatabaseConnectionUtilTest {
@@ -56,4 +59,30 @@ public class DatabaseConnectionUtilTest {
         Assert.assertEquals("root", util.getUser());
     }
 
+    private static Class<?> loadClass(String name) {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    @Test
+    public void testGetPasswordMySQL_5_1_38() throws Exception {
+        // with MySQL Connector 5.1.38, we use JDBC4Connection and its superclass ConnectionImpl
+        // to get hold of the password.
+        Class<?> connectionImpl = loadClass("com.mysql.jdbc.ConnectionImpl");
+        Assume.assumeNotNull(connectionImpl);
+        Field propsField = connectionImpl.getDeclaredField("props");
+        Assert.assertNotNull("The field props is not existing", propsField);
+    }
+
+    @Test
+    public void testGetPasswordMySQL_6_0_4() throws Exception {
+        // with MySQL Connector 6.0.4, the packages changed.
+        Class<?> connectionImpl = loadClass("com.mysql.cj.jdbc.ConnectionImpl");
+        Assume.assumeNotNull(connectionImpl);
+        Field propsField2 = connectionImpl.getDeclaredField("props");
+        Assert.assertNotNull("The field props is not existing", propsField2);
+    }
 }

@@ -65,13 +65,35 @@ public class DatabaseConnectionUtil {
         return connectionUserName;
     }
 
+    private static Class<?> loadClass(String name, ClassLoader loader) {
+        try {
+            return loader.loadClass(name);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
     public String getPassword() {
         if (connection instanceof JdbcConnection) {
             Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
             try {
-                // for MySQL, jdbcCon would be JDBC4Connection and superclass
-                // would be ConnectionImpl
-                Field propsField = jdbcCon.getClass().getSuperclass().getDeclaredField("props");
+                Class<?> connectionImplClass = null;
+
+                // MySQL Connector 5.1.38
+                connectionImplClass = loadClass("com.mysql.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
+
+                // MySQL Connector 6.0.4
+                if (connectionImplClass == null) {
+                    connectionImplClass = loadClass("com.mysql.cj.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
+                }
+
+                // Unknown MySQL Connector version?
+                if (connectionImplClass == null) {
+                    throw new RuntimeException("Couldn't find class ConnectionImpl");
+                }
+
+                // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
+                Field propsField = connectionImplClass.getDeclaredField("props");
                 propsField.setAccessible(true);
                 Properties props = (Properties) propsField.get(jdbcCon);
                 String password = props.getProperty("password");

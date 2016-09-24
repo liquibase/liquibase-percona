@@ -164,7 +164,7 @@ integration test.
 ### Version 1.2.2 (?????)
 
 *   Upgraded liquibase to 3.5.1
-
+*   Support for MySQL Connector 6.0.x in addition to 5.1.x.
 
 ### Version 1.2.1 (2016-09-13)
 
