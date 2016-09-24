@@ -19,6 +19,7 @@ changes provided by liquibase-core.
 * Liquibase 3.2.0 (liquibase-percona 1.0.0)
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
 * Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.1)
+* Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
 
 
 ## Supported Changes and examples
@@ -161,6 +162,8 @@ integration test.
 ## Changelog
 
 ### Version 1.2.2 (?????)
+
+*   Upgraded liquibase to 3.5.1
 
 
 ### Version 1.2.1 (2016-09-13)
