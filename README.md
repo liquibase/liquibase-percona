@@ -274,8 +274,10 @@ Please note, that you'll need:
 
 1.  [docker](https://www.docker.com/).
     During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) will be started.
+    Under debian, execute `sudo apt-get install docker.io`.
 2.  [percona toolkit](https://www.percona.com/downloads/percona-toolkit/).
     The command line tools need to be available on your `PATH`.
+    The toolkit requires perl with mysql dbi libraries. Under debian, execute `sudo apt-get install libdbd-mysql-perl`.
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 
