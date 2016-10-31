@@ -27,7 +27,6 @@ import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
 
 /**
  * Subclasses the original {@link liquibase.change.core.AddColumnChange} to
@@ -71,6 +70,17 @@ public class PerconaAddColumnChange extends AddColumnChange {
         return alter.toString();
     }
 
+    /**
+     * Simple isNotEmpty check, avoiding NPE.
+     * Note: not use StringUtil.isNotEmpty, since this method/class doesn't exist
+     * for liquibase 3.3.x and 3.4.x.
+     * @param s the string to test
+     * @return <code>true</code> if s is not null and not empty, <code>false</code> otherwise.
+     */
+    private static boolean isNotEmpty(String s) {
+        return s != null && !s.isEmpty();
+    }
+
     String convertColumnToSql(AddColumnConfig column, Database database) {
         String nullable = "";
         ConstraintsConfig constraintsConfig = column.getConstraints();
@@ -84,18 +94,18 @@ public class PerconaAddColumnChange extends AddColumnChange {
             defaultValue = " DEFAULT " + DataTypeFactory.getInstance().fromObject(column.getDefaultValueObject(), database).objectToSql(column.getDefaultValueObject(), database);
         }
         String comment = "";
-        if (StringUtils.isNotEmpty(column.getRemarks())) {
+        if (isNotEmpty(column.getRemarks())) {
             comment += " COMMENT '" + column.getRemarks() + "'";
         }
         String after = "";
-        if (StringUtils.isNotEmpty(column.getAfterColumn())) {
+        if (isNotEmpty(column.getAfterColumn())) {
             after += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
         }
 
         String constraints = "";
-        if (constraintsConfig != null && StringUtils.isNotEmpty(constraintsConfig.getReferences())) {
+        if (constraintsConfig != null && isNotEmpty(constraintsConfig.getReferences())) {
             constraints += ", ADD ";
-            if (StringUtils.isNotEmpty(constraintsConfig.getForeignKeyName())) {
+            if (isNotEmpty(constraintsConfig.getForeignKeyName())) {
                 constraints += "CONSTRAINT _" + constraintsConfig.getForeignKeyName() + " ";
             }
             constraints +=  "FOREIGN KEY ("
@@ -104,7 +114,7 @@ public class PerconaAddColumnChange extends AddColumnChange {
         }
         if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
             constraints += ", ADD ";
-            if (StringUtils.isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
+            if (isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
                 constraints += "CONSTRAINT _" + constraintsConfig.getUniqueConstraintName() + " ";
             }
             constraints +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";
