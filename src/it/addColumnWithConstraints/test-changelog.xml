@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="Alice">
+        <createTable tableName="test_parent">
+            <column name="id" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Alice">
+        <createTable tableName="test_table">
+            <column name="id" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="Alice">
+        <addColumn tableName="test_table">
+            <column name="testColumn" type="bigint(20)">
+                <constraints nullable="true"
+                             foreignKeyName="fk_test_column"
+                             references="test_parent(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="4" author="Alice">
+        <addColumn tableName="test_table">
+            <column name="testColumn2" type="bigint(20)">
+                <constraints nullable="true"
+                             unique="true"
+                             uniqueConstraintName="uc_test_column"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="5" author="Alice">
+        <addColumn tableName="test_table">
+            <column name="testColumn3" type="bigint(20)">
+                <constraints nullable="true"
+                             unique="true"
+                             uniqueConstraintName="uc_test_column3"
+                             foreignKeyName="fk_test_column3"
+                             references="test_parent(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
