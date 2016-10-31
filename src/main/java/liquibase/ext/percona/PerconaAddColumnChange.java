@@ -20,12 +20,14 @@ import liquibase.change.AddColumnConfig;
 import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
+import liquibase.change.ConstraintsConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.statement.SqlStatement;
+import liquibase.util.StringUtils;
 
 /**
  * Subclasses the original {@link liquibase.change.core.AddColumnChange} to
@@ -71,7 +73,8 @@ public class PerconaAddColumnChange extends AddColumnChange {
 
     String convertColumnToSql(AddColumnConfig column, Database database) {
         String nullable = "";
-        if (column.getConstraints() != null && !column.getConstraints().isNullable()) {
+        ConstraintsConfig constraintsConfig = column.getConstraints();
+        if (constraintsConfig != null && !constraintsConfig.isNullable()) {
             nullable = " NOT NULL";
         } else {
             nullable = " NULL";
@@ -81,19 +84,39 @@ public class PerconaAddColumnChange extends AddColumnChange {
             defaultValue = " DEFAULT " + DataTypeFactory.getInstance().fromObject(column.getDefaultValueObject(), database).objectToSql(column.getDefaultValueObject(), database);
         }
         String comment = "";
-        if (column.getRemarks() != null) {
+        if (StringUtils.isNotEmpty(column.getRemarks())) {
             comment += " COMMENT '" + column.getRemarks() + "'";
         }
         String after = "";
-        if (column.getAfterColumn() != null && !column.getAfterColumn().isEmpty()) {
+        if (StringUtils.isNotEmpty(column.getAfterColumn())) {
             after += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
         }
+
+        String constraints = "";
+        if (constraintsConfig != null && StringUtils.isNotEmpty(constraintsConfig.getReferences())) {
+            constraints += ", ADD ";
+            if (StringUtils.isNotEmpty(constraintsConfig.getForeignKeyName())) {
+                constraints += "CONSTRAINT _" + constraintsConfig.getForeignKeyName() + " ";
+            }
+            constraints +=  "FOREIGN KEY ("
+                    + database.escapeColumnName(null, null, null, column.getName()) + ") REFERENCES "
+                    + constraintsConfig.getReferences();
+        }
+        if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
+            constraints += ", ADD ";
+            if (StringUtils.isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
+                constraints += "CONSTRAINT _" + constraintsConfig.getUniqueConstraintName() + " ";
+            }
+            constraints +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";
+        }
+
         return "ADD COLUMN " + database.escapeColumnName(null, null, null, column.getName())
                 + " " + DataTypeFactory.getInstance().fromDescription(column.getType(), database).toDatabaseDataType(database)
                 + nullable
                 + defaultValue
                 + comment
-                + after;
+                + after
+                + constraints;
     }
 
     @Override

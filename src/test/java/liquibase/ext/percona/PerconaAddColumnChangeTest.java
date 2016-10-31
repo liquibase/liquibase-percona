@@ -205,4 +205,60 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals("ADD COLUMN new_column INT NULL",
                 c.convertColumnToSql(column, database));
     }
+
+    @Test
+    public void testConvertColumnToSqlWithConstraints() {
+        PerconaAddColumnChange c = getChange();
+        Database database = getDatabase();
+
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName("testColumn");
+        column.setType("BIGINT(20)");
+
+        ConstraintsConfig constraints = new ConstraintsConfig();
+        constraints.setNullable(true);
+        constraints.setForeignKeyName("fk_test_column");
+        constraints.setReferences("test_parent(id)");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+                + "ADD CONSTRAINT _fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
+                c.convertColumnToSql(column, database));
+
+        constraints = new ConstraintsConfig();
+        constraints.setNullable(true);
+        constraints.setReferences("test_parent(id)");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals(
+                "ADD COLUMN testColumn BIGINT NULL, ADD FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
+                c.convertColumnToSql(column, database));
+
+        constraints = new ConstraintsConfig();
+        constraints.setNullable(true).setUnique("true").setUniqueConstraintName("unique_test_column");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals(
+                "ADD COLUMN testColumn BIGINT NULL, ADD CONSTRAINT _unique_test_column UNIQUE (testColumn)",
+                c.convertColumnToSql(column, database));
+
+        constraints = new ConstraintsConfig();
+        constraints.setNullable(true).setUnique("true");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals(
+                "ADD COLUMN testColumn BIGINT NULL, ADD UNIQUE (testColumn)",
+                c.convertColumnToSql(column, database));
+
+        constraints = new ConstraintsConfig();
+        constraints.setNullable(true);
+        constraints.setForeignKeyName("fk_test_column").setReferences("test_parent(id)");
+        constraints.setUnique(true).setUniqueConstraintName("unique_test_column");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+                + "ADD CONSTRAINT _fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id), "
+                + "ADD CONSTRAINT _unique_test_column UNIQUE (testColumn)",
+                c.convertColumnToSql(column, database));
+    }
 }
