@@ -20,6 +20,7 @@ import liquibase.change.AddColumnConfig;
 import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
+import liquibase.change.ConstraintsConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.DropDefaultValueChange;
@@ -69,9 +70,21 @@ public class PerconaAddColumnChange extends AddColumnChange {
         return alter.toString();
     }
 
+    /**
+     * Simple isNotEmpty check, avoiding NPE.
+     * Note: not use StringUtil.isNotEmpty, since this method/class doesn't exist
+     * for liquibase 3.3.x and 3.4.x.
+     * @param s the string to test
+     * @return <code>true</code> if s is not null and not empty, <code>false</code> otherwise.
+     */
+    private static boolean isNotEmpty(String s) {
+        return s != null && !s.isEmpty();
+    }
+
     String convertColumnToSql(AddColumnConfig column, Database database) {
         String nullable = "";
-        if (column.getConstraints() != null && !column.getConstraints().isNullable()) {
+        ConstraintsConfig constraintsConfig = column.getConstraints();
+        if (constraintsConfig != null && !constraintsConfig.isNullable()) {
             nullable = " NOT NULL";
         } else {
             nullable = " NULL";
@@ -81,19 +94,39 @@ public class PerconaAddColumnChange extends AddColumnChange {
             defaultValue = " DEFAULT " + DataTypeFactory.getInstance().fromObject(column.getDefaultValueObject(), database).objectToSql(column.getDefaultValueObject(), database);
         }
         String comment = "";
-        if (column.getRemarks() != null) {
+        if (isNotEmpty(column.getRemarks())) {
             comment += " COMMENT '" + column.getRemarks() + "'";
         }
         String after = "";
-        if (column.getAfterColumn() != null && !column.getAfterColumn().isEmpty()) {
+        if (isNotEmpty(column.getAfterColumn())) {
             after += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
         }
+
+        String constraints = "";
+        if (constraintsConfig != null && isNotEmpty(constraintsConfig.getReferences())) {
+            constraints += ", ADD ";
+            if (isNotEmpty(constraintsConfig.getForeignKeyName())) {
+                constraints += "CONSTRAINT " + constraintsConfig.getForeignKeyName() + " ";
+            }
+            constraints +=  "FOREIGN KEY ("
+                    + database.escapeColumnName(null, null, null, column.getName()) + ") REFERENCES "
+                    + constraintsConfig.getReferences();
+        }
+        if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
+            constraints += ", ADD ";
+            if (isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
+                constraints += "CONSTRAINT " + constraintsConfig.getUniqueConstraintName() + " ";
+            }
+            constraints +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";
+        }
+
         return "ADD COLUMN " + database.escapeColumnName(null, null, null, column.getName())
                 + " " + DataTypeFactory.getInstance().fromDescription(column.getType(), database).toDatabaseDataType(database)
                 + nullable
                 + defaultValue
                 + comment
-                + after;
+                + after
+                + constraints;
     }
 
     @Override

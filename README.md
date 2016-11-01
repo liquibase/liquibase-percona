@@ -165,6 +165,7 @@ integration test.
 
 *   Upgraded liquibase to 3.5.1
 *   Support for MySQL Connector 6.0.x in addition to 5.1.x.
+*   Fixed [#7](https://github.com/adangel/liquibase-percona/issues/7): Foreign key constraints of AddColumn is ignored
 
 ### Version 1.2.1 (2016-09-13)
 
