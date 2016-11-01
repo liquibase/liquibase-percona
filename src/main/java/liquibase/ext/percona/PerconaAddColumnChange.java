@@ -15,6 +15,8 @@ package liquibase.ext.percona;
  */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.change.Change;
@@ -26,6 +28,7 @@ import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
+import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.statement.SqlStatement;
 
 /**
@@ -103,22 +106,8 @@ public class PerconaAddColumnChange extends AddColumnChange {
         }
 
         String constraints = "";
-        if (constraintsConfig != null && isNotEmpty(constraintsConfig.getReferences())) {
-            constraints += ", ADD ";
-            if (isNotEmpty(constraintsConfig.getForeignKeyName())) {
-                constraints += "CONSTRAINT " + constraintsConfig.getForeignKeyName() + " ";
-            }
-            constraints +=  "FOREIGN KEY ("
-                    + database.escapeColumnName(null, null, null, column.getName()) + ") REFERENCES "
-                    + constraintsConfig.getReferences();
-        }
-        if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
-            constraints += ", ADD ";
-            if (isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
-                constraints += "CONSTRAINT " + constraintsConfig.getUniqueConstraintName() + " ";
-            }
-            constraints +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";
-        }
+        constraints += addForeignKeyConstraint(column, database);
+        constraints += addUniqueKeyConstraint(column, database);
 
         return "ADD COLUMN " + database.escapeColumnName(null, null, null, column.getName())
                 + " " + DataTypeFactory.getInstance().fromDescription(column.getType(), database).toDatabaseDataType(database)
@@ -127,6 +116,51 @@ public class PerconaAddColumnChange extends AddColumnChange {
                 + comment
                 + after
                 + constraints;
+    }
+
+    private String addForeignKeyConstraint(AddColumnConfig column, Database database) {
+        String result = "";
+        ConstraintsConfig constraintsConfig = column.getConstraints();
+        if (constraintsConfig != null && (isNotEmpty(constraintsConfig.getReferences()) || isNotEmpty(constraintsConfig.getReferencedTableName()) )) {
+            result += ", ADD ";
+            if (isNotEmpty(constraintsConfig.getForeignKeyName())) {
+                result += "CONSTRAINT " + database.escapeConstraintName(constraintsConfig.getForeignKeyName()) + " ";
+            }
+            result +=  "FOREIGN KEY ("
+                    + database.escapeColumnName(null, null, null, column.getName()) + ") REFERENCES ";
+
+            String referencedTable;
+            String referencedColumn;
+
+            if (isNotEmpty(constraintsConfig.getReferences())) {
+                Matcher references = Pattern.compile("([\\w\\._]+)\\(([\\w_]+)\\)").matcher(constraintsConfig.getReferences());
+                if (!references.matches()) {
+                    throw new UnexpectedLiquibaseException("Unable to get table name and column name from " + constraintsConfig.getReferences());
+                }
+                referencedTable = references.group(1);
+                referencedColumn = references.group(2);
+            } else {
+                referencedTable = constraintsConfig.getReferencedTableName();
+                referencedColumn = constraintsConfig.getReferencedColumnNames();
+            }
+            result += database.escapeTableName(null, null, referencedTable) + "(";
+            result += database.escapeColumnName(null, null, null, referencedColumn);
+            result += ")";
+        }
+        return result;
+    }
+
+    private String addUniqueKeyConstraint(AddColumnConfig column, Database database) {
+        String result = "";
+        ConstraintsConfig constraintsConfig = column.getConstraints();
+        if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
+            result += ", ADD ";
+            if (isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
+                result += "CONSTRAINT " + database.escapeConstraintName(constraintsConfig.getUniqueConstraintName()) + " ";
+            }
+            result +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";
+        }
+        return result;
     }
 
     @Override

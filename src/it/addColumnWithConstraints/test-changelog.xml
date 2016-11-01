@@ -53,4 +53,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="6" author="Alice">
+        <addColumn tableName="test_table">
+            <column name="testColumn4" type="bigint(20)">
+                <constraints nullable="true"
+                             foreignKeyName="fk_test_column4"
+                             referencedTableName="test_parent"
+                             referencedColumnNames="id"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

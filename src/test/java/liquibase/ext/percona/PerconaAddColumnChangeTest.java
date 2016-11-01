@@ -260,5 +260,15 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id), "
                 + "ADD CONSTRAINT unique_test_column UNIQUE (testColumn)",
                 c.convertColumnToSql(column, database));
+
+        constraints = new ConstraintsConfig();
+        constraints.setNullable(true);
+        constraints.setForeignKeyName("fk_test_column").setReferencedTableName("test_parent");
+        constraints.setReferencedColumnNames("id");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+                + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
+                c.convertColumnToSql(column, database));
     }
 }
