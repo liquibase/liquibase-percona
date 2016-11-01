@@ -106,7 +106,7 @@ public class PerconaAddColumnChange extends AddColumnChange {
         if (constraintsConfig != null && isNotEmpty(constraintsConfig.getReferences())) {
             constraints += ", ADD ";
             if (isNotEmpty(constraintsConfig.getForeignKeyName())) {
-                constraints += "CONSTRAINT _" + constraintsConfig.getForeignKeyName() + " ";
+                constraints += "CONSTRAINT " + constraintsConfig.getForeignKeyName() + " ";
             }
             constraints +=  "FOREIGN KEY ("
                     + database.escapeColumnName(null, null, null, column.getName()) + ") REFERENCES "
@@ -115,7 +115,7 @@ public class PerconaAddColumnChange extends AddColumnChange {
         if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
             constraints += ", ADD ";
             if (isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
-                constraints += "CONSTRAINT _" + constraintsConfig.getUniqueConstraintName() + " ";
+                constraints += "CONSTRAINT " + constraintsConfig.getUniqueConstraintName() + " ";
             }
             constraints +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";
         }

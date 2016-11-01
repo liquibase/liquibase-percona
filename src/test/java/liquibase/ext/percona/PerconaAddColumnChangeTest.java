@@ -222,7 +222,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         column.setConstraints(constraints);
 
         Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
-                + "ADD CONSTRAINT _fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
+                + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
                 c.convertColumnToSql(column, database));
 
         constraints = new ConstraintsConfig();
@@ -239,7 +239,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         column.setConstraints(constraints);
 
         Assert.assertEquals(
-                "ADD COLUMN testColumn BIGINT NULL, ADD CONSTRAINT _unique_test_column UNIQUE (testColumn)",
+                "ADD COLUMN testColumn BIGINT NULL, ADD CONSTRAINT unique_test_column UNIQUE (testColumn)",
                 c.convertColumnToSql(column, database));
 
         constraints = new ConstraintsConfig();
@@ -257,8 +257,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         column.setConstraints(constraints);
 
         Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
-                + "ADD CONSTRAINT _fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id), "
-                + "ADD CONSTRAINT _unique_test_column UNIQUE (testColumn)",
+                + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id), "
+                + "ADD CONSTRAINT unique_test_column UNIQUE (testColumn)",
                 c.convertColumnToSql(column, database));
     }
 }
