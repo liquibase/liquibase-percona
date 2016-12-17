@@ -27,22 +27,23 @@ import liquibase.statement.SqlStatement;
 @DatabaseChange(name = PerconaCreateIndexChange.NAME,
     description = "Creates an index on an existing column or set of columns.",
     priority = PerconaCreateIndexChange.PRIORITY, appliesTo = "index")
-public class PerconaCreateIndexChange extends CreateIndexChange
+public class PerconaCreateIndexChange extends CreateIndexChange implements PerconaChange
 {
     public static final String NAME = "createIndex";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
+    private Boolean usePercona;
+
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
-        return PerconaChangeUtil.generateStatements(PerconaCreateIndexChange.NAME,
+        return PerconaChangeUtil.generateStatements(this,
                     database,
-                    super.generateStatements(database),
-                    getTableName(),
-                    generateAlterStatement(database));
+                    super.generateStatements(database));
     }
 
-    private String generateAlterStatement( Database database )
+    @Override
+    public String generateAlterStatement( Database database )
     {
         StringBuilder alter = new StringBuilder();
         
@@ -87,5 +88,24 @@ public class PerconaCreateIndexChange extends CreateIndexChange
         inverse.setTableName(getTableName());
 
         return new Change[] { inverse };
+    }
+
+    @Override
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    public String getChangeSkipName() {
+        return NAME;
+    }
+
+    @Override
+    public String getTargetTableName() {
+        return getTableName();
     }
 }

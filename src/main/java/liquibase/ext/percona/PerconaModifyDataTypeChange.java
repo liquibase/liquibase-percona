@@ -25,21 +25,22 @@ import liquibase.statement.SqlStatement;
 @DatabaseChange(name = PerconaModifyDataTypeChange.NAME,
     description = "Modify data type",
     priority = PerconaModifyDataTypeChange.PRIORITY, appliesTo = "column")
-public class PerconaModifyDataTypeChange extends ModifyDataTypeChange {
+public class PerconaModifyDataTypeChange extends ModifyDataTypeChange implements PerconaChange {
     public static final String NAME = "modifyDataType";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
+
+    private Boolean usePercona;
 
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
-        return PerconaChangeUtil.generateStatements(PerconaModifyDataTypeChange.NAME,
+        return PerconaChangeUtil.generateStatements(this,
                     database,
-                    super.generateStatements(database),
-                    getTableName(),
-                    generateAlterStatement(database));
+                    super.generateStatements(database));
     }
 
-    private String generateAlterStatement(Database database) {
+    @Override
+    public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
 
         alter.append("MODIFY ");
@@ -53,5 +54,24 @@ public class PerconaModifyDataTypeChange extends ModifyDataTypeChange {
         }
 
         return alter.toString();
+    }
+
+    @Override
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    public String getChangeSkipName() {
+        return NAME;
+    }
+
+    @Override
+    public String getTargetTableName() {
+        return getTableName();
     }
 }
