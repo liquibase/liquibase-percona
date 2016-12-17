@@ -7,6 +7,41 @@ This extension replaces a couple of the default changes to use `pt-online-schema
 This allows to perform a non-locking database upgrade.
 
 
+## Table Of Contents
+
+*   [Supported Databases](#supported-databases)
+*   [Liquibase version(s) tested against](#liquibase-versions-tested-against)
+*   [Supported Changes and examples](#supported-changes-and-examples)
+    *   [AddColumn](#addcolumn)
+    *   [AddForeignKeyConstraint](#addforeignkeyconstraint)
+    *   [CreateIndex](#createindex)
+    *   [DropColumn](#dropcolumn)
+    *   [DropForeignKeyConstraint](#dropforeignkeyconstraint)
+    *   [DropIndex](#dropindex)
+    *   [ModifyDataType](#modifydatatype)
+*   [Configuration](#configuration)
+*   [Changelog](#changelog)
+    *   [Version 1.3.0 (?????)](#version-130-)
+    *   [Version 1.2.1 (2016-09-13)](#version-121-2016-09-13)
+    *   [Version 1.2.0 (2016-04-02)](#version-120-2016-04-02)
+    *   [Version 1.1.1 (2015-07-26)](#version-111-2015-07-26)
+    *   [Version 1.1.0 (2014-11-06)](#version-110-2014-11-06)
+    *   [Version 1.0.0 (2014-10-09)](#version-100-2014-10-09)
+*   [Using / Installling the extension](#using--installing-the-extension)
+    *   [Download](#download)
+    *   [Command line liquibase](#command-line-liquibase)
+    *   [Via Maven](#via-maven)
+    *   [Using snapshots](#using-snapshots)
+*   [Notes](#notes)
+*   [Building this extension](#building-this-extension)
+    *   [Integration testing](#integration-testing)
+*   [Common Problems](#common-problems)
+    *   [NoSuchMethodError: PerconaDropColumnChange.getColumns()Ljava/util/List](#nosuchmethoderror-perconadropcolumnchangegetcolumnsljavautillist)
+*   [Sponsors](#sponsors)
+*   [References](#references)
+
+
+
 ## Supported Databases
 
 MySQL is the only supported database.
@@ -45,6 +80,25 @@ Corresponding command:
     pt-online-schema-change --alter="ADD COLUMN address VARCHAR(255)" ...
 
 
+### AddForeignKeyConstraint
+
+Since: liquibase-percona 1.3.0
+
+Automatic rollback supported? yes
+
+Example:
+
+    <changeSet id="3" author="Alice">
+        <addForeignKeyConstraint constraintName="fk_person_address"
+            referencedTableName="person" referencedColumnNames="id"
+            baseTableName="address" baseColumnNames="person_id"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (id)" ...
+
+
 ### CreateIndex
 
 Since: liquibase-percona 1.2.0
@@ -79,6 +133,23 @@ Example:
 Corresponding command:
 
     pt-online-schema-change --alter="DROP COLUMN age" ...
+
+
+### DropForeignKeyConstraint
+
+Since: liquibase-percona 1.3.0
+
+Automatic rollback supported? no
+
+Example:
+
+    <changeSet id="4" author="Alice">
+        <dropForeignKeyConstraint baseTableName="address" constraintName="fk_person_address" />
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="DROP FOREIGN KEY _fk_person_address" ...
 
 
 ### DropIndex
@@ -161,11 +232,12 @@ integration test.
 
 ## Changelog
 
-### Version 1.2.2 (?????)
+### Version 1.3.0 (?????)
 
 *   Upgraded liquibase to 3.5.1
 *   Support for MySQL Connector 6.0.x in addition to 5.1.x.
 *   Fixed [#7](https://github.com/adangel/liquibase-percona/issues/7): Foreign key constraints of AddColumn is ignored
+*   Fixed [#8](https://github.com/adangel/liquibase-percona/issues/8): Support addForeignKeyConstraintChange, addUniqueConstraintChange
 
 ### Version 1.2.1 (2016-09-13)
 
@@ -284,6 +356,8 @@ Please note, that you'll need:
     The toolkit requires perl with mysql dbi libraries. Under debian, execute `sudo apt-get install libdbd-mysql-perl`.
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
+
+To run a single integration test, execute maven like this: `mvn verify -Prun-its -Dinvoker.test=addColumn*,dropColumn`
 
 ## Common Problems
 
