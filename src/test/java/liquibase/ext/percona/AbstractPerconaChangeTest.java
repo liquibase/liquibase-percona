@@ -35,6 +35,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
     private Database database;
     private T change;
     private final Class<T> changeClazz;
+    private String targetTableName = "person";
 
     public AbstractPerconaChangeTest(Class<T> clazz) {
         changeClazz = clazz;
@@ -67,6 +68,10 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
 
     protected abstract void setupChange(T change);
 
+    protected void setTargetTableName(String targetTableName) {
+        this.targetTableName = targetTableName;
+    }
+
     protected T getChange() {
         return change;
     }
@@ -86,7 +91,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
                 + "--alter-foreign-keys-method=auto "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
+                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=" + targetTableName,
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
     }
 
