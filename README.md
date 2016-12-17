@@ -22,6 +22,8 @@ This allows to perform a non-locking database upgrade.
     *   [DropUniqueConstraint](#dropuniqueconstraint)
     *   [ModifyDataType](#modifydatatype)
 *   [Configuration](#configuration)
+    *   [UsePercona flag](#usepercona-flag)
+    *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
     *   [Version 1.3.0 (?????)](#version-130-)
     *   [Version 1.2.1 (2016-09-13)](#version-121-2016-09-13)
@@ -225,6 +227,31 @@ Corresponding command:
 
 ## Configuration
 
+### UsePercona flag
+
+Each change allows to enable or disable the usage of percona toolkit via the property `usePercona`.
+By default, the percona toolkit is used, see also the system property `liquibase.percona.defaultOn`.
+
+Example:
+
+    - changeSet:
+        id: 2
+        author: Alice
+        changes:
+          - addColumn:
+              tableName: person
+              usePercona: false
+              columns:
+                - column:
+                    name: address
+                    type: varchar(255)
+
+This flag exists since liquibase-percona 1.3.0
+
+It is currently only supported by using the YAML format.
+
+### System Properties
+
 The extension supports the following java system properties:
 
 *   `liquibase.percona.failIfNoPT`: true/false. **Default: false**.
@@ -245,13 +272,19 @@ The extension supports the following java system properties:
     By default, this property is empty, so that all supported changes are executed using the percona toolkit.
     Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
     
-*   `liquibase.percona.options`: String of options. **Default: <empty>**.
+*   `liquibase.percona.options`: String of options. **Default: <empty>**. Since liquibase-percona 1.2.1
     This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
     be used in complication replication setup to change the way slaves are detected and how their state is used.
     You can also specify a percona configuration file via `--config file.conf`,
     see [Configuration Files](https://www.percona.com/doc/percona-toolkit/2.2/configuration_files.html).
     Multiple options are separated by space. If argument itself contains a space, it must be quoted with
     double-quotes, e.g. `--config "filename with spaces.conf`.
+
+*   `liquibase.percona.defaultOn`: true/false. **Default: true**. Since liquibase-percona 1.3.0
+    This options allows to change the default behavior for the [UsePercona flag](#usepercona-flag). By default,
+    all changes, that do not explicitly specify this flag, use the value from this system property.
+    Settings this property to `false` allows to control for each single change, whether to use Percona Toolkit
+    or not.
 
 
 
@@ -274,6 +307,7 @@ integration test.
 *   Support for MySQL Connector 6.0.x in addition to 5.1.x.
 *   Fixed [#7](https://github.com/adangel/liquibase-percona/issues/7): Foreign key constraints of AddColumn is ignored
 *   Fixed [#8](https://github.com/adangel/liquibase-percona/issues/8): Support addForeignKeyConstraintChange, addUniqueConstraintChange
+*   Fixed [#9](https://github.com/adangel/liquibase-percona/issues/9): Support for enabling pt-online-schema-changes on a per-change basis
 *   Fixed [#10](https://github.com/adangel/liquibase-percona/issues/10): Build fails with java7: UnsupportedClassVersion when running DatabaseConnectionUtilTest.testGetPasswordMySQL\_6\_0\_4
 
 ### Version 1.2.1 (2016-09-13)
