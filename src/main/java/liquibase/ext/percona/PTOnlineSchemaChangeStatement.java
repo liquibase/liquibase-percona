@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -38,7 +40,7 @@ import liquibase.util.StreamUtil;
  */
 public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     public static final String COMMAND = "pt-online-schema-change";
-    private static String perconaToolkitVersion = null;
+    private static PerconaToolkitVersion perconaToolkitVersion = null;
     static Boolean available = null;
 
     private static Logger log = LogFactory.getInstance().getLog();
@@ -251,9 +253,11 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         }
     }
 
-    public static String getVersion() {
-        checkIsAvailableAndGetVersion();
-        return perconaToolkitVersion;
+    public static synchronized PerconaToolkitVersion getVersion() {
+        if (available == null) {
+            checkIsAvailableAndGetVersion();
+        }
+        return perconaToolkitVersion != null ? perconaToolkitVersion : new PerconaToolkitVersion(null);
     }
 
     /**
@@ -281,9 +285,12 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             p = pb.start();
             p.waitFor();
 
-            perconaToolkitVersion = StreamUtil.getStreamContents(p.getInputStream());
-            if (perconaToolkitVersion != null) {
-                perconaToolkitVersion = perconaToolkitVersion.replaceAll("\n|\r", "");
+            String output = StreamUtil.getStreamContents(p.getInputStream());
+            if (output != null) {
+                Matcher matcher = Pattern.compile("(\\d+\\.\\d+\\.\\d+)").matcher(output);
+                if (matcher.find()) {
+                    perconaToolkitVersion = new PerconaToolkitVersion(matcher.group(1));
+                }
             }
             available = true;
             log.info("Using percona toolkit: " + perconaToolkitVersion);

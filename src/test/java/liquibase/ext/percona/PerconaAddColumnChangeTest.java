@@ -271,4 +271,24 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
                 c.convertColumnToSql(column, database));
     }
+
+    @Test
+    public void testConvertColumnToSqlWithConstraintSelfReferencingTable() {
+        PerconaAddColumnChange c = getChange();
+        Database database = getDatabase();
+
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName("testColumn");
+        column.setType("BIGINT(20)");
+
+        ConstraintsConfig constraints = new ConstraintsConfig();
+        constraints.setNullable(true);
+        constraints.setForeignKeyName("fk_test_column");
+        constraints.setReferences("person(id)");
+        column.setConstraints(constraints);
+
+        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+                + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _person_new(id)",
+                c.convertColumnToSql(column, database));
+    }
 }

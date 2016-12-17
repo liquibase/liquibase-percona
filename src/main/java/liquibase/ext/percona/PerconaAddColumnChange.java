@@ -39,7 +39,7 @@ import liquibase.statement.SqlStatement;
 @DatabaseChange(name = PerconaAddColumnChange.NAME, description = "Adds a new column to an existing table",
     priority = PerconaAddColumnChange.PRIORITY, appliesTo = "table")
 public class PerconaAddColumnChange extends AddColumnChange {
-    public static final String NAME= "addColumn";
+    public static final String NAME = "addColumn";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     /**
@@ -73,17 +73,6 @@ public class PerconaAddColumnChange extends AddColumnChange {
         return alter.toString();
     }
 
-    /**
-     * Simple isNotEmpty check, avoiding NPE.
-     * Note: not use StringUtil.isNotEmpty, since this method/class doesn't exist
-     * for liquibase 3.3.x and 3.4.x.
-     * @param s the string to test
-     * @return <code>true</code> if s is not null and not empty, <code>false</code> otherwise.
-     */
-    private static boolean isNotEmpty(String s) {
-        return s != null && !s.isEmpty();
-    }
-
     String convertColumnToSql(AddColumnConfig column, Database database) {
         String nullable = "";
         ConstraintsConfig constraintsConfig = column.getConstraints();
@@ -97,11 +86,11 @@ public class PerconaAddColumnChange extends AddColumnChange {
             defaultValue = " DEFAULT " + DataTypeFactory.getInstance().fromObject(column.getDefaultValueObject(), database).objectToSql(column.getDefaultValueObject(), database);
         }
         String comment = "";
-        if (isNotEmpty(column.getRemarks())) {
+        if (StringUtil.isNotEmpty(column.getRemarks())) {
             comment += " COMMENT '" + column.getRemarks() + "'";
         }
         String after = "";
-        if (isNotEmpty(column.getAfterColumn())) {
+        if (StringUtil.isNotEmpty(column.getAfterColumn())) {
             after += " AFTER " + database.escapeColumnName(null, null, null, column.getAfterColumn());
         }
 
@@ -121,9 +110,9 @@ public class PerconaAddColumnChange extends AddColumnChange {
     private String addForeignKeyConstraint(AddColumnConfig column, Database database) {
         String result = "";
         ConstraintsConfig constraintsConfig = column.getConstraints();
-        if (constraintsConfig != null && (isNotEmpty(constraintsConfig.getReferences()) || isNotEmpty(constraintsConfig.getReferencedTableName()) )) {
+        if (constraintsConfig != null && (StringUtil.isNotEmpty(constraintsConfig.getReferences()) || StringUtil.isNotEmpty(constraintsConfig.getReferencedTableName()) )) {
             result += ", ADD ";
-            if (isNotEmpty(constraintsConfig.getForeignKeyName())) {
+            if (StringUtil.isNotEmpty(constraintsConfig.getForeignKeyName())) {
                 result += "CONSTRAINT " + database.escapeConstraintName(constraintsConfig.getForeignKeyName()) + " ";
             }
             result +=  "FOREIGN KEY ("
@@ -132,7 +121,7 @@ public class PerconaAddColumnChange extends AddColumnChange {
             String referencedTable;
             String referencedColumn;
 
-            if (isNotEmpty(constraintsConfig.getReferences())) {
+            if (StringUtil.isNotEmpty(constraintsConfig.getReferences())) {
                 Matcher references = Pattern.compile("([\\w\\._]+)\\(([\\w_]+)\\)").matcher(constraintsConfig.getReferences());
                 if (!references.matches()) {
                     throw new UnexpectedLiquibaseException("Unable to get table name and column name from " + constraintsConfig.getReferences());
@@ -143,6 +132,9 @@ public class PerconaAddColumnChange extends AddColumnChange {
                 referencedTable = constraintsConfig.getReferencedTableName();
                 referencedColumn = constraintsConfig.getReferencedColumnNames();
             }
+
+            referencedTable = PerconaChangeUtil.resolveReferencedPerconaTableName(getTableName(), referencedTable);
+
             result += database.escapeTableName(null, null, referencedTable) + "(";
             result += database.escapeColumnName(null, null, null, referencedColumn);
             result += ")";
@@ -155,7 +147,7 @@ public class PerconaAddColumnChange extends AddColumnChange {
         ConstraintsConfig constraintsConfig = column.getConstraints();
         if (constraintsConfig != null && constraintsConfig.isUnique() != null && constraintsConfig.isUnique()) {
             result += ", ADD ";
-            if (isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
+            if (StringUtil.isNotEmpty(constraintsConfig.getUniqueConstraintName())) {
                 result += "CONSTRAINT " + database.escapeConstraintName(constraintsConfig.getUniqueConstraintName()) + " ";
             }
             result +=  "UNIQUE (" + database.escapeColumnName(null, null, null, column.getName()) + ")";

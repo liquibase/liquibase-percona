@@ -38,4 +38,23 @@
         <modifyDataType tableName="person" columnName="email" newDataType="VARCHAR(400)"/>
     </changeSet>
 
+    <changeSet id="7" author="Alice">
+        <createTable tableName="address">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="person_id" type="varchar(255)"/>
+            <column name="street" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="Alice">
+        <addForeignKeyConstraint constraintName="fk_person_address"
+            referencedTableName="person" referencedColumnNames="name"
+            baseTableName="address" baseColumnNames="person_id"/>
+    </changeSet>
+
+    <changeSet id="9" author="Alice">
+        <dropForeignKeyConstraint baseTableName="address" constraintName="fk_person_address" />
+    </changeSet>
 </databaseChangeLog>
