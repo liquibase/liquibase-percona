@@ -79,10 +79,17 @@ public class DatabaseConnectionUtilTest {
 
     @Test
     public void testGetPasswordMySQL_6_0_4() throws Exception {
+        assumeJava8();
         // with MySQL Connector 6.0.4, the packages changed.
         Class<?> connectionImpl = loadClass("com.mysql.cj.jdbc.ConnectionImpl");
         Assume.assumeNotNull(connectionImpl);
         Field propsField2 = connectionImpl.getDeclaredField("props");
         Assert.assertNotNull("The field props is not existing", propsField2);
+    }
+
+    private static void assumeJava8() {
+        String javaVersion = System.getProperty("java.version");
+        int majorJava = Integer.parseInt(javaVersion.split("\\.")[1]);
+        Assume.assumeTrue("Java Runtime too old - for this test at least java8 is required", majorJava >= 8);
     }
 }

@@ -274,6 +274,7 @@ integration test.
 *   Support for MySQL Connector 6.0.x in addition to 5.1.x.
 *   Fixed [#7](https://github.com/adangel/liquibase-percona/issues/7): Foreign key constraints of AddColumn is ignored
 *   Fixed [#8](https://github.com/adangel/liquibase-percona/issues/8): Support addForeignKeyConstraintChange, addUniqueConstraintChange
+*   Fixed [#10](https://github.com/adangel/liquibase-percona/issues/10): Build fails with java7: UnsupportedClassVersion when running DatabaseConnectionUtilTest.testGetPasswordMySQL\_6\_0\_4
 
 ### Version 1.2.1 (2016-09-13)
 
