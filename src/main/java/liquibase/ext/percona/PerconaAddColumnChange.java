@@ -132,6 +132,9 @@ public class PerconaAddColumnChange extends AddColumnChange {
                 referencedTable = constraintsConfig.getReferencedTableName();
                 referencedColumn = constraintsConfig.getReferencedColumnNames();
             }
+
+            referencedTable = PerconaChangeUtil.resolveReferencedPerconaTableName(getTableName(), referencedTable);
+
             result += database.escapeTableName(null, null, referencedTable) + "(";
             result += database.escapeColumnName(null, null, null, referencedColumn);
             result += ")";

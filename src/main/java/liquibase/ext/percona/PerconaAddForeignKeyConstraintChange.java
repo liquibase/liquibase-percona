@@ -8,8 +8,6 @@ import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.database.Database;
-import liquibase.logging.LogFactory;
-import liquibase.logging.Logger;
 import liquibase.statement.SqlStatement;
 import liquibase.util.StringUtils;
 
@@ -58,7 +56,8 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
         alter.append(") ");
 
         alter.append("REFERENCES ");
-        alter.append(resolveReferencedPerconaTableName(database)).append(" ");
+        String referencedTable = PerconaChangeUtil.resolveReferencedPerconaTableName(getBaseTableName(), getReferencedTableName());
+        alter.append(database.escapeTableName(getReferencedTableCatalogName(), getReferencedTableSchemaName(), referencedTable)).append(" ");
         alter.append("(");
         List<String> referencedColumns = StringUtils.splitAndTrim(getReferencedColumnNames(), ",");
         if (referencedColumns == null) referencedColumns = Collections.emptyList();
@@ -91,29 +90,5 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
         inverse.setConstraintName(getConstraintName());
 
         return new Change[] { inverse };
-    }
-
-    /**
-     * In case the foreign key is self-referencing the table itself, we have to deal with this
-     * the temporary percona table name. Since percona copies the old table and performas the alters
-     * on the copy, we need to reference the copy in that case ("_new" suffix).
-     *
-     * Since this bug is scheduled to be fixed with pt 2.2.21, the workaround will be applied
-     * only for earlier versions.
-     *
-     * @param database
-     * @return
-     *
-     * @see <a href="https://bugs.launchpad.net/percona-toolkit/+bug/1393961">pt-online-schema-change fails with self-referential foreign key</a>
-     */
-    private String resolveReferencedPerconaTableName(Database database) {
-        if (getBaseTableName() != null && getBaseTableName().equals(getReferencedTableName())
-                && !PTOnlineSchemaChangeStatement.getVersion().isGreaterOrEqualThan("2.2.21")) {
-            Logger log = LogFactory.getInstance().getLog();
-            log.warning("Applying workaround for pt-osc bug https://bugs.launchpad.net/percona-toolkit/+bug/1393961");
-            return database.escapeTableName(getReferencedTableCatalogName(), getReferencedTableSchemaName(), "_" + getReferencedTableName() + "_new");
-        }
-
-        return database.escapeTableName(getReferencedTableCatalogName(), getReferencedTableSchemaName(), getReferencedTableName());
     }
 }

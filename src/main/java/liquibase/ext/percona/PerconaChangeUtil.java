@@ -100,4 +100,28 @@ public class PerconaChangeUtil {
             alreadyLogged.put(message, Boolean.TRUE);
         }
     }
+
+    /**
+     * In case the foreign key is self-referencing the table itself, we have to deal with this
+     * the temporary percona table name. Since percona copies the old table and performas the alters
+     * on the copy, we need to reference the copy in that case ("_new" suffix).
+     *
+     * Since this bug is scheduled to be fixed with pt 2.2.21, the workaround will be applied
+     * only for earlier versions.
+     *
+     * @param database
+     * @return
+     *
+     * @see <a href="https://bugs.launchpad.net/percona-toolkit/+bug/1393961">pt-online-schema-change fails with self-referential foreign key</a>
+     */
+    public static String resolveReferencedPerconaTableName(String baseTableName, String referencedTableName) {
+        if (baseTableName != null && baseTableName.equals(referencedTableName)
+                && !PTOnlineSchemaChangeStatement.getVersion().isGreaterOrEqualThan("2.2.21")) {
+            log.warning("Applying workaround for pt-osc bug https://bugs.launchpad.net/percona-toolkit/+bug/1393961 for table " + baseTableName);
+            return "_" + referencedTableName + "_new";
+        }
+
+        return referencedTableName;
+    }
+
 }

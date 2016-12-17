@@ -6,18 +6,21 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="1" author="Alice">
-        <createTable tableName="person">
-            <column name="id" type="varchar(255)">
+        <createTable tableName="test_table">
+            <column name="id" type="bigint(20)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="parent" type="varchar(255)"/>
         </createTable>
     </changeSet>
 
     <!-- Special handling of referenced table name needed, see https://bugs.launchpad.net/percona-toolkit/+bug/1393961 -->
     <changeSet id="2" author="Alice">
-        <addForeignKeyConstraint constraintName="fk_person_parent"
-            referencedTableName="person" referencedColumnNames="id"
-            baseTableName="person" baseColumnNames="parent"/>
+        <addColumn tableName="test_table">
+            <column name="testColumn" type="bigint(20)">
+                <constraints nullable="true"
+                             foreignKeyName="fk_test_column"
+                             references="test_table(id)"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
