@@ -38,9 +38,11 @@ import liquibase.statement.SqlStatement;
  */
 @DatabaseChange(name = PerconaAddColumnChange.NAME, description = "Adds a new column to an existing table",
     priority = PerconaAddColumnChange.PRIORITY, appliesTo = "table")
-public class PerconaAddColumnChange extends AddColumnChange {
+public class PerconaAddColumnChange extends AddColumnChange implements PerconaChange {
     public static final String NAME = "addColumn";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
+
+    private Boolean usePercona;
 
     /**
      * Generates the statements required for the add column change.
@@ -53,14 +55,13 @@ public class PerconaAddColumnChange extends AddColumnChange {
      */
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        return PerconaChangeUtil.generateStatements(PerconaAddColumnChange.NAME,
+        return PerconaChangeUtil.generateStatements(this,
                 database,
-                super.generateStatements(database),
-                getTableName(),
-                generateAlterStatement(database));
+                super.generateStatements(database));
     }
 
-    String generateAlterStatement(Database database) {
+    @Override
+    public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
         boolean firstColumn = true;
         for (AddColumnConfig a : getColumns()) {
@@ -179,4 +180,22 @@ public class PerconaAddColumnChange extends AddColumnChange {
         return inverses.toArray(new Change[inverses.size()]);
     }
 
+    @Override
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    public String getChangeSkipName() {
+        return NAME;
+    }
+
+    @Override
+    public String getTargetTableName() {
+        return getTableName();
+    }
 }

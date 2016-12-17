@@ -291,4 +291,12 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _person_new(id)",
                 c.convertColumnToSql(column, database));
     }
+
+    @Test
+    public void testWithDisabledPercona() {
+        getChange().setUsePercona(false);
+        SqlStatement[] statements = generateStatements();
+        Assert.assertEquals(1, statements.length);
+        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+    }
 }

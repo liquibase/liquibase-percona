@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import liquibase.change.Change;
+import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.executor.Executor;
@@ -48,13 +50,47 @@ public class PerconaChangeUtil {
         return false;
     }
 
-    public static SqlStatement[] generateStatements(String changeName,
+    public static SqlStatement[] generateStatements(final String changeName,
             Database database, SqlStatement[] originalStatements,
-            String tableName, String alterStatement) {
+            final String tableName, final String alterStatement) {
+        PerconaChange change = new PerconaChange() {
+            @Override
+            public Boolean getUsePercona() {
+                return true;
+            }
+            @Override
+            public String getChangeSkipName() {
+                return changeName;
+            }
+            @Override
+            public String getTargetTableName() {
+                return tableName;
+            }
+            @Override
+            public String generateAlterStatement(Database database) {
+                return alterStatement;
+            }
+        };
+        return generateStatements(change, database, originalStatements);
+    }
 
-        if (Configuration.skipChange(changeName)) {
+    public static SqlStatement[] generateStatements(PerconaChange change,
+            Database database, SqlStatement[] originalStatements) {
+
+        if (Boolean.FALSE.equals(change.getUsePercona())) {
+            String changeSetId = "unknown changeset id";
+            if (change instanceof Change) {
+                ChangeSet changeSet = ((Change)change).getChangeSet();
+                if (changeSet != null) {
+                    changeSetId = changeSet.getId() + ":" + changeSet.getAuthor();
+                }
+            }
+            log.debug("Not using percona toolkit, because usePercona flag is false for " + changeSetId + ":" + change.toString());
+            return originalStatements;
+        }
+        if (Configuration.skipChange(change.getChangeSkipName())) {
             maybeLog("Not using percona toolkit, because skipChange for "
-                    + changeName + " is active (property: " + Configuration.SKIP_CHANGES + ")!");
+                    + change.getChangeSkipName() + " is active (property: " + Configuration.SKIP_CHANGES + ")!");
             return originalStatements;
         }
 
@@ -63,8 +99,8 @@ public class PerconaChangeUtil {
         if (database instanceof MySQLDatabase) {
             if (PTOnlineSchemaChangeStatement.isAvailable()) {
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
-                        tableName,
-                        alterStatement);
+                        change.getTargetTableName(),
+                        change.generateAlterStatement(database));
 
                 if (isDryRun(database)) {
                     CommentStatement commentStatement = new CommentStatement(statement.printCommand(database));

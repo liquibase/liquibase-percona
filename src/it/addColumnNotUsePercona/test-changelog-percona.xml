@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog-percona.xsd">
+
+    <changeSet id="1" author="Alice">
+        <createTable tableName="person">
+            <column name="name" type="varchar(255)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Alice">
+        <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/adangel/liquibase-percona" liquibasePercona:usePercona="false">
+            <column name="address" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
