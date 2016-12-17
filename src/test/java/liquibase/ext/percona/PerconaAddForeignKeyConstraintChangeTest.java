@@ -1,5 +1,8 @@
 package liquibase.ext.percona;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,12 +153,28 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
                 ((CommentStatement)statements[0]).getText());
     }
 
-
     @Test
     public void testSkipAddForeignKeyConstraintChange() {
         System.setProperty(Configuration.SKIP_CHANGES, "addForeignKeyConstraint");
         SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(AddForeignKeyConstraintStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void testSelfReferencingForeignKey() {
+        PerconaAddForeignKeyConstraintChange change = new PerconaAddForeignKeyConstraintChange();
+        change.setBaseTableName("person");
+        change.setBaseColumnNames("parent");
+        change.setConstraintName("fk_person_parent");
+        change.setReferencedColumnNames("id");
+        change.setReferencedTableName("person");
+
+        PerconaToolkitVersion version = PTOnlineSchemaChangeStatement.getVersion();
+        assertEquals("0.0.0", version.toString());
+        assertTrue(PTOnlineSchemaChangeStatement.available);
+
+        setTargetTableName("person");
+        assertPerconaChange("ADD CONSTRAINT fk_person_parent FOREIGN KEY (parent) REFERENCES _person_new (id)", change.generateStatements(getDatabase()));
     }
 }

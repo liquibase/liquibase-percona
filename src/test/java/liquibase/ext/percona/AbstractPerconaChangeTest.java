@@ -86,7 +86,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         assertPerconaChange(alter, generateStatements());
     }
 
-    private void assertPerconaChange(String alter, SqlStatement[] statements) {
+    protected void assertPerconaChange(String alter, SqlStatement[] statements) {
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
