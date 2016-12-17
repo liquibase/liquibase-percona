@@ -14,10 +14,12 @@ This allows to perform a non-locking database upgrade.
 *   [Supported Changes and examples](#supported-changes-and-examples)
     *   [AddColumn](#addcolumn)
     *   [AddForeignKeyConstraint](#addforeignkeyconstraint)
+    *   [AddUniqueConstraint](#adduniqueconstraint)
     *   [CreateIndex](#createindex)
     *   [DropColumn](#dropcolumn)
     *   [DropForeignKeyConstraint](#dropforeignkeyconstraint)
     *   [DropIndex](#dropindex)
+    *   [DropUniqueConstraint](#dropuniqueconstraint)
     *   [ModifyDataType](#modifydatatype)
 *   [Configuration](#configuration)
 *   [Changelog](#changelog)
@@ -99,6 +101,23 @@ Corresponding command:
     pt-online-schema-change --alter="ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (id)" ...
 
 
+### AddUniqueConstraint
+
+Since: liquibase-percona 1.3.0
+
+Automatic rollback supported? yes
+
+Example:
+
+    <changeSet id="2" author="Alice">
+        <addUniqueConstraint columnNames="id, name" tableName="person" constraintName="uq_id_name"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="ADD CONSTRAINT uq_id_name UNIQUE (id, name)" ...
+
+
 ### CreateIndex
 
 Since: liquibase-percona 1.2.0
@@ -150,6 +169,23 @@ Example:
 Corresponding command:
 
     pt-online-schema-change --alter="DROP FOREIGN KEY _fk_person_address" ...
+
+
+### DropUniqueConstraint
+
+Since: liquibase-percona 1.3.0
+
+Automatic rollback supported? no
+
+Example:
+
+    <changeSet id="3" author="Alice">
+        <dropUniqueConstraint tableName="person" constraintName="uq_id_name"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="DROP KEY uq_id_name" ...
 
 
 ### DropIndex
