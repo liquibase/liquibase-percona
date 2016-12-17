@@ -37,7 +37,7 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
 
     @Test
     public void testGenerateAlterStatement() {
-        Assert.assertEquals("DROP COLUMN col_test", getChange().generateAlterStatement());
+        Assert.assertEquals("DROP COLUMN col_test", getChange().generateAlterStatement(getDatabase()));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         col2.setName("col2_test");
         getChange().addColumn(col2);
 
-        Assert.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", getChange().generateAlterStatement());
+        Assert.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", getChange().generateAlterStatement(getDatabase()));
     }
 
     @Test

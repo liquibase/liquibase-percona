@@ -29,9 +29,11 @@ import liquibase.statement.SqlStatement;
     description = "Drop an existing column",
     priority = PerconaDropColumnChange.PRIORITY,
     appliesTo = "column")
-public class PerconaDropColumnChange extends DropColumnChange {
+public class PerconaDropColumnChange extends DropColumnChange implements PerconaChange {
     public static final String NAME = "dropColumn";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
+
+    private Boolean usePercona;
 
     /**
      * Generates the statements required for the drop column change.
@@ -44,14 +46,13 @@ public class PerconaDropColumnChange extends DropColumnChange {
      */
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        return PerconaChangeUtil.generateStatements(PerconaDropColumnChange.NAME,
+        return PerconaChangeUtil.generateStatements(this,
                 database,
-                super.generateStatements(database),
-                getTableName(),
-                generateAlterStatement());
+                super.generateStatements(database));
     }
 
-    String generateAlterStatement() {
+    @Override
+    public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
         if (getColumns() != null && !getColumns().isEmpty()) {
             boolean first = true;
@@ -66,5 +67,24 @@ public class PerconaDropColumnChange extends DropColumnChange {
             alter.append("DROP COLUMN ").append(getColumnName());
         }
         return alter.toString();
+    }
+
+    @Override
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    public String getChangeSkipName() {
+        return NAME;
+    }
+
+    @Override
+    public String getTargetTableName() {
+        return getTableName();
     }
 }

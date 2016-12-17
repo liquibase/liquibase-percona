@@ -12,15 +12,17 @@ import liquibase.statement.SqlStatement;
 import liquibase.util.StringUtils;
 
 /**
- * Subclasses the original {@link liquibase.change.core.AddForeignKeyConstraintChange} to
+ * Subclasses the original {@link liquibase.change.core.AddUniqueConstraintChange} to
  * integrate with pt-online-schema-change.
  * @see PTOnlineSchemaChangeStatement
  */
 @DatabaseChange(name = PerconaAddUniqueConstraintChange.NAME, description = "Adds a unique constrant to an existing column or set of columns",
-    priority = PerconaAddUniqueConstraintChange.PRIORITY, appliesTo = "table")
-public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange {
+    priority = PerconaAddUniqueConstraintChange.PRIORITY, appliesTo = "column")
+public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange implements PerconaChange {
     public static final String NAME = "addUniqueConstraint";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
+
+    private Boolean usePercona;
 
     /**
      * Generates the statements required for the add unique constraint change.
@@ -33,14 +35,13 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
      */
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        return PerconaChangeUtil.generateStatements(PerconaAddUniqueConstraintChange.NAME,
+        return PerconaChangeUtil.generateStatements(this,
                 database,
-                super.generateStatements(database),
-                getTableName(),
-                generateAlterStatement(database));
+                super.generateStatements(database));
     }
 
-    String generateAlterStatement(Database database) {
+    @Override
+    public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
 
         alter.append("ADD ");
@@ -67,5 +68,24 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
         inverse.setConstraintName(getConstraintName());
 
         return new Change[] { inverse };
+    }
+
+    @Override
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    public String getChangeSkipName() {
+        return NAME;
+    }
+
+    @Override
+    public String getTargetTableName() {
+        return getTableName();
     }
 }

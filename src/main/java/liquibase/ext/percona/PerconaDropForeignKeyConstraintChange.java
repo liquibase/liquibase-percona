@@ -7,15 +7,17 @@ import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
 
 /**
- * Subclasses the original {@link liquibase.change.core.AddForeignKeyConstraintChange} to
+ * Subclasses the original {@link liquibase.change.core.DropForeignKeyConstraintChange} to
  * integrate with pt-online-schema-change.
  * @see PTOnlineSchemaChangeStatement
  */
 @DatabaseChange(name = PerconaDropForeignKeyConstraintChange.NAME, description = "Drops an existing foreign key",
-    priority = PerconaDropForeignKeyConstraintChange.PRIORITY, appliesTo = "table")
-public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstraintChange {
+    priority = PerconaDropForeignKeyConstraintChange.PRIORITY, appliesTo = "foreignKey")
+public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstraintChange implements PerconaChange {
     public static final String NAME = "dropForeignKeyConstraint";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
+
+    private Boolean usePercona;
 
     /**
      * Generates the statements required for the drop foreign key constraint change.
@@ -28,19 +30,37 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
      */
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        return PerconaChangeUtil.generateStatements(PerconaDropForeignKeyConstraintChange.NAME,
+        return PerconaChangeUtil.generateStatements(this,
                 database,
-                super.generateStatements(database),
-                getBaseTableName(),
-                generateAlterStatement(database));
+                super.generateStatements(database));
     }
 
-    String generateAlterStatement(Database database) {
+    @Override
+    public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
 
         alter.append("DROP FOREIGN KEY ");
         alter.append(database.escapeConstraintName("_" + getConstraintName()));
 
         return alter.toString();
+    }
+
+    @Override
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    public String getChangeSkipName() {
+        return NAME;
+    }
+
+    @Override
+    public String getTargetTableName() {
+        return getBaseTableName();
     }
 }

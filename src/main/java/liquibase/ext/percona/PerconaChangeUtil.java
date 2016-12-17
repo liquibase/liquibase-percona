@@ -50,30 +50,6 @@ public class PerconaChangeUtil {
         return false;
     }
 
-    public static SqlStatement[] generateStatements(final String changeName,
-            Database database, SqlStatement[] originalStatements,
-            final String tableName, final String alterStatement) {
-        PerconaChange change = new PerconaChange() {
-            @Override
-            public Boolean getUsePercona() {
-                return true;
-            }
-            @Override
-            public String getChangeSkipName() {
-                return changeName;
-            }
-            @Override
-            public String getTargetTableName() {
-                return tableName;
-            }
-            @Override
-            public String generateAlterStatement(Database database) {
-                return alterStatement;
-            }
-        };
-        return generateStatements(change, database, originalStatements);
-    }
-
     public static SqlStatement[] generateStatements(PerconaChange change,
             Database database, SqlStatement[] originalStatements) {
 
