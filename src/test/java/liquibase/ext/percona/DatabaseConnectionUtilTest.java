@@ -68,7 +68,7 @@ public class DatabaseConnectionUtilTest {
     }
 
     @Test
-    public void testGetPasswordMySQL_5_1_38() throws Exception {
+    public void testGetPasswordMySQL_5_1() throws Exception {
         // with MySQL Connector 5.1.38, we use JDBC4Connection and its superclass ConnectionImpl
         // to get hold of the password.
         Class<?> connectionImpl = loadClass("com.mysql.jdbc.ConnectionImpl");
@@ -78,7 +78,7 @@ public class DatabaseConnectionUtilTest {
     }
 
     @Test
-    public void testGetPasswordMySQL_6_0_4() throws Exception {
+    public void testGetPasswordMySQL_6() throws Exception {
         assumeJava8();
         // with MySQL Connector 6.0.4, the packages changed.
         Class<?> connectionImpl = loadClass("com.mysql.cj.jdbc.ConnectionImpl");
