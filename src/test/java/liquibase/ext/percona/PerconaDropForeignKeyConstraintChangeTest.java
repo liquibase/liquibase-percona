@@ -35,7 +35,7 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         change.setConstraintName("fk_address_person");
 
         setTargetTableName("address");
-        alterText = "DROP FOREIGN KEY fk_address_person";
+        alterText = "DROP FOREIGN KEY _fk_address_person";
     }
 
     @Test

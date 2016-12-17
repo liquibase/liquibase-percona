@@ -39,7 +39,7 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
         StringBuilder alter = new StringBuilder();
 
         alter.append("DROP FOREIGN KEY ");
-        alter.append(database.escapeConstraintName(getConstraintName()));
+        alter.append(database.escapeConstraintName("_" + getConstraintName()));
 
         return alter.toString();
     }

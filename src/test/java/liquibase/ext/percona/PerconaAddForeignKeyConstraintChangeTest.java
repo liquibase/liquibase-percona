@@ -47,7 +47,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
 
         setTargetTableName("address");
         alterText = "ADD CONSTRAINT fk_address_person FOREIGN KEY (person_id) REFERENCES person (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE INITIALLY DEFERRED";
-        alterRollbackText = "DROP FOREIGN KEY fk_address_person";
+        alterRollbackText = "DROP FOREIGN KEY _fk_address_person";
     }
 
     @Test
