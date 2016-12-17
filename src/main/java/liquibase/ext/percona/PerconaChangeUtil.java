@@ -53,7 +53,7 @@ public class PerconaChangeUtil {
     public static SqlStatement[] generateStatements(PerconaChange change,
             Database database, SqlStatement[] originalStatements) {
 
-        if (Boolean.FALSE.equals(change.getUsePercona())) {
+        if (Boolean.FALSE.equals(change.getUsePercona()) || !Configuration.getDefaultOn()) {
             String changeSetId = "unknown changeset id";
             if (change instanceof Change) {
                 ChangeSet changeSet = ((Change)change).getChangeSet();

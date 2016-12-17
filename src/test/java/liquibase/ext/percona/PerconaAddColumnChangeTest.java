@@ -1,5 +1,7 @@
 package liquibase.ext.percona;
 
+import java.util.Properties;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -298,5 +300,19 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void testWithDisabledPerconaViaDefaultOn() {
+        try {
+            System.setProperty(Configuration.DEFAULT_ON, "false");
+            SqlStatement[] statements = generateStatements();
+            Assert.assertEquals(1, statements.length);
+            Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+        } finally {
+            Properties props = System.getProperties();
+            props.remove(Configuration.DEFAULT_ON);
+            System.setProperties(props);
+        }
     }
 }
