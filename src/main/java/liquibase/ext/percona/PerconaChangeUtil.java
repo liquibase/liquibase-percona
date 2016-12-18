@@ -121,8 +121,10 @@ public class PerconaChangeUtil {
      * Since this bug is scheduled to be fixed with pt 2.2.21, the workaround will be applied
      * only for earlier versions.
      *
-     * @param database
-     * @return
+     * @param baseTableName the table name, in which the foreign key will be added. This is the table, that
+     *                      pt-osc temporarily copies.
+     * @param referencedTableName the table referenced by the foreign key
+     * @return the referencedTableName, adjusted if needed.
      *
      * @see <a href="https://bugs.launchpad.net/percona-toolkit/+bug/1393961">pt-online-schema-change fails with self-referential foreign key</a>
      */
