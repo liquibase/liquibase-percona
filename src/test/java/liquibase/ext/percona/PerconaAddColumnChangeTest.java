@@ -1,7 +1,5 @@
 package liquibase.ext.percona;
 
-import java.util.Properties;
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +15,10 @@ import java.util.Properties;
  */
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.rules.TestRule;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ConstraintsConfig;
@@ -29,6 +30,8 @@ import liquibase.statement.core.CommentStatement;
 import liquibase.statement.core.DropColumnStatement;
 
 public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<PerconaAddColumnChange> {
+    @Rule
+    public final TestRule restoreSystemProperties = new RestoreSystemProperties();
 
     public PerconaAddColumnChangeTest() {
         super(PerconaAddColumnChange.class);
@@ -304,15 +307,9 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
 
     @Test
     public void testWithDisabledPerconaViaDefaultOn() {
-        try {
-            System.setProperty(Configuration.DEFAULT_ON, "false");
-            SqlStatement[] statements = generateStatements();
-            Assert.assertEquals(1, statements.length);
-            Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
-        } finally {
-            Properties props = System.getProperties();
-            props.remove(Configuration.DEFAULT_ON);
-            System.setProperties(props);
-        }
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        SqlStatement[] statements = generateStatements();
+        Assert.assertEquals(1, statements.length);
+        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
 }
