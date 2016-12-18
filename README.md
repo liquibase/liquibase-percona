@@ -25,6 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Version 1.3.1 (?????)](#version-131-)
     *   [Version 1.3.0 (2016-12-18)](#version-130-2016-12-18)
     *   [Version 1.2.1 (2016-09-13)](#version-121-2016-09-13)
     *   [Version 1.2.0 (2016-04-02)](#version-120-2016-04-02)
@@ -302,6 +303,8 @@ integration test.
 
 ## Changelog
 
+### Version 1.3.1 (?????)
+
 ### Version 1.3.0 (2016-12-18)
 
 *   Upgraded liquibase to 3.5.3
@@ -384,12 +387,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.3.0-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.3.1-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.1-SNAPSHOT</version>
     </dependency>
 
 
