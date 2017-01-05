@@ -80,14 +80,8 @@ public class PerconaChangeUtil {
 
                 if (isDryRun(database)) {
                     CommentStatement commentStatement = new CommentStatement(statement.printCommand(database));
-
-                    if (Configuration.noAlterSqlDryMode()) {
-                        statements.clear();
-                        statements.add(0, commentStatement);
-                    } else {
-                        statements.add(0, commentStatement);
-                        statements.add(1, new CommentStatement("Instead of the following statements, pt-online-schema-change will be used"));
-                    }
+                    statements.clear();
+                    statements.add(commentStatement);
                 } else {
                     statements.clear();
                     statements.add(statement);
