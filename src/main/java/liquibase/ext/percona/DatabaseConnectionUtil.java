@@ -14,7 +14,12 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,9 +78,47 @@ public class DatabaseConnectionUtil {
         }
     }
 
+    /**
+     * Unwraps the underlying jdbc connection from a tomcat-jdbc pooled connection.
+     * @param wrappedConnection the proxy
+     * @return the unwrapped jdbc connection or, if the connection cannot be unwrapped, the wrapped connection itself.
+     */
+    private Connection getUnderlyingJdbcConnectionFromProxy(Connection wrappedConnection) {
+        if (Proxy.isProxyClass(wrappedConnection.getClass())) {
+            InvocationHandler invocationHandler = Proxy.getInvocationHandler(wrappedConnection);
+            Class<?> pooledConnectionClass = loadClass("org.apache.tomcat.jdbc.pool.PooledConnection", invocationHandler.getClass().getClassLoader());
+
+            if (pooledConnectionClass != null) {
+                try {
+                    Object pooledConnectionInstance = wrappedConnection.unwrap(pooledConnectionClass);
+                    Method getJdbcConnectionMethod = pooledConnectionClass.getMethod("getConnection");
+                    return (Connection) getJdbcConnectionMethod.invoke(pooledConnectionInstance);
+                } catch (NoSuchMethodException e) {
+                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                } catch (SecurityException e) {
+                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                } catch (IllegalAccessException e) {
+                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                } catch (IllegalArgumentException e) {
+                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                } catch (InvocationTargetException e) {
+                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                } catch (SQLException e) {
+                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                }
+            } else {
+                log.warning("Couldn't determine the password from JdbcConnection. "
+                        + "It is a not supported proxy class: " + invocationHandler.getClass().getName());
+            }
+        }
+        return wrappedConnection;
+    }
+
     public String getPassword() {
         if (connection instanceof JdbcConnection) {
-            Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
+            Connection wrappedConnection = ((JdbcConnection) connection).getWrappedConnection();
+            Connection jdbcCon = getUnderlyingJdbcConnectionFromProxy(wrappedConnection);
+
             try {
                 Class<?> connectionImplClass = null;
 
@@ -90,6 +133,10 @@ public class DatabaseConnectionUtil {
                 // Unknown MySQL Connector version?
                 if (connectionImplClass == null) {
                     throw new RuntimeException("Couldn't find class ConnectionImpl");
+                }
+
+                if (!connectionImplClass.isInstance(jdbcCon)) {
+                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
                 }
 
                 // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...

@@ -1,7 +1,5 @@
 package liquibase.ext.percona;
 
-import java.lang.reflect.Field;
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +13,13 @@ import java.lang.reflect.Field;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.lang.reflect.Field;
+
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+
+import liquibase.database.jvm.JdbcConnection;
 
 public class DatabaseConnectionUtilTest {
     @Test
@@ -91,5 +93,12 @@ public class DatabaseConnectionUtilTest {
         String javaVersion = System.getProperty("java.version");
         int majorJava = Integer.parseInt(javaVersion.split("\\.")[1]);
         Assume.assumeTrue("Java Runtime too old - for this test at least java8 is required", majorJava >= 8);
+    }
+
+    @Test
+    public void testTomcatJdbcConnection() throws Exception {
+        DatabaseConnectionUtil util = new DatabaseConnectionUtil(
+                new JdbcConnection(MockedTomcatJdbcConnection.create("user", "xyz")));
+        Assert.assertEquals("xyz", util.getPassword());
     }
 }
