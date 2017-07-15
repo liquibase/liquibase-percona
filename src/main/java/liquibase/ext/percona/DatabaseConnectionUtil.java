@@ -92,6 +92,10 @@ public class DatabaseConnectionUtil {
                     throw new RuntimeException("Couldn't find class ConnectionImpl");
                 }
 
+                if (!connectionImplClass.isInstance(jdbcCon)) {
+                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
+                }
+
                 // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
                 Field propsField = connectionImplClass.getDeclaredField("props");
                 propsField.setAccessible(true);
