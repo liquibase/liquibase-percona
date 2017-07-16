@@ -17,11 +17,16 @@ import java.lang.reflect.Field;
 
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 
 import liquibase.database.jvm.JdbcConnection;
 
 public class DatabaseConnectionUtilTest {
+    @Rule
+    public RestoreSystemProperties restoreSystemPropertiesRule = new RestoreSystemProperties();
+
     @Test
     public void testGetHost() {
         DatabaseConnectionUtil util;
@@ -106,5 +111,12 @@ public class DatabaseConnectionUtilTest {
     public void testDatabasePropertiesFromFile() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
         Assert.assertEquals("password-for-unit-testing", util.getPassword());
+    }
+
+    @Test
+    public void testDatabasePasswordSystemProperty() throws Exception {
+        System.setProperty(Configuration.LIQUIBASE_PASSWORD, "password-via-system-property");
+        DatabaseConnectionUtil util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
+        Assert.assertEquals("password-via-system-property", util.getPassword());
     }
 }

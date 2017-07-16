@@ -124,6 +124,11 @@ public class DatabaseConnectionUtil {
     }
 
     public String getPassword() {
+        String liquibasePassword = Configuration.getLiquibasePassword();
+        if (liquibasePassword != null) {
+            return liquibasePassword;
+        }
+
         if (connection instanceof JdbcConnection) {
             Connection wrappedConnection = ((JdbcConnection) connection).getWrappedConnection();
             Connection jdbcCon = getUnderlyingJdbcConnectionFromProxy(wrappedConnection);
