@@ -1,5 +1,9 @@
 package liquibase.ext.percona;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +38,11 @@ import liquibase.logging.Logger;
  * to its connection properties like host, port, user and password.
  */
 public class DatabaseConnectionUtil {
+    private static final String DEFAULT_LIQUIBASE_PROPERTIES_FILENAME = "liquibase.properties";
+
+    /** The name of the password property. */
+    private static final String PASSWORD_PROPERTY_NAME = "password";
+
     static String passwordForTests = null;
 
     private Logger log = LogFactory.getInstance().getLog();
@@ -143,7 +152,7 @@ public class DatabaseConnectionUtil {
                 Field propsField = connectionImplClass.getDeclaredField("props");
                 propsField.setAccessible(true);
                 Properties props = (Properties) propsField.get(jdbcCon);
-                String password = props.getProperty("password");
+                String password = props.getProperty(PASSWORD_PROPERTY_NAME);
                 if (password != null && !password.trim().isEmpty()) {
                     return password;
                 }
@@ -154,6 +163,41 @@ public class DatabaseConnectionUtil {
             log.warning("Using passwordForTests");
             return passwordForTests;
         }
+
+        try {
+            Properties liquibaseProperties = loadLiquibaseProperties();
+            if (liquibaseProperties.containsKey(PASSWORD_PROPERTY_NAME)) {
+                return liquibaseProperties.getProperty(PASSWORD_PROPERTY_NAME);
+            }
+        } catch (IOException e) {
+            log.warning("Couldn't read " + DEFAULT_LIQUIBASE_PROPERTIES_FILENAME + " file", e);
+        }
+
         return null;
+    }
+
+    private Properties loadLiquibaseProperties() throws IOException {
+        Properties properties = new Properties();
+
+        File propertiesFile = new File(DEFAULT_LIQUIBASE_PROPERTIES_FILENAME);
+        if (propertiesFile.exists()) {
+            FileInputStream stream = new FileInputStream(propertiesFile);
+            try {
+                properties.load(stream);
+            } finally {
+                stream.close();
+            }
+        } else {
+            InputStream stream = DatabaseConnectionUtil.class.getClassLoader()
+                    .getResourceAsStream(DEFAULT_LIQUIBASE_PROPERTIES_FILENAME);
+            if (stream != null) {
+                try {
+                    properties.load(stream);
+                } finally {
+                    stream.close();
+                }
+            }
+        }
+        return properties;
     }
 }

@@ -101,4 +101,10 @@ public class DatabaseConnectionUtilTest {
                 new JdbcConnection(MockedTomcatJdbcConnection.create("user", "xyz")));
         Assert.assertEquals("xyz", util.getPassword());
     }
+
+    @Test
+    public void testDatabasePropertiesFromFile() throws Exception {
+        DatabaseConnectionUtil util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
+        Assert.assertEquals("password-for-unit-testing", util.getPassword());
+    }
 }

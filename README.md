@@ -306,6 +306,7 @@ integration test.
 
 ### Version 1.4.0 (?????)
 
+*   Fixed [#13](https://github.com/adangel/liquibase-percona/issues/13): Use default liquibase.properties as fallback
 
 ### Version 1.3.1 (2017-07-21)
 
