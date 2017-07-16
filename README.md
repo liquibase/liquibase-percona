@@ -305,6 +305,8 @@ integration test.
 
 ### Version 1.3.1 (?????)
 
+*   Fixed [#12](https://github.com/adangel/liquibase-percona/issues/12): Cannot run migrations with the percona extension on a Spring Boot app with embedded Tomcat
+
 ### Version 1.3.0 (2016-12-18)
 
 *   Upgraded liquibase to 3.5.3
