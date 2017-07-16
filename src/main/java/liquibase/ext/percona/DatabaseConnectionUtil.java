@@ -43,8 +43,6 @@ public class DatabaseConnectionUtil {
     /** The name of the password property. */
     private static final String PASSWORD_PROPERTY_NAME = "password";
 
-    static String passwordForTests = null;
-
     private Logger log = LogFactory.getInstance().getLog();
 
     private DatabaseConnection connection;
@@ -164,9 +162,6 @@ public class DatabaseConnectionUtil {
             } catch (Exception e) {
                 log.warning("Couldn't determine the password from JdbcConnection", e);
             }
-        } else if (passwordForTests != null) {
-            log.warning("Using passwordForTests");
-            return passwordForTests;
         }
 
         try {

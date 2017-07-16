@@ -20,12 +20,13 @@ import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.rules.TestRule;
 
 import liquibase.database.jvm.JdbcConnection;
 
 public class DatabaseConnectionUtilTest {
     @Rule
-    public RestoreSystemProperties restoreSystemPropertiesRule = new RestoreSystemProperties();
+    public final TestRule restoreSystemPropertiesRule = new RestoreSystemProperties();
 
     @Test
     public void testGetHost() {
