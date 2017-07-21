@@ -25,7 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.3.1 (?????)](#version-131-)
+    *   [Version 1.3.1 (2017-07-21)](#version-131-2017-07-21)
     *   [Version 1.3.0 (2016-12-18)](#version-130-2016-12-18)
     *   [Version 1.2.1 (2016-09-13)](#version-121-2016-09-13)
     *   [Version 1.2.0 (2016-04-02)](#version-120-2016-04-02)
@@ -60,7 +60,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
 * Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.1)
 * Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
-* Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.0)
+* Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1)
 
 
 ## Supported Changes and examples
@@ -303,7 +303,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.3.1 (?????)
+### Version 1.3.1 (2017-07-21)
 
 *   Fixed [#12](https://github.com/adangel/liquibase-percona/issues/12): Cannot run migrations with the percona extension on a Spring Boot app with embedded Tomcat
 
