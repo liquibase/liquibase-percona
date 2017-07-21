@@ -293,7 +293,7 @@ The extension supports the following java system properties:
 *   `liquibase.password`: String with the password needed to connect to the database. **Default: <empty>**.
     Since liquibase-percona 1.4.0.
     With this property, you can shortcut the automatic detection of the password from the underlying
-    `java.sql.Connection` fails or from the default `liquibase.properties` file. If this property is set,
+    `java.sql.Connection` (if that fails) or from the default `liquibase.properties` file. If this property is set,
     then it is used for the password when executing `pt-online-schema-change`.
 
 
