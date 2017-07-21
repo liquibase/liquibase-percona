@@ -289,6 +289,11 @@ The extension supports the following java system properties:
     Settings this property to `false` allows to control for each single change, whether to use Percona Toolkit
     or not.
 
+*   `liquibase.password`: String with the password needed to connect to the database. **Default: <empty>**.
+    Since liquibase-percona 1.4.0.
+    With this property, you can shortcut the automatic detection of the password from the underlying
+    `java.sql.Connection` fails or from the default `liquibase.properties` file. If this property is set,
+    then it is used for the password when executing `pt-online-schema-change`.
 
 
 You can set these properties by using the standard java `-D` option:
@@ -306,6 +311,7 @@ integration test.
 
 ### Version 1.4.0 (?????)
 
+*   Fixed [#13](https://github.com/adangel/liquibase-percona/issues/13): Use default liquibase.properties as fallback
 
 ### Version 1.3.1 (2017-07-21)
 

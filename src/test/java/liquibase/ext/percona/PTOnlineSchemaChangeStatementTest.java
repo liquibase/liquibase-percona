@@ -13,16 +13,16 @@ package liquibase.ext.percona;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import liquibase.database.Database;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.core.MySQLDatabase;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.rules.TestRule;
+
+import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
+import liquibase.database.core.MySQLDatabase;
 
 public class PTOnlineSchemaChangeStatementTest {
     private Database database;
@@ -32,7 +32,7 @@ public class PTOnlineSchemaChangeStatementTest {
 
     @Before
     public void setup() {
-        DatabaseConnectionUtil.passwordForTests = "root";
+        System.setProperty(Configuration.LIQUIBASE_PASSWORD, "root");
 
         database = new MySQLDatabase();
         database.setLiquibaseSchemaName("testdb");

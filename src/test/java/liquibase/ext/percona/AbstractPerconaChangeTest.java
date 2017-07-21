@@ -18,7 +18,10 @@ import java.io.StringWriter;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.rules.TestRule;
 
 import liquibase.change.Change;
 import liquibase.database.Database;
@@ -47,9 +50,12 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         }
     }
 
+    @Rule
+    public final TestRule restoreSystemProperties = new RestoreSystemProperties();
+
     @Before
     public void setup() {
-        DatabaseConnectionUtil.passwordForTests = "root";
+        System.setProperty(Configuration.LIQUIBASE_PASSWORD, "root");
 
         database = new MySQLDatabase();
         database.setLiquibaseSchemaName("testdb");

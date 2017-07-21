@@ -28,6 +28,8 @@ public final class Configuration {
     public static final String ADDITIONAL_OPTIONS = "liquibase.percona.options";
     /** Default value for the "usePercona" flag for each change. */
     public static final String DEFAULT_ON = "liquibase.percona.defaultOn";
+    /** The database password to use when executing pt-osc. */
+    public static final String LIQUIBASE_PASSWORD = "liquibase.password";
 
     public static boolean failIfNoPT() {
         return Boolean.getBoolean(FAIL_IF_NO_PT);
@@ -47,5 +49,13 @@ public final class Configuration {
 
     public static boolean getDefaultOn() {
         return Boolean.parseBoolean(System.getProperty(DEFAULT_ON, "true"));
+    }
+
+    /**
+     * Gets the password set via the system property {@link #LIQUIBASE_PASSWORD}.
+     * @return the password or <code>null</code>, if the property is not set.
+     */
+    public static String getLiquibasePassword() {
+        return System.getProperty(LIQUIBASE_PASSWORD);
     }
 }
