@@ -40,7 +40,7 @@ import liquibase.util.StreamUtil;
  */
 public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     public static final String COMMAND = "pt-online-schema-change";
-    private static PerconaToolkitVersion perconaToolkitVersion = null;
+    static PerconaToolkitVersion perconaToolkitVersion = null;
     static Boolean available = null;
 
     private static Logger log = LogFactory.getInstance().getLog();

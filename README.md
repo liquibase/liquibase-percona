@@ -275,7 +275,7 @@ The extension supports the following java system properties:
     the change will be executed by the default liquibase core implementation and *percona toolkit won't be used*.
     By default, this property is empty, so that all supported changes are executed using the percona toolkit.
     Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
-    
+
 *   `liquibase.percona.options`: String of options. **Default: <empty>**. Since liquibase-percona 1.2.1
     This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
     be used in complication replication setup to change the way slaves are detected and how their state is used.
@@ -311,6 +311,8 @@ integration test.
 ## Changelog
 
 ### Version 1.4.1 (?????)
+
+*   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
 
 ### Version 1.4.0 (2017-07-21)
 
