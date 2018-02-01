@@ -1,7 +1,7 @@
 # Liquibase Percona Extension
 
 [![Build Status](https://travis-ci.org/adangel/liquibase-percona.svg?branch=master)](https://travis-ci.org/adangel/liquibase-percona)
-<script src="https://opengift.io/static/public/assets/js/og.widget.js"></script><div class="ogwidget js-og-widget" data-project="632"></div>
+[<img src="https://opengift.io/static/public/assets/img/logo-gradient.svg" width="100" alt="Donate via opengift.io">](https://opengift.io/project/632/public/)
 
 Extension to support the tool `pt-online-schema-change` from Percona Toolkit.
 This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
