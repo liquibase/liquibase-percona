@@ -431,7 +431,7 @@ potentially lock the table for the duration of the update.
 
 ## Building this extension
 
-Simply run `mvn clean verify`.
+Simply run `./mvnw clean verify`.
 You'll find the jar-file in the `target/` subdirectory.
 
 
