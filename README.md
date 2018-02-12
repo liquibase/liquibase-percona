@@ -64,6 +64,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.1)
 * Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
 * Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1, 1.4.0)
+* Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
 
 
 ## Supported Changes and examples
@@ -315,6 +316,7 @@ integration test.
 
 *   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
 *   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs
+*   Fixed [#19](https://github.com/adangel/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
 
 ### Version 1.4.0 (2017-07-21)
 
