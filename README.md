@@ -314,6 +314,7 @@ integration test.
 ### Version 1.4.1 (?????)
 
 *   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
+*   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs
 
 ### Version 1.4.0 (2017-07-21)
 
