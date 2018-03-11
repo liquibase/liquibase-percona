@@ -30,6 +30,11 @@ public final class Configuration {
     public static final String DEFAULT_ON = "liquibase.percona.defaultOn";
     /** The database password to use when executing pt-osc. */
     public static final String LIQUIBASE_PASSWORD = "liquibase.password";
+    /**
+     * Path to the percona toolkit directory, where the tool pt-online-schema-change is located. Can be empty,
+     * to just use the <code>PATH</code>.
+     */
+    public static final String PERCONA_TOOLKIT_PATH = "liquibase.percona.path";
 
     public static boolean failIfNoPT() {
         return Boolean.getBoolean(FAIL_IF_NO_PT);
@@ -57,5 +62,9 @@ public final class Configuration {
      */
     public static String getLiquibasePassword() {
         return System.getProperty(LIQUIBASE_PASSWORD);
+    }
+
+    public static String getPerconaToolkitPath() {
+        return System.getProperty(PERCONA_TOOLKIT_PATH, "");
     }
 }

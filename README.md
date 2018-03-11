@@ -298,6 +298,12 @@ The extension supports the following java system properties:
     `java.sql.Connection` (if that fails) or from the default `liquibase.properties` file. If this property is set,
     then it is used for the password when executing `pt-online-schema-change`.
 
+*   `liquibase.percona.path`: Path to the percona toolkit directory, where the tool
+    `pt-online-schema-change` is installed. **Default: <empty>**.
+    Since liquibase-percona 1.4.1.
+    With this property, you can select a specific toolkit installation. If this property is not set, then the
+    toolkit will be searched on the `PATH`.
+
 
 You can set these properties by using the standard java `-D` option:
 
