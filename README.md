@@ -125,6 +125,11 @@ Corresponding command:
 
     pt-online-schema-change --alter="ADD CONSTRAINT uq_id_name UNIQUE (id, name)" ...
 
+**Note:** pt-online-schema-change is executed with the option `--nocheck-unique-key-change`. This enables to
+add a unique index, but can cause data loss, since duplicated rows are ignored.
+See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
+for more information.
+
 
 ### CreateIndex
 
@@ -143,6 +148,11 @@ Example:
 Corresponding command:
 
     pt-online-schema-change --alter="ADD UNIQUE INDEX emailIdx (email)" ...
+
+**Note:** pt-online-schema-change is executed with the option `--nocheck-unique-key-change`. This enables to
+add a unique index, but can cause data loss, since duplicated rows are ignored.
+See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
+for more information.
 
 
 ### DropColumn
@@ -320,6 +330,12 @@ integration test.
 
 ### Version 1.4.1 (?????)
 
+`pt-online-schema-change` is executed now with the option `--nocheck-unique-key-change`.
+This enables to add unique indexes, but can cause data loss, since duplicated rows are ignored.
+See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
+for more information.
+
+*   Fixed [#15](https://github.com/adangel/liquibase-percona/issues/15): Unique key constraint cannot be added
 *   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
 *   Fixed [#17](https://github.com/adangel/liquibase-percona/issues/17): Include Percona Toolkit into integration test
 *   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs

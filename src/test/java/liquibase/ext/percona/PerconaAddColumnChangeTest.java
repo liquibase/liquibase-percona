@@ -97,6 +97,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -112,6 +113,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -128,6 +130,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }
@@ -142,6 +145,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }

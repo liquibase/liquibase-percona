@@ -98,6 +98,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=" + targetTableName,
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
     }

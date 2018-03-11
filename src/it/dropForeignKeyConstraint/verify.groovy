@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("test-changelog.xml::4::Alice: Executing: pt-online-schema-change --alter=\"DROP FOREIGN KEY _fk_person_address\" --alter-foreign-keys-method=auto --host=127.0.0.1 --port=${config_port} --user=${config_user} --password=*** --execute D=${config_dbname},t=address");
+assert buildLogText.contains("test-changelog.xml::4::Alice: Executing: pt-online-schema-change --alter=\"DROP FOREIGN KEY _fk_person_address\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=127.0.0.1 --port=${config_port} --user=${config_user} --password=*** --execute D=${config_dbname},t=address");
 assert buildLogText.contains("test-changelog.xml::4::Alice: Altering `${config_dbname}`.`address`...");
 assert buildLogText.contains("test-changelog.xml::4::Alice: Creating new table...");
 assert buildLogText.contains("test-changelog.xml::4::Alice: Created new table ${config_dbname}._address_new OK.");

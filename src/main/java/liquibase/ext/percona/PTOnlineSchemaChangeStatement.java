@@ -118,6 +118,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
 
         commands.add("--alter=" + alterStatement);
         commands.add("--alter-foreign-keys-method=auto");
+        commands.add("--nocheck-unique-key-change");
 
         if (database.getConnection() != null) {
             DatabaseConnectionUtil connection = new DatabaseConnectionUtil(database.getConnection());
