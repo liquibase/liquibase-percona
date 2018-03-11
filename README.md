@@ -26,7 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.4.1 (?????)](#version-141-)
+    *   [Version 1.5.0 (?????)](#version-150-)
     *   [Version 1.4.0 (2017-07-21)](#version-140-2017-07-21)
     *   [Version 1.3.1 (2017-07-21)](#version-131-2017-07-21)
     *   [Version 1.3.0 (2016-12-18)](#version-130-2016-12-18)
@@ -65,6 +65,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
 * Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1, 1.4.0)
 * Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
+* Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.5.0). Percona Toolkit 3.0.7.
 
 
 ## Supported Changes and examples
@@ -282,13 +283,13 @@ The extension supports the following java system properties:
     won't be used.
     If this property is set to `true`, then no such SQL statements will be output into the migration file.
 
-*   `liquibase.percona.skipChanges`: comma separated list of changes. **Default: <empty>**.
+*   `liquibase.percona.skipChanges`: comma separated list of changes. **Default: \<empty\>**.
     This option can be used in order to selectively disable one or more changes. If a change is disabled, then
     the change will be executed by the default liquibase core implementation and *percona toolkit won't be used*.
     By default, this property is empty, so that all supported changes are executed using the percona toolkit.
     Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
 
-*   `liquibase.percona.options`: String of options. **Default: <empty>**. Since liquibase-percona 1.2.1
+*   `liquibase.percona.options`: String of options. **Default: \<empty\>**. Since liquibase-percona 1.2.1
     This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
     be used in complication replication setup to change the way slaves are detected and how their state is used.
     You can also specify a percona configuration file via `--config file.conf`,
@@ -302,17 +303,18 @@ The extension supports the following java system properties:
     Settings this property to `false` allows to control for each single change, whether to use Percona Toolkit
     or not.
 
-*   `liquibase.password`: String with the password needed to connect to the database. **Default: <empty>**.
+*   `liquibase.password`: String with the password needed to connect to the database. **Default: \<empty\>**.
     Since liquibase-percona 1.4.0.
     With this property, you can shortcut the automatic detection of the password from the underlying
     `java.sql.Connection` (if that fails) or from the default `liquibase.properties` file. If this property is set,
     then it is used for the password when executing `pt-online-schema-change`.
 
 *   `liquibase.percona.path`: Path to the percona toolkit directory, where the tool
-    `pt-online-schema-change` is installed. **Default: <empty>**.
-    Since liquibase-percona 1.4.1.
+    `pt-online-schema-change` is installed. **Default: \<empty\>**.
+    Since liquibase-percona 1.5.0.
     With this property, you can select a specific toolkit installation. If this property is not set, then the
-    toolkit will be searched on the `PATH`.
+    toolkit will be searched on the `PATH`. You need to specify the `bin` subfolder of the Percona Toolkit
+    distribution.
 
 
 You can set these properties by using the standard java `-D` option:
@@ -328,18 +330,21 @@ integration test.
 
 ## Changelog
 
-### Version 1.4.1 (?????)
+### Version 1.5.0 (?????)
 
 `pt-online-schema-change` is executed now with the option `--nocheck-unique-key-change`.
 This enables to add unique indexes, but can cause data loss, since duplicated rows are ignored.
 See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
 for more information.
 
+The plugin is only compatible with version 3.0.7 or later of Percona Toolkit.
+
 *   Fixed [#15](https://github.com/adangel/liquibase-percona/issues/15): Unique key constraint cannot be added
 *   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
 *   Fixed [#17](https://github.com/adangel/liquibase-percona/issues/17): Include Percona Toolkit into integration test
 *   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs
 *   Fixed [#19](https://github.com/adangel/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
+*   Added new system property `liquibase.percona.path` to specify the path where Percona Toolkit is installed.
 
 ### Version 1.4.0 (2017-07-21)
 
@@ -431,12 +436,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.4.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.0-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.5.0-SNAPSHOT</version>
     </dependency>
 
 
