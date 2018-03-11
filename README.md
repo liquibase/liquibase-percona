@@ -440,20 +440,22 @@ You'll find the jar-file in the `target/` subdirectory.
 
 ### Integration testing
 
-In order to execute the integration tests, run `mvn clean verify -Prun-its`.
+In order to execute the integration tests, run `./mvnw clean verify -Prun-its`.
 
 Please note, that you'll need:
 
 1.  [docker](https://www.docker.com/).
     During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) will be started.
     Under debian, execute `sudo apt-get install docker.io`.
-2.  [percona toolkit](https://www.percona.com/downloads/percona-toolkit/).
-    The command line tools need to be available on your `PATH`.
-    The toolkit requires perl with mysql dbi libraries. Under debian, execute `sudo apt-get install libdbd-mysql-perl`.
+2.  Internet access to download the docker image the first time. And to download
+    [percona toolkit](https://www.percona.com/downloads/percona-toolkit/). The build system will add the downloaded
+    toolkit automatically to the `PATH`.
+3.  The percona toolkit requires perl with mysql dbi libraries.
+    Under debian, execute `sudo apt-get install libdbd-mysql-perl`.
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 
-To run a single integration test, execute maven like this: `mvn verify -Prun-its -Dinvoker.test=addColumn*,dropColumn`
+To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=addColumn*,dropColumn`
 
 ## Common Problems
 

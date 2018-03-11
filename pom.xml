@@ -37,6 +37,7 @@
         <java.version>1.6</java.version>
         <liquibase.version>3.5.4</liquibase.version>
         <mysql.version>5.1.45</mysql.version>
+        <percona.toolkit.version>3.0.7</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--
@@ -238,6 +239,29 @@
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>download-percona-toolkit</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/percona-toolkit"/>
+                                        <get src="https://www.percona.com/downloads/percona-toolkit/${percona.toolkit.version}/binary/tarball/percona-toolkit-${percona.toolkit.version}_x86_64.tar.gz"
+                                             dest="${project.build.directory}/percona-toolkit/" />
+                                        <gunzip src="${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}_x86_64.tar.gz"/>
+                                        <untar src="${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}_x86_64.tar" dest="${project.build.directory}/percona-toolkit/"/>
+                                        <chmod file="${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/bin/pt-online-schema-change" perm="ugo+rx"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
                         <version>0.24.0</version>
@@ -308,6 +332,9 @@
                                 <config_password>${config_password}</config_password>
                                 <config_dbname>${config_dbname}</config_dbname>
                             </scriptVariables>
+                            <environmentVariables>
+                                <PATH>${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/bin:${env.PATH}</PATH>
+                            </environmentVariables>
                         </configuration>
                         <executions>
                             <execution>
