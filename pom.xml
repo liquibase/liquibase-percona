@@ -251,11 +251,25 @@
                                 <configuration>
                                     <target>
                                         <mkdir dir="${project.build.directory}/percona-toolkit"/>
-                                        <get src="https://www.percona.com/downloads/percona-toolkit/${percona.toolkit.version}/binary/tarball/percona-toolkit-${percona.toolkit.version}_x86_64.tar.gz"
-                                             dest="${project.build.directory}/percona-toolkit/" />
-                                        <gunzip src="${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}_x86_64.tar.gz"/>
-                                        <untar src="${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}_x86_64.tar" dest="${project.build.directory}/percona-toolkit/"/>
-                                        <chmod file="${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/bin/pt-online-schema-change" perm="ugo+rx"/>
+
+                                        <exec executable="${project.basedir}/src/main/scripts/determine-latest-toolkit.sh"
+                                              dir="${project.build.directory}/percona-toolkit"
+                                              outputproperty="LATEST" />
+                                        <echo message="Determined latest version of percona toolkit: ${LATEST}" />
+
+                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh"
+                                              dir="${project.build.directory}/percona-toolkit">
+                                            <arg value="${LATEST}" />
+                                        </exec>
+                                        <move file="${project.build.directory}/percona-toolkit/percona-toolkit-${LATEST}"
+                                              tofile="${project.build.directory}/percona-toolkit/percona-toolkit-LATEST"/>
+                                        <echo message="The latest percona toolkit is available in: ${project.build.directory}/percona-toolkit/percona-toolkit-LATEST/" />
+
+                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh"
+                                              dir="${project.build.directory}/percona-toolkit">
+                                            <arg value="${percona.toolkit.version}" />
+                                        </exec>
+                                        <echo message="Downloaded percona toolkit in: ${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/" />
                                     </target>
                                 </configuration>
                             </execution>
