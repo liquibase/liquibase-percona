@@ -37,7 +37,7 @@
         <java.version>1.6</java.version>
         <liquibase.version>3.5.4</liquibase.version>
         <mysql.version>5.1.45</mysql.version>
-        <percona.toolkit.version>2.2.20</percona.toolkit.version>
+        <percona.toolkit.version>3.0.7</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--
