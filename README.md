@@ -298,6 +298,12 @@ The extension supports the following java system properties:
     `java.sql.Connection` (if that fails) or from the default `liquibase.properties` file. If this property is set,
     then it is used for the password when executing `pt-online-schema-change`.
 
+*   `liquibase.percona.path`: Path to the percona toolkit directory, where the tool
+    `pt-online-schema-change` is installed. **Default: <empty>**.
+    Since liquibase-percona 1.4.1.
+    With this property, you can select a specific toolkit installation. If this property is not set, then the
+    toolkit will be searched on the `PATH`.
+
 
 You can set these properties by using the standard java `-D` option:
 
@@ -315,6 +321,7 @@ integration test.
 ### Version 1.4.1 (?????)
 
 *   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
+*   Fixed [#17](https://github.com/adangel/liquibase-percona/issues/17): Include Percona Toolkit into integration test
 *   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs
 *   Fixed [#19](https://github.com/adangel/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
 
@@ -440,20 +447,22 @@ You'll find the jar-file in the `target/` subdirectory.
 
 ### Integration testing
 
-In order to execute the integration tests, run `mvn clean verify -Prun-its`.
+In order to execute the integration tests, run `./mvnw clean verify -Prun-its`.
 
 Please note, that you'll need:
 
 1.  [docker](https://www.docker.com/).
     During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) will be started.
     Under debian, execute `sudo apt-get install docker.io`.
-2.  [percona toolkit](https://www.percona.com/downloads/percona-toolkit/).
-    The command line tools need to be available on your `PATH`.
-    The toolkit requires perl with mysql dbi libraries. Under debian, execute `sudo apt-get install libdbd-mysql-perl`.
+2.  Internet access to download the docker image the first time. And to download
+    [percona toolkit](https://www.percona.com/downloads/percona-toolkit/). The build system will add the downloaded
+    toolkit automatically to the `PATH`.
+3.  The percona toolkit requires perl with mysql dbi libraries.
+    Under debian, execute `sudo apt-get install libdbd-mysql-perl`.
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 
-To run a single integration test, execute maven like this: `mvn verify -Prun-its -Dinvoker.test=addColumn*,dropColumn`
+To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=addColumn*,dropColumn`
 
 ## Common Problems
 

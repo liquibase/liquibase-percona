@@ -37,6 +37,7 @@
         <java.version>1.6</java.version>
         <liquibase.version>3.5.4</liquibase.version>
         <mysql.version>5.1.45</mysql.version>
+        <percona.toolkit.version>2.2.20</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--
@@ -238,6 +239,43 @@
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>download-percona-toolkit</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/percona-toolkit"/>
+
+                                        <exec executable="${project.basedir}/src/main/scripts/determine-latest-toolkit.sh"
+                                              dir="${project.build.directory}/percona-toolkit"
+                                              outputproperty="LATEST" />
+                                        <echo message="Determined latest version of percona toolkit: ${LATEST}" />
+
+                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh"
+                                              dir="${project.build.directory}/percona-toolkit">
+                                            <arg value="${LATEST}" />
+                                        </exec>
+                                        <move file="${project.build.directory}/percona-toolkit/percona-toolkit-${LATEST}"
+                                              tofile="${project.build.directory}/percona-toolkit/percona-toolkit-LATEST"/>
+                                        <echo message="The latest percona toolkit is available in: ${project.build.directory}/percona-toolkit/percona-toolkit-LATEST/" />
+
+                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh"
+                                              dir="${project.build.directory}/percona-toolkit">
+                                            <arg value="${percona.toolkit.version}" />
+                                        </exec>
+                                        <echo message="Downloaded percona toolkit in: ${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
                         <version>0.24.0</version>
@@ -308,6 +346,9 @@
                                 <config_password>${config_password}</config_password>
                                 <config_dbname>${config_dbname}</config_dbname>
                             </scriptVariables>
+                            <environmentVariables>
+                                <PATH>${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/bin:${env.PATH}</PATH>
+                            </environmentVariables>
                         </configuration>
                         <executions>
                             <execution>

@@ -14,6 +14,7 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,7 +110,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
      */
     List<String> buildCommand(Database database) {
         List<String> commands = new ArrayList<String>();
-        commands.add(PTOnlineSchemaChangeStatement.COMMAND);
+        commands.add(getFullToolkitPath());
 
         if (!Configuration.getAdditionalOptions().isEmpty()) {
             commands.addAll(tokenize(Configuration.getAdditionalOptions()));
@@ -277,8 +278,20 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         return available.booleanValue();
     }
 
+    private static String getFullToolkitPath() {
+        String toolkitPath = Configuration.getPerconaToolkitPath();
+        if (toolkitPath.isEmpty()) {
+            return COMMAND;
+        }
+        if (toolkitPath.endsWith(File.separator)) {
+            return toolkitPath + COMMAND;
+        } else {
+            return toolkitPath + File.separator + COMMAND;
+        }
+    }
+
     private static void checkIsAvailableAndGetVersion() {
-        ProcessBuilder pb = new ProcessBuilder(COMMAND, "--version");
+        ProcessBuilder pb = new ProcessBuilder(getFullToolkitPath(), "--version");
         pb.redirectErrorStream(true);
         Process p = null;
         try {
