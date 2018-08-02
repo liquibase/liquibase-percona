@@ -121,6 +121,28 @@ public class DatabaseConnectionUtil {
         return wrappedConnection;
     }
 
+    private Connection getDelegatedDbcpConnection(Connection con) {
+        Class<?> delegatingConnectionClass = loadClass("org.apache.commons.dbcp.DelegatingConnection", con.getClass().getClassLoader());
+        if (delegatingConnectionClass != null && delegatingConnectionClass.isInstance(con)) {
+            try {
+                Method getInnermostDelegateMethod = delegatingConnectionClass.getDeclaredMethod("getInnermostDelegateInternal");
+                getInnermostDelegateMethod.setAccessible(true);
+                return (Connection) getInnermostDelegateMethod.invoke(con);
+            } catch (NoSuchMethodException e) {
+                log.warning("Couldn't determine the password from JdbcConnection", e);
+            } catch (SecurityException e) {
+                log.warning("Couldn't determine the password from JdbcConnection", e);
+            } catch (IllegalAccessException e) {
+                log.warning("Couldn't determine the password from JdbcConnection", e);
+            } catch (IllegalArgumentException e) {
+                log.warning("Couldn't determine the password from JdbcConnection", e);
+            } catch (InvocationTargetException e) {
+                log.warning("Couldn't determine the password from JdbcConnection", e);
+            }
+        }
+        return con;
+    }
+
     public String getPassword() {
         String liquibasePassword = Configuration.getLiquibasePassword();
         if (liquibasePassword != null) {
@@ -128,8 +150,9 @@ public class DatabaseConnectionUtil {
         }
 
         if (connection instanceof JdbcConnection) {
-            Connection wrappedConnection = ((JdbcConnection) connection).getWrappedConnection();
-            Connection jdbcCon = getUnderlyingJdbcConnectionFromProxy(wrappedConnection);
+            Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
+            jdbcCon = getDelegatedDbcpConnection(jdbcCon);
+            jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
 
             try {
                 Class<?> connectionImplClass = null;
