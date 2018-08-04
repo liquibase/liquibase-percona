@@ -14,9 +14,20 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ReflectionUtils {
+
+    public static Class<?> findClass(ClassLoader loader, String ... names) {
+        for (String clazzName : names) {
+            Class<?> clazz = loadClass(clazzName, loader);
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
+    }
 
     public static Class<?> loadClass(String name, ClassLoader loader) {
         try {
@@ -53,5 +64,14 @@ public class ReflectionUtils {
         } catch (NoSuchMethodException e) {
             return clazz.getDeclaredMethod(name);
         }
+    }
+
+    public static <T> T readField(Class<?> clazz, Object instance, String name) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field field = clazz.getDeclaredField(name);
+        field.setAccessible(true);
+
+        @SuppressWarnings("unchecked")
+        T result = (T) field.get(instance);
+        return result;
     }
 }

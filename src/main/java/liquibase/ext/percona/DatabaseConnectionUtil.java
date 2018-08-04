@@ -1,9 +1,5 @@
 package liquibase.ext.percona;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +13,11 @@ import java.io.InputStream;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.lang.reflect.Field;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
@@ -126,15 +126,11 @@ public class DatabaseConnectionUtil {
                 jdbcCon = getDelegatedDbcp2Connection(jdbcCon);
                 jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
 
-                Class<?> connectionImplClass = null;
 
-                // MySQL Connector 5.1.38
-                connectionImplClass = ReflectionUtils.loadClass("com.mysql.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
-
-                // MySQL Connector 6.0.4
-                if (connectionImplClass == null) {
-                    connectionImplClass = ReflectionUtils.loadClass("com.mysql.cj.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
-                }
+                Class<?> connectionImplClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "com.mysql.jdbc.ConnectionImpl",   // MySQL Connector 5.1.38: com.mysql.jdbc.ConnectionImpl
+                        "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 6.0.4: com.mysql.cj.jdbc.ConnectionImpl
+                    );
 
                 // Unknown MySQL Connector version?
                 if (connectionImplClass == null) {
@@ -146,9 +142,7 @@ public class DatabaseConnectionUtil {
                 }
 
                 // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
-                Field propsField = connectionImplClass.getDeclaredField("props");
-                propsField.setAccessible(true);
-                Properties props = (Properties) propsField.get(jdbcCon);
+                Properties props = ReflectionUtils.readField(connectionImplClass, jdbcCon, "props");
                 String password = props.getProperty(PASSWORD_PROPERTY_NAME);
                 if (password != null && !password.trim().isEmpty()) {
                     return password;
