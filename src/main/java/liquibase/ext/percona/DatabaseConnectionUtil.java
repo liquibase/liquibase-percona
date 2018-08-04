@@ -107,6 +107,12 @@ public class DatabaseConnectionUtil {
         return result != null ? result : con;
     }
 
+    private Connection getDelegatedDbcp2Connection(Connection con) {
+        Connection result = ReflectionUtils.invokeMethod("org.apache.commons.dbcp2.DelegatingConnection",
+                con, "getInnermostDelegateInternal");
+        return result != null ? result : con;
+    }
+
     public String getPassword() {
         String liquibasePassword = Configuration.getLiquibasePassword();
         if (liquibasePassword != null) {
@@ -117,6 +123,7 @@ public class DatabaseConnectionUtil {
             try {
                 Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
                 jdbcCon = getDelegatedDbcpConnection(jdbcCon);
+                jdbcCon = getDelegatedDbcp2Connection(jdbcCon);
                 jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
 
                 Class<?> connectionImplClass = null;
