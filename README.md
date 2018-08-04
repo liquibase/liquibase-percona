@@ -325,6 +325,7 @@ integration test.
 *   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs
 *   Fixed [#19](https://github.com/adangel/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
 *   Fixed [#21](https://github.com/adangel/liquibase-percona/issues/21): Couldn't determine password: JdbcConnection is unsupported: dbcp.PoolingDataSource$PoolGuardConnectionWrapper
+*   Fixed [#23](https://github.com/adangel/liquibase-percona/pull/23): Add support for dbcp2
 
 ### Version 1.4.0 (2017-07-21)
 
