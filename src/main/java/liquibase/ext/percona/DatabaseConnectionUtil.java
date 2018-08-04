@@ -19,8 +19,6 @@ import java.io.InputStream;
  */
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -77,14 +75,6 @@ public class DatabaseConnectionUtil {
         return connectionUserName;
     }
 
-    private static Class<?> loadClass(String name, ClassLoader loader) {
-        try {
-            return loader.loadClass(name);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-
     /**
      * Unwraps the underlying jdbc connection from a tomcat-jdbc pooled connection.
      * @param wrappedConnection the proxy
@@ -93,25 +83,15 @@ public class DatabaseConnectionUtil {
     private Connection getUnderlyingJdbcConnectionFromProxy(Connection wrappedConnection) {
         if (Proxy.isProxyClass(wrappedConnection.getClass())) {
             InvocationHandler invocationHandler = Proxy.getInvocationHandler(wrappedConnection);
-            Class<?> pooledConnectionClass = loadClass("org.apache.tomcat.jdbc.pool.PooledConnection", invocationHandler.getClass().getClassLoader());
+            Class<?> pooledConnectionClass = ReflectionUtils.loadClass("org.apache.tomcat.jdbc.pool.PooledConnection", invocationHandler.getClass().getClassLoader());
 
             if (pooledConnectionClass != null) {
                 try {
                     Object pooledConnectionInstance = wrappedConnection.unwrap(pooledConnectionClass);
-                    Method getJdbcConnectionMethod = pooledConnectionClass.getMethod("getConnection");
-                    return (Connection) getJdbcConnectionMethod.invoke(pooledConnectionInstance);
-                } catch (NoSuchMethodException e) {
-                    log.warning("Couldn't determine the password from JdbcConnection", e);
-                } catch (SecurityException e) {
-                    log.warning("Couldn't determine the password from JdbcConnection", e);
-                } catch (IllegalAccessException e) {
-                    log.warning("Couldn't determine the password from JdbcConnection", e);
-                } catch (IllegalArgumentException e) {
-                    log.warning("Couldn't determine the password from JdbcConnection", e);
-                } catch (InvocationTargetException e) {
-                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                    Connection result = ReflectionUtils.invokeMethod(pooledConnectionClass, pooledConnectionInstance, "getConnection");
+                    return result != null ? result : wrappedConnection;
                 } catch (SQLException e) {
-                    log.warning("Couldn't determine the password from JdbcConnection", e);
+                    throw new RuntimeException(e);
                 }
             } else {
                 log.warning("Couldn't determine the password from JdbcConnection. "
@@ -122,25 +102,9 @@ public class DatabaseConnectionUtil {
     }
 
     private Connection getDelegatedDbcpConnection(Connection con) {
-        Class<?> delegatingConnectionClass = loadClass("org.apache.commons.dbcp.DelegatingConnection", con.getClass().getClassLoader());
-        if (delegatingConnectionClass != null && delegatingConnectionClass.isInstance(con)) {
-            try {
-                Method getInnermostDelegateMethod = delegatingConnectionClass.getDeclaredMethod("getInnermostDelegateInternal");
-                getInnermostDelegateMethod.setAccessible(true);
-                return (Connection) getInnermostDelegateMethod.invoke(con);
-            } catch (NoSuchMethodException e) {
-                log.warning("Couldn't determine the password from JdbcConnection", e);
-            } catch (SecurityException e) {
-                log.warning("Couldn't determine the password from JdbcConnection", e);
-            } catch (IllegalAccessException e) {
-                log.warning("Couldn't determine the password from JdbcConnection", e);
-            } catch (IllegalArgumentException e) {
-                log.warning("Couldn't determine the password from JdbcConnection", e);
-            } catch (InvocationTargetException e) {
-                log.warning("Couldn't determine the password from JdbcConnection", e);
-            }
-        }
-        return con;
+        Connection result = ReflectionUtils.invokeMethod("org.apache.commons.dbcp.DelegatingConnection",
+                con, "getInnermostDelegateInternal");
+        return result != null ? result : con;
     }
 
     public String getPassword() {
@@ -150,19 +114,19 @@ public class DatabaseConnectionUtil {
         }
 
         if (connection instanceof JdbcConnection) {
-            Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
-            jdbcCon = getDelegatedDbcpConnection(jdbcCon);
-            jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
-
             try {
+                Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
+                jdbcCon = getDelegatedDbcpConnection(jdbcCon);
+                jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
+
                 Class<?> connectionImplClass = null;
 
                 // MySQL Connector 5.1.38
-                connectionImplClass = loadClass("com.mysql.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
+                connectionImplClass = ReflectionUtils.loadClass("com.mysql.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
 
                 // MySQL Connector 6.0.4
                 if (connectionImplClass == null) {
-                    connectionImplClass = loadClass("com.mysql.cj.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
+                    connectionImplClass = ReflectionUtils.loadClass("com.mysql.cj.jdbc.ConnectionImpl", jdbcCon.getClass().getClassLoader());
                 }
 
                 // Unknown MySQL Connector version?
