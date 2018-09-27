@@ -97,7 +97,13 @@ public class DatabaseConnectionUtilTest {
 
     private static void assumeJava8() {
         String javaVersion = System.getProperty("java.version");
-        int majorJava = Integer.parseInt(javaVersion.split("\\.")[1]);
+        String[] versionComponents = javaVersion.split("\\.");
+        int majorJava = 0;
+        if ("1".equals(versionComponents[0])) {
+            majorJava = Integer.parseInt(versionComponents[1]);
+        } else {
+            majorJava = Integer.parseInt(versionComponents[0]);
+        }
         Assume.assumeTrue("Java Runtime too old - for this test at least java8 is required", majorJava >= 8);
     }
 
