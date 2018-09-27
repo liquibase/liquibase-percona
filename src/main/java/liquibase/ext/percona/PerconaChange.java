@@ -8,6 +8,8 @@ public interface PerconaChange {
 
     String getChangeSkipName();
 
+    String getTargetDatabaseName();
+
     String getTargetTableName();
 
     String generateAlterStatement(Database database);

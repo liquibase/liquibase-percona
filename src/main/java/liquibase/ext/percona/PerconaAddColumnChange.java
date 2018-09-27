@@ -166,6 +166,7 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
                 dropChange.setTableName(getTableName());
                 dropChange.setColumnName(aColumn.getName());
                 dropChange.setSchemaName(getSchemaName());
+                dropChange.setCatalogName(getCatalogName());
                 inverses.add(dropChange);
             }
 
@@ -173,6 +174,7 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
             PerconaDropColumnChange inverse = new PerconaDropColumnChange();
             inverse.setSchemaName(getSchemaName());
             inverse.setColumnName(aColumn.getName());
+            inverse.setCatalogName(getCatalogName());
             inverse.setTableName(getTableName());
             inverses.add(inverse);
         }
@@ -197,5 +199,10 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
     @Override
     public String getTargetTableName() {
         return getTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
     }
 }

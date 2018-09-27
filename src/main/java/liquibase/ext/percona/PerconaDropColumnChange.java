@@ -87,4 +87,9 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
     public String getTargetTableName() {
         return getTableName();
     }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
 }

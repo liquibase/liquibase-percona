@@ -70,4 +70,9 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
     public String getTargetTableName() {
         return getTableName();
     }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
 }

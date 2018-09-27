@@ -44,6 +44,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         column.setType("INT");
         change.addColumn(column);
         change.setTableName("person");
+        change.setCatalogName("testdb");
     }
 
     @Test

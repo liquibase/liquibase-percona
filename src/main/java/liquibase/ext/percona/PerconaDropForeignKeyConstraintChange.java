@@ -63,4 +63,9 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     public String getTargetTableName() {
         return getBaseTableName();
     }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getBaseTableCatalogName();
+    }
 }

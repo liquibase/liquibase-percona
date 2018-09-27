@@ -343,6 +343,7 @@ The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
 *   Upgraded liquibase to 3.5.5
 *   Verified compatibility to liquibase 3.6.2
 *   Fixed [#15](https://github.com/adangel/liquibase-percona/issues/15): Unique key constraint cannot be added
+*   Fixed [#22](https://github.com/adangel/liquibase-percona/issues/22): Cross database bug
 
 ### Version 1.4.1 (2018-09-27)
 

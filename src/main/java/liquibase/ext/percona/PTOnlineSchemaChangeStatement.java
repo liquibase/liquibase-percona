@@ -46,10 +46,12 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
 
     private static Logger log = LogFactory.getInstance().getLog();
 
+    private String databaseName;
     private String tableName;
     private String alterStatement;
 
-    public PTOnlineSchemaChangeStatement(String tableName, String alterStatement) {
+    public PTOnlineSchemaChangeStatement(String databaseName, String tableName, String alterStatement) {
+        this.databaseName = databaseName;
         this.tableName = tableName;
         this.alterStatement = alterStatement;
     }
@@ -132,7 +134,11 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         }
 
         commands.add("--execute");
-        commands.add("D=" + database.getLiquibaseSchemaName() + ",t=" + tableName);
+        if (databaseName != null) {
+            commands.add("D=" + databaseName + ",t=" + tableName);
+        } else {
+            commands.add("D=" + database.getLiquibaseSchemaName() + ",t=" + tableName);
+        }
         return commands;
     }
 
@@ -230,7 +236,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     @Override
     public String toString() {
         return PTOnlineSchemaChangeStatement.class.getSimpleName()
-                + "[table: " + tableName + ", alterStatement: " + alterStatement + "]";
+                + "[database: " + databaseName + ", table: " + tableName + ", alterStatement: " + alterStatement + "]";
     }
 
     private static class IOThread extends Thread {

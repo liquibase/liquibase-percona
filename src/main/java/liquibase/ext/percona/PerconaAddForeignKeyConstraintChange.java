@@ -86,6 +86,7 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
     protected Change[] createInverses() {
         // that's the percona drop foreign key constraint change
         PerconaDropForeignKeyConstraintChange inverse = new PerconaDropForeignKeyConstraintChange();
+        inverse.setBaseTableCatalogName(getBaseTableCatalogName());
         inverse.setBaseTableSchemaName(getBaseTableSchemaName());
         inverse.setBaseTableName(getBaseTableName());
         inverse.setConstraintName(getConstraintName());
@@ -110,5 +111,10 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
     @Override
     public String getTargetTableName() {
         return getBaseTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getBaseTableCatalogName();
     }
 }
