@@ -15,6 +15,7 @@
     </changeSet>
 
     <!-- Special handling of referenced table name needed, see https://bugs.launchpad.net/percona-toolkit/+bug/1393961 -->
+    <!-- https://jira.percona.com/browse/PT-381 -->
     <changeSet id="2" author="Alice">
         <addForeignKeyConstraint constraintName="fk_person_parent"
             referencedTableName="person" referencedColumnNames="id"

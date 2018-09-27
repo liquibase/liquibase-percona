@@ -181,4 +181,22 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         setTargetTableName("person");
         assertPerconaChange("ADD CONSTRAINT fk_person_parent FOREIGN KEY (parent) REFERENCES _person_new (id)", change.generateStatements(getDatabase()));
     }
+
+    @Test
+    public void testSelfReferencingForeignKeyPT3() {
+        PerconaAddForeignKeyConstraintChange change = new PerconaAddForeignKeyConstraintChange();
+        change.setBaseTableName("person");
+        change.setBaseColumnNames("parent");
+        change.setConstraintName("fk_person_parent");
+        change.setReferencedColumnNames("id");
+        change.setReferencedTableName("person");
+
+        PTOnlineSchemaChangeStatement.perconaToolkitVersion = new PerconaToolkitVersion("3.0.12");
+        PerconaToolkitVersion version = PTOnlineSchemaChangeStatement.getVersion();
+        assertEquals("3.0.12", version.toString());
+        assertTrue(PTOnlineSchemaChangeStatement.available);
+
+        setTargetTableName("person");
+        assertPerconaChange("ADD CONSTRAINT fk_person_parent FOREIGN KEY (parent) REFERENCES _person_new (id)", change.generateStatements(getDatabase()));
+    }
 }

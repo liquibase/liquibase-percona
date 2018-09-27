@@ -121,17 +121,21 @@ public class PerconaChangeUtil {
      * Since this bug is scheduled to be fixed with pt 2.2.21, the workaround will be applied
      * only for earlier versions.
      *
+     * The bug appears also with pt 3+.
+     *
      * @param baseTableName the table name, in which the foreign key will be added. This is the table, that
      *                      pt-osc temporarily copies.
      * @param referencedTableName the table referenced by the foreign key
      * @return the referencedTableName, adjusted if needed.
      *
      * @see <a href="https://bugs.launchpad.net/percona-toolkit/+bug/1393961">pt-online-schema-change fails with self-referential foreign key</a>
+     * @see <a href="https://jira.percona.com/browse/PT-381">LP #1393961: pt-online-schema-change fails with self-referential foreign key</a>
      */
     public static String resolveReferencedPerconaTableName(String baseTableName, String referencedTableName) {
         if (baseTableName != null && baseTableName.equals(referencedTableName)
-                && !PTOnlineSchemaChangeStatement.getVersion().isGreaterOrEqualThan("2.2.21")) {
-            log.warning("Applying workaround for pt-osc bug https://bugs.launchpad.net/percona-toolkit/+bug/1393961 for table " + baseTableName);
+                && (!PTOnlineSchemaChangeStatement.getVersion().isGreaterOrEqualThan("2.2.21")
+                        || PTOnlineSchemaChangeStatement.getVersion().isGreaterOrEqualThan("3.0.0"))) {
+            log.warning("Applying workaround for pt-osc bug https://jira.percona.com/browse/PT-381 for table " + baseTableName);
             return "_" + referencedTableName + "_new";
         }
 
