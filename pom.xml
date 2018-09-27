@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <java.version>1.6</java.version>
-        <liquibase.version>3.5.4</liquibase.version>
+        <liquibase.version>3.5.5</liquibase.version>
         <mysql.version>5.1.45</mysql.version>
         <percona.toolkit.version>3.0.12</percona.toolkit.version>
 
