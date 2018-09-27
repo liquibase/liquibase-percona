@@ -26,7 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.4.1 (?????)](#version-141-)
+    *   [Version 1.4.1 (2018-09-27)](#version-141-2018-09-27)
     *   [Version 1.4.0 (2017-07-21)](#version-140-2017-07-21)
     *   [Version 1.3.1 (2017-07-21)](#version-131-2017-07-21)
     *   [Version 1.3.0 (2016-12-18)](#version-130-2016-12-18)
@@ -272,13 +272,13 @@ The extension supports the following java system properties:
     won't be used.
     If this property is set to `true`, then no such SQL statements will be output into the migration file.
 
-*   `liquibase.percona.skipChanges`: comma separated list of changes. **Default: <empty>**.
+*   `liquibase.percona.skipChanges`: comma separated list of changes. **Default: &lt;empty&gt;**.
     This option can be used in order to selectively disable one or more changes. If a change is disabled, then
     the change will be executed by the default liquibase core implementation and *percona toolkit won't be used*.
     By default, this property is empty, so that all supported changes are executed using the percona toolkit.
     Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
 
-*   `liquibase.percona.options`: String of options. **Default: <empty>**. Since liquibase-percona 1.2.1
+*   `liquibase.percona.options`: String of options. **Default: &lt;empty&gt;**. Since liquibase-percona 1.2.1
     This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
     be used in complication replication setup to change the way slaves are detected and how their state is used.
     You can also specify a percona configuration file via `--config file.conf`,
@@ -292,14 +292,14 @@ The extension supports the following java system properties:
     Settings this property to `false` allows to control for each single change, whether to use Percona Toolkit
     or not.
 
-*   `liquibase.password`: String with the password needed to connect to the database. **Default: <empty>**.
+*   `liquibase.password`: String with the password needed to connect to the database. **Default: &lt;empty&gt;**.
     Since liquibase-percona 1.4.0.
     With this property, you can shortcut the automatic detection of the password from the underlying
     `java.sql.Connection` (if that fails) or from the default `liquibase.properties` file. If this property is set,
     then it is used for the password when executing `pt-online-schema-change`.
 
 *   `liquibase.percona.path`: Path to the percona toolkit directory, where the tool
-    `pt-online-schema-change` is installed. **Default: <empty>**.
+    `pt-online-schema-change` is installed. **Default: &lt;empty&gt;**.
     Since liquibase-percona 1.4.1.
     With this property, you can select a specific toolkit installation. If this property is not set, then the
     toolkit will be searched on the `PATH`.
@@ -318,7 +318,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.4.1 (?????)
+### Version 1.4.1 (2018-09-27)
 
 *   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
 *   Fixed [#17](https://github.com/adangel/liquibase-percona/issues/17): Include Percona Toolkit into integration test
@@ -379,7 +379,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.4.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.4.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -389,7 +389,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </dependency>
 
 
@@ -417,12 +417,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.4.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.4.2-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.4.2-SNAPSHOT</version>
     </dependency>
 
 
