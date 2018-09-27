@@ -26,7 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.4.2 (????-??-??)](#version-142---)
+    *   [Version 1.5.0 (????-??-??)](#version-150---)
     *   [Version 1.4.1 (2018-09-27)](#version-141-2018-09-27)
     *   [Version 1.4.0 (2017-07-21)](#version-140-2017-07-21)
     *   [Version 1.3.1 (2017-07-21)](#version-131-2017-07-21)
@@ -66,6 +66,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
 * Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1, 1.4.0)
 * Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
+* Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.5.0). Percona Toolkit 3.0.12.
 
 
 ## Supported Changes and examples
@@ -126,6 +127,11 @@ Corresponding command:
 
     pt-online-schema-change --alter="ADD CONSTRAINT uq_id_name UNIQUE (id, name)" ...
 
+**Note:** pt-online-schema-change is executed with the option `--nocheck-unique-key-change`. This enables to
+add a unique index, but can cause data loss, since duplicated rows are ignored.
+See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
+for more information.
+
 
 ### CreateIndex
 
@@ -144,6 +150,11 @@ Example:
 Corresponding command:
 
     pt-online-schema-change --alter="ADD UNIQUE INDEX emailIdx (email)" ...
+
+**Note:** pt-online-schema-change is executed with the option `--nocheck-unique-key-change`. This enables to
+add a unique index, but can cause data loss, since duplicated rows are ignored.
+See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
+for more information.
 
 
 ### DropColumn
@@ -303,7 +314,8 @@ The extension supports the following java system properties:
     `pt-online-schema-change` is installed. **Default: &lt;empty&gt;**.
     Since liquibase-percona 1.4.1.
     With this property, you can select a specific toolkit installation. If this property is not set, then the
-    toolkit will be searched on the `PATH`.
+    toolkit will be searched on the `PATH`. You need to specify the `bin` subfolder of the Percona Toolkit
+    distribution.
 
 
 You can set these properties by using the standard java `-D` option:
@@ -319,7 +331,16 @@ integration test.
 
 ## Changelog
 
-### Version 1.4.2 (????-??-??)
+### Version 1.5.0 (????-??-??)
+
+`pt-online-schema-change` is executed now with the option `--nocheck-unique-key-change`.
+This enables to add unique indexes, but can cause data loss, since duplicated rows are ignored.
+See [Percona Toolkit Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id7)
+for more information.
+
+The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
+
+*   Fixed [#15](https://github.com/adangel/liquibase-percona/issues/15): Unique key constraint cannot be added
 
 ### Version 1.4.1 (2018-09-27)
 
@@ -329,6 +350,7 @@ integration test.
 *   Fixed [#19](https://github.com/adangel/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
 *   Fixed [#21](https://github.com/adangel/liquibase-percona/issues/21): Couldn't determine password: JdbcConnection is unsupported: dbcp.PoolingDataSource$PoolGuardConnectionWrapper
 *   Fixed [#23](https://github.com/adangel/liquibase-percona/pull/23): Add support for dbcp2
+*   Added new system property `liquibase.percona.path` to specify the path where Percona Toolkit is installed.
 
 ### Version 1.4.0 (2017-07-21)
 
@@ -420,12 +442,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.4.2-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.0-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.5.0-SNAPSHOT</version>
     </dependency>
 
 

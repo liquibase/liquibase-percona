@@ -52,6 +52,8 @@ try {
     s = con.createStatement();
     r = s.executeQuery("SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA='${config_dbname}' AND TABLE_NAME='test_table' ORDER BY CONSTRAINT_NAME ASC")
     assert r.first()
+    assertColumn(r, "fk_test_column", "FOREIGN KEY")
+    assert r.next()
     assertColumn(r, "fk_test_column4", "FOREIGN KEY")
     assert r.next()
     assertColumn(r, "PRIMARY", "PRIMARY KEY")
@@ -59,8 +61,6 @@ try {
     assertColumn(r, "uc_test_column", "UNIQUE")
     assert r.next()
     assertColumn(r, "uc_test_column3", "UNIQUE")
-    assert r.next()
-    assertColumn(r, "_fk_test_column", "FOREIGN KEY")
     assert r.next()
     assertColumn(r, "_fk_test_column3", "FOREIGN KEY")
     r.close()

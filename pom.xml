@@ -4,7 +4,7 @@
     <groupId>com.github.adangel.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
     <name>Liquibase Percona Extension</name>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
 
@@ -37,7 +37,7 @@
         <java.version>1.6</java.version>
         <liquibase.version>3.5.4</liquibase.version>
         <mysql.version>5.1.45</mysql.version>
-        <percona.toolkit.version>2.2.20</percona.toolkit.version>
+        <percona.toolkit.version>3.0.12</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--

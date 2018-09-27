@@ -104,6 +104,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -119,6 +120,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -135,6 +137,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
     }
@@ -149,6 +152,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
         Assert.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
                 + "--alter-foreign-keys-method=auto "
+                + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
     }
@@ -172,6 +176,24 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
 
         PerconaToolkitVersion version = PTOnlineSchemaChangeStatement.getVersion();
         assertEquals("0.0.0", version.toString());
+        assertTrue(PTOnlineSchemaChangeStatement.available);
+
+        setTargetTableName("person");
+        assertPerconaChange("ADD CONSTRAINT fk_person_parent FOREIGN KEY (parent) REFERENCES _person_new (id)", change.generateStatements(getDatabase()));
+    }
+
+    @Test
+    public void testSelfReferencingForeignKeyPT3() {
+        PerconaAddForeignKeyConstraintChange change = new PerconaAddForeignKeyConstraintChange();
+        change.setBaseTableName("person");
+        change.setBaseColumnNames("parent");
+        change.setConstraintName("fk_person_parent");
+        change.setReferencedColumnNames("id");
+        change.setReferencedTableName("person");
+
+        PTOnlineSchemaChangeStatement.perconaToolkitVersion = new PerconaToolkitVersion("3.0.12");
+        PerconaToolkitVersion version = PTOnlineSchemaChangeStatement.getVersion();
+        assertEquals("3.0.12", version.toString());
         assertTrue(PTOnlineSchemaChangeStatement.available);
 
         setTargetTableName("person");
