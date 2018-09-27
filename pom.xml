@@ -4,7 +4,7 @@
     <groupId>com.github.adangel.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
     <name>Liquibase Percona Extension</name>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
 
@@ -19,7 +19,7 @@
     <scm>
         <connection>scm:git:http://github.com/adangel/liquibase-percona.git</connection>
         <url>https://github.com/adangel/liquibase-percona</url>
-      <tag>HEAD</tag>
+      <tag>liquibase-percona-1.4.1</tag>
   </scm>
 
     <developers>
@@ -262,23 +262,18 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${project.build.directory}/percona-toolkit"/>
+                                        <mkdir dir="${project.build.directory}/percona-toolkit" />
 
-                                        <exec executable="${project.basedir}/src/main/scripts/determine-latest-toolkit.sh"
-                                              dir="${project.build.directory}/percona-toolkit"
-                                              outputproperty="LATEST" />
+                                        <exec executable="${project.basedir}/src/main/scripts/determine-latest-toolkit.sh" dir="${project.build.directory}/percona-toolkit" outputproperty="LATEST" />
                                         <echo message="Determined latest version of percona toolkit: ${LATEST}" />
 
-                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh"
-                                              dir="${project.build.directory}/percona-toolkit">
+                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh" dir="${project.build.directory}/percona-toolkit">
                                             <arg value="${LATEST}" />
                                         </exec>
-                                        <move file="${project.build.directory}/percona-toolkit/percona-toolkit-${LATEST}"
-                                              tofile="${project.build.directory}/percona-toolkit/percona-toolkit-LATEST"/>
+                                        <move file="${project.build.directory}/percona-toolkit/percona-toolkit-${LATEST}" tofile="${project.build.directory}/percona-toolkit/percona-toolkit-LATEST" />
                                         <echo message="The latest percona toolkit is available in: ${project.build.directory}/percona-toolkit/percona-toolkit-LATEST/" />
 
-                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh"
-                                              dir="${project.build.directory}/percona-toolkit">
+                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh" dir="${project.build.directory}/percona-toolkit">
                                             <arg value="${percona.toolkit.version}" />
                                         </exec>
                                         <echo message="Downloaded percona toolkit in: ${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/" />
