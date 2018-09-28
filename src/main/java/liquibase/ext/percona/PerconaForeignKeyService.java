@@ -14,17 +14,20 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
+import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.executor.Executor;
-import liquibase.executor.ExecutorService;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
-import liquibase.statement.core.FindForeignKeyConstraintsStatement;
+import liquibase.snapshot.InvalidExampleException;
+import liquibase.snapshot.SnapshotControl;
+import liquibase.snapshot.SnapshotGeneratorFactory;
+import liquibase.structure.core.ForeignKey;
+import liquibase.structure.core.Table;
 
 public class PerconaForeignKeyService {
     private static PerconaForeignKeyService instance = new PerconaForeignKeyService();
@@ -66,25 +69,29 @@ public class PerconaForeignKeyService {
     private String findForeignKey(Database database, PerconaDropForeignKeyConstraintChange change) {
         log.debug("Searching for all foreign keys in table " + change.getBaseTableName());
 
-        Executor executor = ExecutorService.getInstance().getExecutor(database);
-        FindForeignKeyConstraintsStatement sql = new FindForeignKeyConstraintsStatement(change.getBaseTableCatalogName(),
-                change.getBaseTableSchemaName(), change.getBaseTableName());
         try {
-            List<Map<String, ?>> results = executor.queryForList(sql);
-            for (Map<String, ?> result : results) {
-                String baseTableName =
-                        (String) result.get(FindForeignKeyConstraintsStatement.RESULT_COLUMN_BASE_TABLE_NAME);
-                String constraintName =
-                        (String) result.get(FindForeignKeyConstraintsStatement.RESULT_COLUMN_CONSTRAINT_NAME);
-                log.debug("Found FK: " + baseTableName + "." + constraintName);
+            SnapshotControl control = new SnapshotControl(database);
+            control.getTypesToInclude().add(ForeignKey.class);
+            CatalogAndSchema catalogAndSchema = new CatalogAndSchema(change.getBaseTableCatalogName(), change.getBaseTableSchemaName())
+                    .standardize(database);
+            Table target = SnapshotGeneratorFactory.getInstance().createSnapshot(new Table(catalogAndSchema.getCatalogName(), catalogAndSchema.getSchemaName(),
+                    database.correctObjectName(change.getBaseTableName(), Table.class)), database);
 
-                if (baseTableName.equalsIgnoreCase(change.getBaseTableName())
+            List<ForeignKey> results = (target == null) ? Collections.<ForeignKey> emptyList() : target.getOutgoingForeignKeys();
+            for (ForeignKey fk : results) {
+                Table baseTable = fk.getForeignKeyTable();
+                String constraintName = fk.getName();
+                log.debug("Found FK: " + baseTable.getName() + "." + constraintName);
+
+                if (baseTable.getName().equalsIgnoreCase(change.getBaseTableName())
                     && constraintName.endsWith(change.getConstraintName())) {
                         log.debug("Found current foreign key constraint " + constraintName);
                         return constraintName;
                 }
             }
         } catch (DatabaseException e) {
+            throw new UnexpectedLiquibaseException("Failed to find foreign keys for table: " + change.getBaseTableName(), e);
+        } catch (InvalidExampleException e) {
             throw new UnexpectedLiquibaseException("Failed to find foreign keys for table: " + change.getBaseTableName(), e);
         }
 
