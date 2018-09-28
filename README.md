@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/adangel/liquibase-percona.svg?branch=master)](https://travis-ci.org/adangel/liquibase-percona)
 [<img src="https://opengift.io/static/public/assets/img/logo-gradient.svg" width="100" alt="Donate via opengift.io">](https://opengift.io/project/632/public/)
 
-Extension to support the tool `pt-online-schema-change` from Percona Toolkit.
+Extension to support the tool `pt-online-schema-change` from [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/LATEST/index.html).
 This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
 This allows to perform a non-locking database upgrade.
 
@@ -515,7 +515,10 @@ a highly flexible & unified billing platform.
 ## References
 
 * [Percona](http://www.percona.com/)
+* [Percona Toolkit Latest Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/index.html)
+* [Percone Toolkit on GitHub](https://github.com/percona/percona-toolkit)
 * [Percona Toolkit 3.0 Documentation: pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html)
 * [Percona Toolkit 2.2 Documentation: pt-online-schema-change](http://www.percona.com/doc/percona-toolkit/2.2/pt-online-schema-change.html)
+* [Liquibase on GitHub](https://github.com/liquibase/liquibase)
 * [Liquibase Percona Extension](https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change)
 * [DZone: Avoiding MySQL ALTER Table Downtime](http://java.dzone.com/articles/avoiding-mysql-alter-table)
