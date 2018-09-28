@@ -317,6 +317,10 @@ The extension supports the following java system properties:
     toolkit will be searched on the `PATH`. You need to specify the `bin` subfolder of the Percona Toolkit
     distribution.
 
+*   `liquibase.percona.ptdebug`: true/false. **Default: false**. Since liquibase-percona 1.5.0
+    This option enables the debug output of pt-osc by setting the environment variable `PTDEBUG` before
+    starting pt-osc.
+
 
 You can set these properties by using the standard java `-D` option:
 
