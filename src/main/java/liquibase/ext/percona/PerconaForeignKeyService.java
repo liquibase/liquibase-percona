@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import liquibase.database.Database;
-import liquibase.diff.compare.DatabaseObjectComparatorFactory;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.Executor;
@@ -26,7 +25,6 @@ import liquibase.executor.ExecutorService;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.statement.core.FindForeignKeyConstraintsStatement;
-import liquibase.structure.core.Table;
 
 public class PerconaForeignKeyService {
     private static PerconaForeignKeyService instance = new PerconaForeignKeyService();
@@ -80,7 +78,7 @@ public class PerconaForeignKeyService {
                         (String) result.get(FindForeignKeyConstraintsStatement.RESULT_COLUMN_CONSTRAINT_NAME);
                 log.debug("Found FK: " + baseTableName + "." + constraintName);
 
-                if (DatabaseObjectComparatorFactory.getInstance().isSameObject(new Table().setName(change.getBaseTableName()), new Table().setName(baseTableName), null, database)
+                if (baseTableName.equalsIgnoreCase(change.getBaseTableName())
                     && constraintName.endsWith(change.getConstraintName())) {
                         log.debug("Found current foreign key constraint " + constraintName);
                         return constraintName;
