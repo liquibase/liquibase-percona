@@ -184,6 +184,9 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         log.info("Executing: " + filterCommands(cmndline));
 
         ProcessBuilder pb = new ProcessBuilder(cmndline);
+        if (Configuration.isPerconaToolkitDebug()) {
+            pb.environment().put("PTDEBUG", "1");
+        }
         pb.redirectErrorStream(true);
         Process p = null;
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

@@ -23,6 +23,7 @@ import liquibase.change.Change;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
+import liquibase.exception.DatabaseException;
 import liquibase.executor.Executor;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
@@ -42,12 +43,23 @@ public class PerconaChangeUtil {
      * @param database the database
      * @return <code>true</code> if dry-run is enabled and the statements should *not* be executed.
      */
-    private static boolean isDryRun(Database database) {
+    public static boolean isDryRun(Database database) {
         Executor executor = ExecutorService.getInstance().getExecutor(database);
         if (executor instanceof LoggingExecutor) {
             return true;
         }
         return false;
+    }
+
+    public static boolean isConnected(Database database) {
+        try {
+            if (database.getConnection() != null) {
+                return !database.getConnection().isClosed();
+            }
+            return false;
+        } catch (DatabaseException e) {
+            return false;
+        }
     }
 
     public static SqlStatement[] generateStatements(PerconaChange change,

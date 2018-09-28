@@ -63,13 +63,17 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb",
                 "user@localhost");
         database.setConnection(conn);
-        ExecutorService.getInstance().setExecutor(database, new JdbcExecutor());
+        JdbcExecutor executor = new JdbcExecutor();
+        executor.setDatabase(database);
+        ExecutorService.getInstance().setExecutor(database, executor);
 
         PTOnlineSchemaChangeStatement.available = true;
         PTOnlineSchemaChangeStatement.perconaToolkitVersion = null;
         System.setProperty(Configuration.FAIL_IF_NO_PT, "false");
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
         System.setProperty(Configuration.SKIP_CHANGES, "");
+
+        PerconaForeignKeyService.getInstance().disable();
 
         setupChange(change);
     }

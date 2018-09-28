@@ -35,6 +35,8 @@ public final class Configuration {
      * to just use the <code>PATH</code>.
      */
     public static final String PERCONA_TOOLKIT_PATH = "liquibase.percona.path";
+    /** Enable debug output for pt-osc. */
+    public static final String PERCONA_TOOLKIT_DEBUG = "liquibase.percona.ptdebug";
 
     public static boolean failIfNoPT() {
         return Boolean.getBoolean(FAIL_IF_NO_PT);
@@ -66,5 +68,9 @@ public final class Configuration {
 
     public static String getPerconaToolkitPath() {
         return System.getProperty(PERCONA_TOOLKIT_PATH, "");
+    }
+
+    public static boolean isPerconaToolkitDebug() {
+        return Boolean.parseBoolean(System.getProperty(PERCONA_TOOLKIT_DEBUG, "false"));
     }
 }
