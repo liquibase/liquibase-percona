@@ -64,6 +64,7 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
         // that's the percona drop unique constraint change
         PerconaDropUniqueConstraintChange inverse = new PerconaDropUniqueConstraintChange();
         inverse.setSchemaName(getSchemaName());
+        inverse.setCatalogName(getCatalogName());
         inverse.setTableName(getTableName());
         inverse.setConstraintName(getConstraintName());
 
@@ -87,5 +88,10 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     @Override
     public String getTargetTableName() {
         return getTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
     }
 }

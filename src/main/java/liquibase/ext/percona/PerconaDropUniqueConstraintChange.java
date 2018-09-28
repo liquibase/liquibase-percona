@@ -63,4 +63,9 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
     public String getTargetTableName() {
         return getTableName();
     }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
 }

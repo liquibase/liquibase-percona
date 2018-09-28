@@ -74,4 +74,9 @@ public class PerconaModifyDataTypeChange extends ModifyDataTypeChange implements
     public String getTargetTableName() {
         return getTableName();
     }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
 }

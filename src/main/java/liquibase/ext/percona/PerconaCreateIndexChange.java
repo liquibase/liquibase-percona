@@ -108,4 +108,9 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
     public String getTargetTableName() {
         return getTableName();
     }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
 }
