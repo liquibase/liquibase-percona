@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Alice
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+  - changeSet:
+      id: 2
+      author: Alice
+      changes:
+        - addColumn:
+            tableName: person
+            usePercona: false
+            columns:
+              - column:
+                  name: address
+                  type: varchar(255)

@@ -266,7 +266,12 @@ Example:
 
 This flag exists since liquibase-percona 1.3.0
 
-It is currently only supported by using the YAML format.
+It is supported by using the YAML format and since liquibase 3.6.0, you can use it in XML changesets, too:
+
+    <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/adangel/liquibase-percona" liquibasePercona:usePercona="false">
+        <column name="address" type="varchar(255)"/>
+    </addColumn>
+
 
 ### System Properties
 
@@ -348,6 +353,7 @@ The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
 *   Verified compatibility to liquibase 3.6.2
 *   Fixed [#14](https://github.com/adangel/liquibase-percona/issues/14): Rollback of foreign key constraint changing constraint names problem
 *   Fixed [#15](https://github.com/adangel/liquibase-percona/issues/15): Unique key constraint cannot be added
+*   Fixed [#20](https://github.com/adangel/liquibase-percona/issues/20): Support "UsePercona flag" in XML changelogs
 *   Fixed [#22](https://github.com/adangel/liquibase-percona/issues/22): Cross database bug
 
 ### Version 1.4.1 (2018-09-27)

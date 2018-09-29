@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import liquibase.change.Change;
@@ -43,7 +42,7 @@ public class ChangeLogParserTest {
         Map<String, String> data = new HashMap<String, String>();
         String[] files = new String[] { "test-changelog.xml", "test-changelog.yaml", "test-changelog-percona.xml", "dbchangelog-percona.xsd"};
         for (String filename : files) {
-            data.put(filename, FileUtil.getContents(new File("src/it/addColumnNotUsePercona/" + filename)));
+            data.put(filename, FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/" + filename)));
         }
         resourceAccessor = new MockResourceAccessor(data);
     }
@@ -65,7 +64,6 @@ public class ChangeLogParserTest {
         Assert.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
     }
 
-    @Ignore("The original schema doesn't allow to add arbitrary attributes to the changes")
     @Test
     public void testReadLiquibaseUsePerconaFlagXML() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.xml");
