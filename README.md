@@ -26,7 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.5.0 (????-??-??)](#version-150---)
+    *   [Version 1.5.0 (2018-09-30)](#version-150-2018-09-30)
     *   [Version 1.4.1 (2018-09-27)](#version-141-2018-09-27)
     *   [Version 1.4.0 (2017-07-21)](#version-140-2017-07-21)
     *   [Version 1.3.1 (2017-07-21)](#version-131-2017-07-21)
@@ -340,7 +340,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.5.0 (????-??-??)
+### Version 1.5.0 (2018-09-30)
 
 `pt-online-schema-change` is executed now with the option `--nocheck-unique-key-change`.
 This enables to add unique indexes, but can cause data loss, since duplicated rows are ignored.
@@ -418,7 +418,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.4.1.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.5.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -428,7 +428,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.4.1</version>
+        <version>1.5.0</version>
     </dependency>
 
 
@@ -456,12 +456,12 @@ Enable the snapshot repository via Maven:
         </repositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.0-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.1-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.5.0-SNAPSHOT</version>
+        <version>1.5.1-SNAPSHOT</version>
     </dependency>
 
 
