@@ -4,7 +4,7 @@
     <groupId>com.github.adangel.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
     <name>Liquibase Percona Extension</name>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0</version>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
 
@@ -19,7 +19,7 @@
     <scm>
         <connection>scm:git:http://github.com/adangel/liquibase-percona.git</connection>
         <url>https://github.com/adangel/liquibase-percona</url>
-      <tag>HEAD</tag>
+      <tag>liquibase-percona-1.5.0</tag>
   </scm>
 
     <developers>
