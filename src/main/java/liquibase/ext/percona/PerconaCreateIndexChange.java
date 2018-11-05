@@ -100,7 +100,7 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

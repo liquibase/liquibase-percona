@@ -55,7 +55,7 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

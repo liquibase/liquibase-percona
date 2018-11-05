@@ -73,12 +73,12 @@ public class PerconaChangeUtil {
                     changeSetId = changeSet.getId() + ":" + changeSet.getAuthor();
                 }
             }
-            log.debug("Not using percona toolkit, because usePercona flag is false for " + changeSetId + ":" + change.toString());
+            log.debug("Not using percona toolkit, because usePercona flag is false for " + changeSetId + ":" + change.getChangeName());
             return originalStatements;
         }
-        if (Configuration.skipChange(change.getChangeSkipName())) {
+        if (Configuration.skipChange(change.getChangeName())) {
             maybeLog("Not using percona toolkit, because skipChange for "
-                    + change.getChangeSkipName() + " is active (property: " + Configuration.SKIP_CHANGES + ")!");
+                    + change.getChangeName() + " is active (property: " + Configuration.SKIP_CHANGES + ")!");
             return originalStatements;
         }
 

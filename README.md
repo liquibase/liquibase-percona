@@ -343,6 +343,7 @@ integration test.
 
 ### Version 1.5.1 (????-??-??)
 
+*   Fixed [#26](https://github.com/adangel/liquibase-percona/issues/26): Stack Overflow using defaultOn=false System Property
 *   [PR #27](https://github.com/adangel/liquibase-percona/pull/27): fix a typo - [kennethinsnow](https://github.com/kennethinsnow)
 
 ### Version 1.5.0 (2018-09-30)

@@ -45,7 +45,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         changeClazz = clazz;
 
         try {
-            change = changeClazz.newInstance();
+            change = changeClazz.getConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -126,7 +126,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
 
     @Test
     public void testUnitializedChange() throws Exception {
-        change = changeClazz.newInstance();
+        change = changeClazz.getConstructor().newInstance();
         change.generateStatements(database);
     }
 }
