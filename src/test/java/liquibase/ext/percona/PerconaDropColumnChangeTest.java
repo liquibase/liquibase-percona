@@ -41,7 +41,7 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
     }
 
     @Test
-    public void testGeneralteAlterStatementMultipleColumns() {
+    public void testGenerateAlterStatementMultipleColumns() {
         ColumnConfig col1 = new ColumnConfig();
         col1.setName("col1_test");
         getChange().addColumn(col1);
