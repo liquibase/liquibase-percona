@@ -81,7 +81,7 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

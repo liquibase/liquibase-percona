@@ -66,7 +66,7 @@ public class PerconaModifyDataTypeChange extends ModifyDataTypeChange implements
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

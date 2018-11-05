@@ -192,7 +192,7 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

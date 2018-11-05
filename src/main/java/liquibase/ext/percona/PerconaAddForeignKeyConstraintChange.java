@@ -104,7 +104,7 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

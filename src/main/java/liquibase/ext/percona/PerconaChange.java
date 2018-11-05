@@ -6,7 +6,7 @@ public interface PerconaChange {
 
     Boolean getUsePercona();
 
-    String getChangeSkipName();
+    String getChangeName();
 
     String getTargetDatabaseName();
 

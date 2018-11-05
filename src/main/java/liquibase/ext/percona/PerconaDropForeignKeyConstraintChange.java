@@ -71,7 +71,7 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

@@ -62,7 +62,7 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 

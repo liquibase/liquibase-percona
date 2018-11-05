@@ -79,7 +79,7 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
     }
 
     @Override
-    public String getChangeSkipName() {
+    public String getChangeName() {
         return NAME;
     }
 
