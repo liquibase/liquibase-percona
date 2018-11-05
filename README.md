@@ -343,6 +343,8 @@ integration test.
 
 ### Version 1.5.1 (????-??-??)
 
+*   [PR #27](https://github.com/adangel/liquibase-percona/pull/27): fix a typo - [kennethinsnow](https://github.com/kennethinsnow)
+
 ### Version 1.5.0 (2018-09-30)
 
 `pt-online-schema-change` is executed now with the option `--nocheck-unique-key-change`.
