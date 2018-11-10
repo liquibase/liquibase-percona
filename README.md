@@ -26,7 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.5.1 (????-??-??)](#version-151---)
+    *   [Version 1.5.1 (2018-11-10)](#version-151-2018-11-10)
     *   [Version 1.5.0 (2018-09-30)](#version-150-2018-09-30)
     *   [Version 1.4.1 (2018-09-27)](#version-141-2018-09-27)
     *   [Version 1.4.0 (2017-07-21)](#version-140-2017-07-21)
@@ -67,7 +67,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
 * Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1, 1.4.0)
 * Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
-* Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.0). Percona Toolkit 3.0.12.
+* Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.1). Percona Toolkit 3.0.12.
 
 
 ## Supported Changes and examples
@@ -341,7 +341,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.5.1 (????-??-??)
+### Version 1.5.1 (2018-11-10)
 
 *   Fixed [#26](https://github.com/adangel/liquibase-percona/issues/26): Stack Overflow using defaultOn=false System Property
 *   [PR #27](https://github.com/adangel/liquibase-percona/pull/27): fix a typo - [kennethinsnow](https://github.com/kennethinsnow)
@@ -424,7 +424,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.5.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.5.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -434,7 +434,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.5.0</version>
+        <version>1.5.1</version>
     </dependency>
 
 
@@ -447,8 +447,8 @@ Download: <https://oss.sonatype.org/content/repositories/snapshots/com/github/ad
 Enable the snapshot repository via Maven:
 
     <project>
-        <repositories>
-            <repository>
+        <pluginRepositories>
+            <pluginRepository>
                 <id>sonatype-nexus-snapshots</id>
                 <name>Sonatype Nexus Snapshots</name>
                 <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -458,16 +458,18 @@ Enable the snapshot repository via Maven:
                 <snapshots>
                     <enabled>true</enabled>
                 </snapshots>
-            </repository>
-        </repositories>
+            </pluginRepository>
+        </pluginRepositories>
     </project>
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.1-SNAPSHOT`:
+See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
+
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.2-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.5.1-SNAPSHOT</version>
+        <version>1.5.2-SNAPSHOT</version>
     </dependency>
 
 
