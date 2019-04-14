@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::3::Alice: Columns email(varchar(255)),age(int) added to person")
+assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully")
 assert buildLogText.contains("Columns address(varchar(255)) added to person");
 assert !buildLogText.contains("Altering `testdb`.`person`...")
 assert !buildLogText.contains("Successfully altered `testdb`.`person`.")

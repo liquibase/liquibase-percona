@@ -20,7 +20,7 @@
 
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
-assert buildLog.text.contains("test-changelog.xml::3::Alice: Rolling Back Changeset:test-changelog.xml::3::Alice")
+assert buildLog.text.contains("Rolling Back Changeset:test-changelog.xml::3::Alice")
 assert buildLog.text.contains("Executing: pt-online-schema-change --alter=\"DROP COLUMN email\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person");
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
