@@ -80,9 +80,10 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         SqlStatement[] statements = generateStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+        Assert.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"DROP COLUMN col_test\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -97,9 +98,10 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+        Assert.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"DROP COLUMN col_test\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }

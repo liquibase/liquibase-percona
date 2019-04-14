@@ -93,9 +93,10 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         SqlStatement[] statements = generateStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assert.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"" + alterText + "\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -109,9 +110,10 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         SqlStatement[] statements = generateRollbackStatements();
         Assert.assertEquals(3, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
+        Assert.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"" + alterRollbackText + "\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assert.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -126,9 +128,10 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         SqlStatement[] statements = generateStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assert.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"" + alterText + "\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }
@@ -141,9 +144,10 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         SqlStatement[] statements = generateRollbackStatements();
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
+        Assert.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"" + alterRollbackText + "\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }

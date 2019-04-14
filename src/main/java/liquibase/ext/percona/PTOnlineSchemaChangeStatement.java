@@ -114,13 +114,12 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         List<String> commands = new ArrayList<String>();
         commands.add(getFullToolkitPath());
 
+        // must be the first on the command line, otherwise "--config" cannot be used
         if (!Configuration.getAdditionalOptions().isEmpty()) {
             commands.addAll(tokenize(Configuration.getAdditionalOptions()));
         }
 
         commands.add("--alter=" + alterStatement);
-        commands.add("--alter-foreign-keys-method=auto");
-        commands.add("--nocheck-unique-key-change");
 
         if (database.getConnection() != null) {
             DatabaseConnectionUtil connection = new DatabaseConnectionUtil(database.getConnection());
