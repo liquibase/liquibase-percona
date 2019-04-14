@@ -53,8 +53,9 @@ public class PerconaForeignKeyService {
      * pt-osc changes the constraint names to avoid collisions.
      * It prefixes the original name with 0, 1 or 2 underscores.
      *
-     * @param database
-     * @return
+     * @param database the database
+     * @param change the foreign key constraint change
+     * @return the prefixed constraint name
      */
     public String determineCurrentConstraintName(Database database, PerconaDropForeignKeyConstraintChange change) {
         // start with best guess without looking at the database

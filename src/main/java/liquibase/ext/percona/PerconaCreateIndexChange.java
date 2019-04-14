@@ -62,14 +62,10 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
         Iterator<AddColumnConfig> iterator = this.getColumns().iterator();
         while (iterator.hasNext()) {
             AddColumnConfig column = iterator.next();
-            if (column.getComputed() == null) {
-                alter.append(database.escapeColumnName(this.getCatalogName(), this.getSchemaName(), this.getTableName(), column.getName(), false));
+            if (Boolean.TRUE.equals(column.getComputed())) {
+                alter.append(column.getName());
             } else {
-                if (column.getComputed()) {
-                    alter.append(column.getName());
-                } else {
-                    alter.append(database.escapeColumnName(this.getCatalogName(), this.getSchemaName(), this.getTableName(), column.getName()));
-                }
+                alter.append(database.escapeColumnName(this.getCatalogName(), this.getSchemaName(), this.getTableName(), column.getName()));
             }
             if (iterator.hasNext()) {
                 alter.append(", ");
