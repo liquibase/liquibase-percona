@@ -347,6 +347,8 @@ integration test.
 
 The minimum Java runtime version is now Java 1.7.
 
+*   Fixed [#30](https://github.com/adangel/liquibase-percona/issues/30): Update liquibase
+
 ### Version 1.5.2 (2019-04-14)
 
 *   Fixed [#28](https://github.com/adangel/liquibase-percona/issues/28): Strange behavior when liquibase.percona.defaultOn is false
