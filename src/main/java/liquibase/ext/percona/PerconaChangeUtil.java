@@ -65,14 +65,19 @@ public class PerconaChangeUtil {
     public static SqlStatement[] generateStatements(PerconaChange change,
             Database database, SqlStatement[] originalStatements) {
 
-        if (Boolean.FALSE.equals(change.getUsePercona()) || !Configuration.getDefaultOn()) {
-            String changeSetId = "unknown changeset id";
-            if (change instanceof Change) {
-                ChangeSet changeSet = ((Change)change).getChangeSet();
-                if (changeSet != null) {
-                    changeSetId = changeSet.getId() + ":" + changeSet.getAuthor();
-                }
+        String changeSetId = "unknown changeset id";
+        if (change instanceof Change) {
+            ChangeSet changeSet = ((Change)change).getChangeSet();
+            if (changeSet != null) {
+                changeSetId = changeSet.getId() + ":" + changeSet.getAuthor();
             }
+        }
+
+        if (change.getUsePercona() == null && !Configuration.getDefaultOn()) {
+            log.debug("Not using percona toolkit, because property " + Configuration.DEFAULT_ON + " is false. " + changeSetId + ":" + change.getChangeName());
+            return originalStatements;
+        }
+        if (change.getUsePercona() != null && !change.getUsePercona()) {
             log.debug("Not using percona toolkit, because usePercona flag is false for " + changeSetId + ":" + change.getChangeName());
             return originalStatements;
         }

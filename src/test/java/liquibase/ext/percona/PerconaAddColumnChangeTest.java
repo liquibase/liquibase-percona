@@ -317,4 +317,22 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assert.assertEquals(1, statements.length);
         Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
+
+    @Test
+    public void testWithDisabledPerconaViaDefaultOnUseDefault() {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        getChange().setUsePercona(null);
+        SqlStatement[] statements = generateStatements();
+        Assert.assertEquals(1, statements.length);
+        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void testWithDisabledPerconaViaDefaultOnButUsePerconaForSingleChange() {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        getChange().setUsePercona(true);
+        SqlStatement[] statements = generateStatements();
+        Assert.assertEquals(1, statements.length);
+        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+    }
 }

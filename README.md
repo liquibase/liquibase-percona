@@ -344,6 +344,8 @@ integration test.
 
 ### Version 1.5.2 (????-??-??)
 
+*   Fixed [#28](https://github.com/adangel/liquibase-percona/issues/28): Strange behavior when liquibase.percona.defaultOn is false
+
 ### Version 1.5.1 (2018-11-10)
 
 *   Fixed [#26](https://github.com/adangel/liquibase-percona/issues/26): Stack Overflow using defaultOn=false System Property
