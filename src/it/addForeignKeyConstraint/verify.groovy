@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("Executing: pt-online-schema-change --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (id)\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=127.0.0.1 --port=${config_port} --user=${config_user} --password=*** --execute D=${config_dbname},t=address");
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (id)\" --host=127.0.0.1 --port=${config_port} --user=${config_user} --password=*** --execute D=${config_dbname},t=address");
 assert buildLogText.contains("Altering `${config_dbname}`.`address`...");
 assert buildLogText.contains("Creating new table...");
 assert buildLogText.contains("Created new table ${config_dbname}._address_new OK.");

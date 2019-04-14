@@ -38,6 +38,8 @@ public final class Configuration {
     /** Enable debug output for pt-osc. */
     public static final String PERCONA_TOOLKIT_DEBUG = "liquibase.percona.ptdebug";
 
+    private static final String DEFAULT_ADDITIONAL_OPTIONS = "--alter-foreign-keys-method=auto --nocheck-unique-key-change";
+
     public static boolean failIfNoPT() {
         return Boolean.getBoolean(FAIL_IF_NO_PT);
     }
@@ -51,7 +53,7 @@ public final class Configuration {
     }
 
     public static String getAdditionalOptions() {
-        return System.getProperty(ADDITIONAL_OPTIONS, "");
+        return System.getProperty(ADDITIONAL_OPTIONS, DEFAULT_ADDITIONAL_OPTIONS);
     }
 
     public static boolean getDefaultOn() {

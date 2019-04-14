@@ -298,13 +298,14 @@ The extension supports the following java system properties:
     By default, this property is empty, so that all supported changes are executed using the percona toolkit.
     Example: Set this to `addColumn,dropColumn` in order to not use percona for adding/dropping a column.
 
-*   `liquibase.percona.options`: String of options. **Default: &lt;empty&gt;**. Since liquibase-percona 1.2.1
+*   `liquibase.percona.options`: String of options. **Default: --alter-foreign-keys-method=auto --nocheck-unique-key-change**.
+    Since liquibase-percona 1.2.1. Default value changed with liquibase-percona 1.6.0.
     This option allows the user to pass additional command line options to pt-online-schema-change. This e.g. can
-    be used in complication replication setup to change the way slaves are detected and how their state is used.
+    be used in complicated replication setup to change the way slaves are detected and how their state is used.
     You can also specify a percona configuration file via `--config file.conf`,
     see [Configuration Files](https://www.percona.com/doc/percona-toolkit/2.2/configuration_files.html).
     Multiple options are separated by space. If argument itself contains a space, it must be quoted with
-    double-quotes, e.g. `--config "filename with spaces.conf`.
+    double-quotes, e.g. `--config "filename with spaces.conf"`.
 
 *   `liquibase.percona.defaultOn`: true/false. **Default: true**. Since liquibase-percona 1.3.0
     This options allows to change the default behavior for the [UsePercona flag](#usepercona-flag). By default,
@@ -347,6 +348,12 @@ integration test.
 
 The minimum Java runtime version is now Java 1.7.
 
+The system property `liquibase.percona.options` uses now a default value of `--alter-foreign-keys-method=auto --nocheck-unique-key-change`.
+These two options are **not** added by default anymore when pt-osc is executed. They are added
+now via the additional options system property. In case you have overridden this system property, make sure, to add
+these options as well, if you need them.
+
+*   Fixed [#29](https://github.com/adangel/liquibase-percona/issues/29): Allow to override --nocheck-unique-key-changes and --alter-foreign-keys-method=auto
 *   Fixed [#30](https://github.com/adangel/liquibase-percona/issues/30): Update liquibase
 
 ### Version 1.5.2 (2019-04-14)

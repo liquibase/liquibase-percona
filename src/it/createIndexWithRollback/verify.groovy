@@ -24,11 +24,11 @@ File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
 assert buildLog.text.contains("Rolling Back Changeset:test-changelog.xml::2::Alice")
-assert buildLog.text.contains("Executing: pt-online-schema-change --alter=\"DROP INDEX personIdx\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person");
+assert buildLog.text.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"DROP INDEX personIdx\" --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person");
 assert buildLog.text.contains("Successfully altered `testdb`.`person`.")
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
 def sqlText = sql.text;
-assert sqlText.contains("pt-online-schema-change --alter=\"DROP INDEX personIdx\"")
+assert sqlText.contains("pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"DROP INDEX personIdx\"")
 assert !sqlText.contains("password=${config_password}")

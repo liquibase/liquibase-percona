@@ -24,7 +24,7 @@ File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
 
-assert buildLogText.contains("Executing: pt-online-schema-change --alter=\"ADD COLUMN testColumn BIGINT NULL, ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _test_table_new(id)\"")
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN testColumn BIGINT NULL, ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _test_table_new(id)\"")
 assert buildLogText.contains("Columns testColumn(bigint(20)) added to test_table")
 assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran successfully")
 

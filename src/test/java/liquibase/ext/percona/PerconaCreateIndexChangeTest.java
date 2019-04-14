@@ -75,9 +75,10 @@ public class PerconaCreateIndexChangeTest extends AbstractPerconaChangeTest<Perc
         SqlStatement[] statements = generateStatements();
         Assertions.assertEquals(3, statements.length);
         Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assertions.assertEquals("pt-online-schema-change --alter=\"ADD UNIQUE INDEX theIndexName (indexedColumn)\" "
+        Assertions.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"ADD UNIQUE INDEX theIndexName (indexedColumn)\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assertions.assertEquals(CommentStatement.class, statements[1].getClass());

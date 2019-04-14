@@ -72,9 +72,10 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         SqlStatement[] statements = generateStatements();
         Assertions.assertEquals(3, statements.length);
         Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assertions.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"" + alterText + "\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
         Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
@@ -89,9 +90,10 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         SqlStatement[] statements = generateStatements();
         Assertions.assertEquals(1, statements.length);
         Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assertions.assertEquals("pt-online-schema-change "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
+                + "--alter=\"" + alterText + "\" "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
     }
