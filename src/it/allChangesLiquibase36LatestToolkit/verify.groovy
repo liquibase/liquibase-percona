@@ -22,15 +22,22 @@ import java.sql.ResultSet;
 
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
-def perconaFullPath = "${project_build_directory}/percona-toolkit/percona-toolkit-LATEST/bin/pt-online-schema-change"
 def buildLogText = buildLog.text;
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::2::Alice: Executing: ${perconaFullPath} --alter=\"ADD COLUMN age INT NULL\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person")
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::3::Alice: Executing: ${perconaFullPath} --alter=\"DROP COLUMN age\"")
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::4::Alice: Executing: ${perconaFullPath} --alter=\"ADD UNIQUE INDEX emailIdx (email)\"")
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::5::Alice: Executing: ${perconaFullPath} --alter=\"DROP INDEX emailIdx\"")
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::6::Alice: Executing: ${perconaFullPath} --alter=\"MODIFY email VARCHAR(400)\"")
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::8::Alice: Executing: ${perconaFullPath} --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (name)\"")
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::9::Alice: Executing: ${perconaFullPath} --alter=\"DROP FOREIGN KEY _fk_person_address\"")
+def perconaFullPath = "${project_build_directory}/percona-toolkit/percona-toolkit-LATEST/bin/pt-online-schema-change"
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"ADD COLUMN age INT NULL\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person")
+assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"DROP COLUMN age\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"ADD UNIQUE INDEX emailIdx (email)\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::4::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"DROP INDEX emailIdx\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::5::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"MODIFY email VARCHAR(400)\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::6::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (name)\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::8::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} --alter=\"DROP FOREIGN KEY _fk_person_address\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::9::Alice ran successfully")
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
