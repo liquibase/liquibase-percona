@@ -20,6 +20,7 @@ import liquibase.change.AddColumnConfig;
 import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.CreateIndexChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
@@ -91,6 +92,7 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }

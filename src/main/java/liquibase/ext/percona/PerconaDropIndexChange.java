@@ -16,6 +16,7 @@ package liquibase.ext.percona;
 
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
@@ -53,6 +54,7 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }
