@@ -24,6 +24,7 @@ import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
@@ -183,6 +184,7 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }

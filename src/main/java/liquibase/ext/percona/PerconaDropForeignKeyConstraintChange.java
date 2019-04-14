@@ -16,6 +16,7 @@ package liquibase.ext.percona;
 
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
@@ -62,6 +63,7 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }

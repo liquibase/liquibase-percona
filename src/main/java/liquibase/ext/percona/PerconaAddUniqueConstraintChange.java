@@ -6,6 +6,7 @@ import java.util.List;
 import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
@@ -72,6 +73,7 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }

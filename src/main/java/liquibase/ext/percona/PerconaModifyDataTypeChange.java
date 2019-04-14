@@ -16,6 +16,7 @@ package liquibase.ext.percona;
 
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.ModifyDataTypeChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
@@ -57,6 +58,7 @@ public class PerconaModifyDataTypeChange extends ModifyDataTypeChange implements
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }

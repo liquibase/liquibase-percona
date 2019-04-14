@@ -16,6 +16,7 @@ package liquibase.ext.percona;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.DropColumnChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
@@ -70,6 +71,7 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
     }
 
     @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
     }
