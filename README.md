@@ -1,7 +1,6 @@
 # Liquibase Percona Extension
 
 [![Build Status](https://travis-ci.org/adangel/liquibase-percona.svg?branch=master)](https://travis-ci.org/adangel/liquibase-percona)
-[<img src="https://opengift.io/static/public/assets/img/logo-gradient.svg" width="100" alt="Donate via opengift.io">](https://opengift.io/project/632/public/)
 
 Extension to support the tool `pt-online-schema-change` from [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/LATEST/index.html).
 This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
@@ -26,7 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.5.2 (????-??-??)](#version-152---)
+    *   [Version 1.5.2 (2019-04-14)](#version-152-2019-04-14)
     *   [Version 1.5.1 (2018-11-10)](#version-151-2018-11-10)
     *   [Version 1.5.0 (2018-09-30)](#version-150-2018-09-30)
     *   [Version 1.4.1 (2018-09-27)](#version-141-2018-09-27)
@@ -68,7 +67,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, and 3.5.1 (liquibase-percona 1.2.2)
 * Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1, 1.4.0)
 * Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
-* Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.1). Percona Toolkit 3.0.12.
+* Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.2). Percona Toolkit 3.0.12.
 
 
 ## Supported Changes and examples
@@ -342,7 +341,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.5.2 (????-??-??)
+### Version 1.5.2 (2019-04-14)
 
 *   Fixed [#28](https://github.com/adangel/liquibase-percona/issues/28): Strange behavior when liquibase.percona.defaultOn is false
 
@@ -429,7 +428,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.5.1.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.5.2.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -439,7 +438,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.5.1</version>
+        <version>1.5.2</version>
     </dependency>
 
 
@@ -469,12 +468,12 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.2-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.5.3-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.3-SNAPSHOT</version>
     </dependency>
 
 
