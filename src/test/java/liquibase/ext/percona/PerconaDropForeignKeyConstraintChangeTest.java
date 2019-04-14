@@ -14,8 +14,9 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
@@ -42,16 +43,21 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
     public void testWithoutPercona() {
         PTOnlineSchemaChangeStatement.available = false;
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(DropForeignKeyConstraintStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(DropForeignKeyConstraintStatement.class, statements[0].getClass());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testWithoutPerconaAndFail() {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        generateStatements();
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateStatements();
+            }
+        });
     }
 
     @Test
@@ -64,15 +70,15 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         enableLogging();
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(DropForeignKeyConstraintStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(DropForeignKeyConstraintStatement.class, statements[2].getClass());
     }
 
     @Test
@@ -81,9 +87,9 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
@@ -94,7 +100,7 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
     public void testSkipDropForeignKeyConstraintChange() {
         System.setProperty(Configuration.SKIP_CHANGES, "dropForeignKeyConstraint");
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(DropForeignKeyConstraintStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(DropForeignKeyConstraintStatement.class, statements[0].getClass());
     }
 }

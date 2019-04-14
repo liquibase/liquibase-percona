@@ -14,8 +14,9 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import liquibase.change.ColumnConfig;
 import liquibase.statement.SqlStatement;
@@ -37,7 +38,7 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
 
     @Test
     public void testGenerateAlterStatement() {
-        Assert.assertEquals("DROP COLUMN col_test", getChange().generateAlterStatement(getDatabase()));
+        Assertions.assertEquals("DROP COLUMN col_test", getChange().generateAlterStatement(getDatabase()));
     }
 
     @Test
@@ -49,23 +50,28 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         col2.setName("col2_test");
         getChange().addColumn(col2);
 
-        Assert.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", getChange().generateAlterStatement(getDatabase()));
+        Assertions.assertEquals("DROP COLUMN col1_test, DROP COLUMN col2_test", getChange().generateAlterStatement(getDatabase()));
     }
 
     @Test
     public void testWithoutPercona() {
         PTOnlineSchemaChangeStatement.available = false;
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(DropColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(DropColumnStatement.class, statements[0].getClass());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testWithoutPerconaAndFail() {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        generateStatements();
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateStatements();
+            }
+        });
     }
 
     @Test
@@ -78,15 +84,15 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         enableLogging();
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(DropColumnStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(DropColumnStatement.class, statements[2].getClass());
     }
 
     @Test
@@ -95,9 +101,9 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN col_test\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",

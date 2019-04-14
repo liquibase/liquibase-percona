@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import liquibase.change.Change;
 import liquibase.changelog.ChangeLogParameters;
@@ -37,7 +37,7 @@ public class ChangeLogParserTest {
 
     private ResourceAccessor resourceAccessor;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         Map<String, String> data = new HashMap<String, String>();
         String[] files = new String[] { "test-changelog.xml", "test-changelog.yaml", "test-changelog-percona.xml", "dbchangelog-percona.xsd"};
@@ -56,34 +56,34 @@ public class ChangeLogParserTest {
     @Test
     public void testReadLiquibaseUsePerconaFlagYAML() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.yaml");
-        Assert.assertEquals(2, changelog.getChangeSets().size());
+        Assertions.assertEquals(2, changelog.getChangeSets().size());
         ChangeSet addColumnChangeset = changelog.getChangeSets().get(1);
         Change change = addColumnChangeset.getChanges().get(0);
-        Assert.assertEquals(PerconaAddColumnChange.class, change.getClass());
-        Assert.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
-        Assert.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
+        Assertions.assertEquals(PerconaAddColumnChange.class, change.getClass());
+        Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
+        Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
     }
 
     @Test
     public void testReadLiquibaseUsePerconaFlagXML() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.xml");
-        Assert.assertEquals(2, changelog.getChangeSets().size());
+        Assertions.assertEquals(2, changelog.getChangeSets().size());
         ChangeSet addColumnChangeset = changelog.getChangeSets().get(1);
         Change change = addColumnChangeset.getChanges().get(0);
-        Assert.assertEquals(PerconaAddColumnChange.class, change.getClass());
-        Assert.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
-        Assert.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
+        Assertions.assertEquals(PerconaAddColumnChange.class, change.getClass());
+        Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
+        Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
     }
 
     @Test
     public void testReadLiquibaseUsePerconaFlagXMLPercona() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog-percona.xml");
-        Assert.assertEquals(2, changelog.getChangeSets().size());
+        Assertions.assertEquals(2, changelog.getChangeSets().size());
         ChangeSet addColumnChangeset = changelog.getChangeSets().get(1);
         Change change = addColumnChangeset.getChanges().get(0);
-        Assert.assertEquals(PerconaAddColumnChange.class, change.getClass());
-        Assert.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
-        Assert.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
+        Assertions.assertEquals(PerconaAddColumnChange.class, change.getClass());
+        Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
+        Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
     }
 
 }
