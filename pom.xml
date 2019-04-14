@@ -125,7 +125,7 @@
 
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.0</version>
+                    <version>3.0.0-M3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -151,15 +151,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>3.1.6</version>
-                <!-- required as 3.1.7 is not yet released for the plugin but we hit problem spotbugs#711 -->
-                <dependencies>
-                    <dependency>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs</artifactId>
-                        <version>3.1.7</version>
-                    </dependency>
-                </dependencies>
+                <version>3.1.11</version>
                 <executions>
                     <execution>
                         <id>spotbugs</id>
@@ -227,7 +219,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -293,7 +285,7 @@
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.26.1</version>
+                        <version>0.29.0</version>
                         <configuration>
                             <images>
                                 <image>
@@ -303,7 +295,10 @@
                                         <env>
                                             <MYSQL_ROOT_PASSWORD>${config_password}</MYSQL_ROOT_PASSWORD>
                                         </env>
-                                        <namingStrategy>alias</namingStrategy>
+                                        <containerNamePattern>%a</containerNamePattern>
+                                        <network>
+                                            <mode>bridge</mode>
+                                        </network>
                                         <ports>
                                             <port>config_port:3306</port>
                                         </ports>
@@ -338,7 +333,7 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.0</version>
                         <configuration>
                             <!-- <debug>true</debug> -->
                             <projectsDirectory>src/it</projectsDirectory>
