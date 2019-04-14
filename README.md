@@ -25,6 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Version 1.5.3 (????-??-??)](#version-153---)
     *   [Version 1.5.2 (2019-04-14)](#version-152-2019-04-14)
     *   [Version 1.5.1 (2018-11-10)](#version-151-2018-11-10)
     *   [Version 1.5.0 (2018-09-30)](#version-150-2018-09-30)
@@ -340,6 +341,8 @@ integration test.
 
 
 ## Changelog
+
+### Version 1.5.3 (????-??-??)
 
 ### Version 1.5.2 (2019-04-14)
 
