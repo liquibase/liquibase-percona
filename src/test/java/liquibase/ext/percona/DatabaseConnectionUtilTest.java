@@ -13,33 +13,31 @@ package liquibase.ext.percona;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import java.lang.reflect.Field;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.contrib.java.lang.system.RestoreSystemProperties;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.database.jvm.JdbcConnection;
 
+@ExtendWith(RestoreSystemPropertiesExtension.class)
 public class DatabaseConnectionUtilTest {
-    @Rule
-    public final TestRule restoreSystemPropertiesRule = new RestoreSystemProperties();
 
     @Test
     public void testGetHost() {
         DatabaseConnectionUtil util;
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
-        Assert.assertEquals("localhost", util.getHost());
+        Assertions.assertEquals("localhost", util.getHost());
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://localhost:3306/testdb"));
-        Assert.assertEquals("localhost", util.getHost());
+        Assertions.assertEquals("localhost", util.getHost());
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://127.0.0.1:3306/testdb"));
-        Assert.assertEquals("127.0.0.1", util.getHost());
+        Assertions.assertEquals("127.0.0.1", util.getHost());
     }
 
     @Test
@@ -47,13 +45,13 @@ public class DatabaseConnectionUtilTest {
         DatabaseConnectionUtil util;
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3307/testdb"));
-        Assert.assertEquals("3307", util.getPort());
+        Assertions.assertEquals("3307", util.getPort());
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://localhost:3307/testdb"));
-        Assert.assertEquals("3307", util.getPort());
+        Assertions.assertEquals("3307", util.getPort());
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://localhost/testdb"));
-        Assert.assertEquals("3306", util.getPort());
+        Assertions.assertEquals("3306", util.getPort());
     }
 
     @Test
@@ -61,10 +59,10 @@ public class DatabaseConnectionUtilTest {
         DatabaseConnectionUtil util;
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUser("root@localhost"));
-        Assert.assertEquals("root", util.getUser());
+        Assertions.assertEquals("root", util.getUser());
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUser("root"));
-        Assert.assertEquals("root", util.getUser());
+        Assertions.assertEquals("root", util.getUser());
     }
 
     private static Class<?> loadClass(String name) {
@@ -80,9 +78,9 @@ public class DatabaseConnectionUtilTest {
         // with MySQL Connector 5.1.38, we use JDBC4Connection and its superclass ConnectionImpl
         // to get hold of the password.
         Class<?> connectionImpl = loadClass("com.mysql.jdbc.ConnectionImpl");
-        Assume.assumeNotNull(connectionImpl);
+        Assumptions.assumeFalse(connectionImpl == null);
         Field propsField = connectionImpl.getDeclaredField("props");
-        Assert.assertNotNull("The field props is not existing", propsField);
+        Assertions.assertNotNull(propsField, "The field props is not existing");
     }
 
     @Test
@@ -90,9 +88,9 @@ public class DatabaseConnectionUtilTest {
         assumeJava8();
         // with MySQL Connector 6.0.4, the packages changed.
         Class<?> connectionImpl = loadClass("com.mysql.cj.jdbc.ConnectionImpl");
-        Assume.assumeNotNull(connectionImpl);
+        Assumptions.assumeFalse(connectionImpl == null);
         Field propsField2 = connectionImpl.getDeclaredField("props");
-        Assert.assertNotNull("The field props is not existing", propsField2);
+        Assertions.assertNotNull(propsField2, "The field props is not existing");
     }
 
     private static void assumeJava8() {
@@ -104,40 +102,40 @@ public class DatabaseConnectionUtilTest {
         } else {
             majorJava = Integer.parseInt(versionComponents[0]);
         }
-        Assume.assumeTrue("Java Runtime too old - for this test at least java8 is required", majorJava >= 8);
+        Assumptions.assumeTrue(majorJava >= 8, "Java Runtime too old - for this test at least java8 is required");
     }
 
     @Test
     public void testTomcatJdbcConnection() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(
                 new JdbcConnection(MockedTomcatJdbcConnection.create("user", "xyz")));
-        Assert.assertEquals("xyz", util.getPassword());
+        Assertions.assertEquals("xyz", util.getPassword());
     }
 
     @Test
     public void testApacheCommonsDbcpPoolingConnection() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(
                 new JdbcConnection(MockedDbcpPoolingConnection.create("user", "xyz")));
-        Assert.assertEquals("xyz", util.getPassword());
+        Assertions.assertEquals("xyz", util.getPassword());
     }
 
     @Test
     public void testApacheCommonsDbcp2PoolingConnection() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(
                 new JdbcConnection(MockedDbcp2PoolingConnection.create("user", "xyz")));
-        Assert.assertEquals("xyz", util.getPassword());
+        Assertions.assertEquals("xyz", util.getPassword());
     }
 
     @Test
     public void testDatabasePropertiesFromFile() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
-        Assert.assertEquals("password-for-unit-testing", util.getPassword());
+        Assertions.assertEquals("password-for-unit-testing", util.getPassword());
     }
 
     @Test
     public void testDatabasePasswordSystemProperty() throws Exception {
         System.setProperty(Configuration.LIQUIBASE_PASSWORD, "password-via-system-property");
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
-        Assert.assertEquals("password-via-system-property", util.getPassword());
+        Assertions.assertEquals("password-via-system-property", util.getPassword());
     }
 }

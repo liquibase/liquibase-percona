@@ -14,11 +14,9 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.contrib.java.lang.system.RestoreSystemProperties;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ConstraintsConfig;
@@ -30,8 +28,6 @@ import liquibase.statement.core.CommentStatement;
 import liquibase.statement.core.DropColumnStatement;
 
 public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<PerconaAddColumnChange> {
-    @Rule
-    public final TestRule restoreSystemProperties = new RestoreSystemProperties();
 
     public PerconaAddColumnChangeTest() {
         super(PerconaAddColumnChange.class);
@@ -51,32 +47,42 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
     public void testWithoutPercona() {
         PTOnlineSchemaChangeStatement.available = false;
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
 
     @Test
     public void testWithoutPerconaRollback() throws RollbackImpossibleException {
         PTOnlineSchemaChangeStatement.available = false;
         SqlStatement[] statements = generateRollbackStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(DropColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(DropColumnStatement.class, statements[0].getClass());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testWithoutPerconaAndFail() {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        generateStatements();
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateStatements();
+            }
+        });
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testWithoutPerdatabaseconaRollbackAndFail() throws RollbackImpossibleException {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        generateRollbackStatements();
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateRollbackStatements();
+            }
+        });
     }
 
     @Test
@@ -94,15 +100,15 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         enableLogging();
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(AddColumnStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(AddColumnStatement.class, statements[2].getClass());
     }
 
     @Test
@@ -110,15 +116,15 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         enableLogging();
 
         SqlStatement[] statements = generateRollbackStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(DropColumnStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(DropColumnStatement.class, statements[2].getClass());
     }
 
     @Test
@@ -127,9 +133,9 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"ADD COLUMN new_column INT NULL\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
@@ -142,9 +148,9 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
         SqlStatement[] statements = generateRollbackStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"DROP COLUMN new_column\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
@@ -158,7 +164,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         column.setType("varchar(255)");
         getChange().addColumn(column);
 
-        Assert.assertEquals("ADD COLUMN new_column INT NULL, ADD COLUMN email VARCHAR(255) NULL",
+        Assertions.assertEquals("ADD COLUMN new_column INT NULL, ADD COLUMN email VARCHAR(255) NULL",
                 getChange().generateAlterStatement(getDatabase()));
     }
 
@@ -166,7 +172,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
     public void testConvertColumnToSql() {
         PerconaAddColumnChange c = getChange();
         Database database = getDatabase();
-        Assert.assertEquals("ADD COLUMN new_column INT NULL", c.convertColumnToSql(c.getColumns().get(0), database));
+        Assertions.assertEquals("ADD COLUMN new_column INT NULL", c.convertColumnToSql(c.getColumns().get(0), database));
 
         AddColumnConfig column = new AddColumnConfig();
         column.setName("email");
@@ -174,14 +180,14 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         ConstraintsConfig constraints = new ConstraintsConfig();
         constraints.setNullable(false);
         column.setConstraints(constraints);
-        Assert.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL", c.convertColumnToSql(column, database));
+        Assertions.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL", c.convertColumnToSql(column, database));
 
         column.setDefaultValue("no-email@example.org");
-        Assert.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT 'no-email@example.org'",
+        Assertions.assertEquals("ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT 'no-email@example.org'",
                 c.convertColumnToSql(column, database));
 
         column.setRemarks("that is the email");
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 "ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT 'no-email@example.org' COMMENT 'that is the email'",
                 c.convertColumnToSql(column, database));
     }
@@ -190,8 +196,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
     public void testSkipAddColumnChange() {
         System.setProperty(Configuration.SKIP_CHANGES, "addColumn");
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
 
     @Test
@@ -204,15 +210,15 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         column.setType("INT");
         column.setAfterColumn("other_column");
 
-        Assert.assertEquals("ADD COLUMN new_column INT NULL AFTER other_column",
+        Assertions.assertEquals("ADD COLUMN new_column INT NULL AFTER other_column",
                 c.convertColumnToSql(column, database));
 
         column.setAfterColumn("other column");
-        Assert.assertEquals("ADD COLUMN new_column INT NULL AFTER `other column`",
+        Assertions.assertEquals("ADD COLUMN new_column INT NULL AFTER `other column`",
                 c.convertColumnToSql(column, database));
 
         column.setAfterColumn("");
-        Assert.assertEquals("ADD COLUMN new_column INT NULL",
+        Assertions.assertEquals("ADD COLUMN new_column INT NULL",
                 c.convertColumnToSql(column, database));
     }
 
@@ -231,7 +237,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setReferences("test_parent(id)");
         column.setConstraints(constraints);
 
-        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+        Assertions.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
                 c.convertColumnToSql(column, database));
 
@@ -240,7 +246,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setReferences("test_parent(id)");
         column.setConstraints(constraints);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 "ADD COLUMN testColumn BIGINT NULL, ADD FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
                 c.convertColumnToSql(column, database));
 
@@ -248,7 +254,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setNullable(true).setUnique("true").setUniqueConstraintName("unique_test_column");
         column.setConstraints(constraints);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 "ADD COLUMN testColumn BIGINT NULL, ADD CONSTRAINT unique_test_column UNIQUE (testColumn)",
                 c.convertColumnToSql(column, database));
 
@@ -256,7 +262,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setNullable(true).setUnique("true");
         column.setConstraints(constraints);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 "ADD COLUMN testColumn BIGINT NULL, ADD UNIQUE (testColumn)",
                 c.convertColumnToSql(column, database));
 
@@ -266,7 +272,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setUnique(true).setUniqueConstraintName("unique_test_column");
         column.setConstraints(constraints);
 
-        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+        Assertions.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id), "
                 + "ADD CONSTRAINT unique_test_column UNIQUE (testColumn)",
                 c.convertColumnToSql(column, database));
@@ -277,7 +283,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setReferencedColumnNames("id");
         column.setConstraints(constraints);
 
-        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+        Assertions.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES test_parent(id)",
                 c.convertColumnToSql(column, database));
     }
@@ -297,7 +303,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         constraints.setReferences("person(id)");
         column.setConstraints(constraints);
 
-        Assert.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
+        Assertions.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _person_new(id)",
                 c.convertColumnToSql(column, database));
     }
@@ -306,16 +312,16 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
     public void testWithDisabledPercona() {
         getChange().setUsePercona(false);
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
 
     @Test
     public void testWithDisabledPerconaViaDefaultOn() {
         System.setProperty(Configuration.DEFAULT_ON, "false");
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
 
     @Test
@@ -323,8 +329,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         System.setProperty(Configuration.DEFAULT_ON, "false");
         getChange().setUsePercona(null);
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddColumnStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
     }
 
     @Test
@@ -332,7 +338,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         System.setProperty(Configuration.DEFAULT_ON, "false");
         getChange().setUsePercona(true);
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
     }
 }

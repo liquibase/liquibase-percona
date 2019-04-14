@@ -16,12 +16,10 @@ package liquibase.ext.percona;
 
 import java.io.StringWriter;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.contrib.java.lang.system.RestoreSystemProperties;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.change.Change;
 import liquibase.database.Database;
@@ -33,6 +31,7 @@ import liquibase.executor.LoggingExecutor;
 import liquibase.executor.jvm.JdbcExecutor;
 import liquibase.statement.SqlStatement;
 
+@ExtendWith(RestoreSystemPropertiesExtension.class)
 public abstract class AbstractPerconaChangeTest<T extends Change> {
 
     private Database database;
@@ -51,10 +50,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         }
     }
 
-    @Rule
-    public final TestRule restoreSystemProperties = new RestoreSystemProperties();
-
-    @Before
+    @BeforeEach
     public void setup() {
         System.setProperty(Configuration.LIQUIBASE_PASSWORD, "root");
 
@@ -103,9 +99,9 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
     }
 
     protected void assertPerconaChange(String alter, SqlStatement[] statements) {
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alter + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=" + targetDatabaseName

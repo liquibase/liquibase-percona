@@ -14,8 +14,9 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import liquibase.exception.RollbackImpossibleException;
 import liquibase.statement.SqlStatement;
@@ -48,32 +49,42 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
     public void testWithoutPercona() {
         PTOnlineSchemaChangeStatement.available = false;
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddUniqueConstraintStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddUniqueConstraintStatement.class, statements[0].getClass());
     }
 
     @Test
     public void testWithoutPerconaRollback() throws RollbackImpossibleException {
         PTOnlineSchemaChangeStatement.available = false;
         SqlStatement[] statements = generateRollbackStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(DropUniqueConstraintStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(DropUniqueConstraintStatement.class, statements[0].getClass());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testWithoutPerconaAndFail() {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        generateStatements();
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateStatements();
+            }
+        });
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testWithoutPerdatabaseconaRollbackAndFail() throws RollbackImpossibleException {
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        generateRollbackStatements();
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateRollbackStatements();
+            }
+        });
     }
 
     @Test
@@ -91,15 +102,15 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         enableLogging();
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(AddUniqueConstraintStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(AddUniqueConstraintStatement.class, statements[2].getClass());
     }
 
     @Test
@@ -107,15 +118,15 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         enableLogging();
 
         SqlStatement[] statements = generateRollbackStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(DropUniqueConstraintStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(DropUniqueConstraintStatement.class, statements[2].getClass());
     }
 
     @Test
@@ -124,9 +135,9 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterText + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
@@ -139,9 +150,9 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
         SqlStatement[] statements = generateRollbackStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"" + alterRollbackText + "\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
@@ -152,7 +163,7 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
     public void testSkipAddUniqueConstraintChange() {
         System.setProperty(Configuration.SKIP_CHANGES, "addUniqueConstraint");
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(1, statements.length);
-        Assert.assertEquals(AddUniqueConstraintStatement.class, statements[0].getClass());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(AddUniqueConstraintStatement.class, statements[0].getClass());
     }
 }

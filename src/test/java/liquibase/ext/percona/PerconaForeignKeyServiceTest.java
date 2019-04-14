@@ -1,9 +1,5 @@
 package liquibase.ext.percona;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +14,12 @@ import org.junit.Test;
  * limitations under the License.
  */
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 public class PerconaForeignKeyServiceTest {
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         PerconaForeignKeyService.getInstance().disable();
     }
@@ -27,9 +27,9 @@ public class PerconaForeignKeyServiceTest {
     @Test
     public void testPrefixing() {
         PerconaForeignKeyService service = PerconaForeignKeyService.getInstance();
-        Assert.assertEquals("_FK_1", service.determineCurrentConstraintName(null, createChange("table", "FK_1")));
-        Assert.assertEquals("__FK_1", service.determineCurrentConstraintName(null, createChange("table", "_FK_1")));
-        Assert.assertEquals("FK_1", service.determineCurrentConstraintName(null, createChange("table", "__FK_1")));
+        Assertions.assertEquals("_FK_1", service.determineCurrentConstraintName(null, createChange("table", "FK_1")));
+        Assertions.assertEquals("__FK_1", service.determineCurrentConstraintName(null, createChange("table", "_FK_1")));
+        Assertions.assertEquals("FK_1", service.determineCurrentConstraintName(null, createChange("table", "__FK_1")));
     }
 
     private static PerconaDropForeignKeyConstraintChange createChange(String baseTableName, String constraintName) {

@@ -14,29 +14,26 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PerconaToolkitVersionTest {
 
     @Test
     public void simpleParse() {
         PerconaToolkitVersion version = new PerconaToolkitVersion("2.2.17");
-        assertEquals("2.2.17", version.toString());
+        Assertions.assertEquals("2.2.17", version.toString());
     }
 
     @Test
     public void checkGreaterOrEqual() {
         PerconaToolkitVersion version = new PerconaToolkitVersion("2.2.17");
-        assertTrue(version.isGreaterOrEqualThan("2.2.17"));
-        assertTrue(version.isGreaterOrEqualThan("2.2.15"));
-        assertTrue(version.isGreaterOrEqualThan("2.1.15"));
-        assertTrue(version.isGreaterOrEqualThan("1.1.15"));
-        assertFalse(version.isGreaterOrEqualThan("2.2.18"));
-        assertFalse(version.isGreaterOrEqualThan("2.2.20"));
-        assertFalse(version.isGreaterOrEqualThan("3.0.0"));
+        Assertions.assertTrue(version.isGreaterOrEqualThan("2.2.17"));
+        Assertions.assertTrue(version.isGreaterOrEqualThan("2.2.15"));
+        Assertions.assertTrue(version.isGreaterOrEqualThan("2.1.15"));
+        Assertions.assertTrue(version.isGreaterOrEqualThan("1.1.15"));
+        Assertions.assertFalse(version.isGreaterOrEqualThan("2.2.18"));
+        Assertions.assertFalse(version.isGreaterOrEqualThan("2.2.20"));
+        Assertions.assertFalse(version.isGreaterOrEqualThan("3.0.0"));
     }
 }

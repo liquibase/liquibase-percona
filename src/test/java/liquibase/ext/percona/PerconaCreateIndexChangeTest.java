@@ -14,8 +14,8 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.exception.RollbackImpossibleException;
@@ -73,15 +73,15 @@ public class PerconaCreateIndexChangeTest extends AbstractPerconaChangeTest<Perc
         enableLogging();
 
         SqlStatement[] statements = generateStatements();
-        Assert.assertEquals(3, statements.length);
-        Assert.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assert.assertEquals("pt-online-schema-change --alter=\"ADD UNIQUE INDEX theIndexName (indexedColumn)\" "
+        Assertions.assertEquals(3, statements.length);
+        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
+        Assertions.assertEquals("pt-online-schema-change --alter=\"ADD UNIQUE INDEX theIndexName (indexedColumn)\" "
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
-        Assert.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assert.assertEquals(CreateIndexStatement.class, statements[2].getClass());
+        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
+        Assertions.assertEquals(CreateIndexStatement.class, statements[2].getClass());
     }
 
     @Test
