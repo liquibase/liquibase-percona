@@ -69,6 +69,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, and 3.5.3 (liquibase-percona 1.3.1, 1.4.0)
 * Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
 * Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.2). Percona Toolkit 3.0.12.
+* Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.3 (liquibase-percona 1.6.0). Percona Toolkit 3.0.13.
 
 
 ## Supported Changes and examples
@@ -343,6 +344,10 @@ integration test.
 ## Changelog
 
 ### Version 1.6.0 (????-??-??)
+
+The minimum Java runtime version is now Java 1.7.
+
+*   Fixed [#30](https://github.com/adangel/liquibase-percona/issues/30): Update liquibase
 
 ### Version 1.5.2 (2019-04-14)
 

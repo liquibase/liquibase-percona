@@ -23,14 +23,15 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("test-changelog.xml::3::Alice: Executing: pt-online-schema-change --alter=\"DROP KEY uq_id_name\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=127.0.0.1 --port=${config_port} --user=${config_user} --password=*** --execute D=${config_dbname},t=person");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Altering `${config_dbname}`.`person`...");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Creating new table...");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Created new table ${config_dbname}._person_new OK.");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Altering new table...");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Altered `${config_dbname}`.`_person_new` OK.");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Successfully altered `${config_dbname}`.`person`.");
-assert buildLogText.contains("test-changelog.xml::3::Alice: Unique constraint uq_id_name dropped from person");
+assert buildLogText.contains("Executing: pt-online-schema-change --alter=\"DROP KEY uq_id_name\" --alter-foreign-keys-method=auto --nocheck-unique-key-change --host=127.0.0.1 --port=${config_port} --user=${config_user} --password=*** --execute D=${config_dbname},t=person");
+assert buildLogText.contains("Altering `${config_dbname}`.`person`...");
+assert buildLogText.contains("Creating new table...");
+assert buildLogText.contains("Created new table ${config_dbname}._person_new OK.");
+assert buildLogText.contains("Altering new table...");
+assert buildLogText.contains("Altered `${config_dbname}`.`_person_new` OK.");
+assert buildLogText.contains("Successfully altered `${config_dbname}`.`person`.");
+assert buildLogText.contains("Unique constraint uq_id_name dropped from person");
+assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully");
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
