@@ -1,5 +1,10 @@
 package liquibase.ext.percona;
 
+import java.util.Collections;
+import java.util.List;
+
+import liquibase.change.Change;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +19,24 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import java.util.Collections;
-import java.util.List;
-
-import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
-import liquibase.change.core.AddUniqueConstraintChange;
+import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
 import liquibase.util.StringUtils;
 
-/**
- * Subclasses the original {@link liquibase.change.core.AddUniqueConstraintChange} to
- * integrate with pt-online-schema-change.
- * @see PTOnlineSchemaChangeStatement
- */
-@DatabaseChange(name = PerconaAddUniqueConstraintChange.NAME, description = "Adds a unique constraint to an existing column or set of columns",
-    priority = PerconaAddUniqueConstraintChange.PRIORITY, appliesTo = "column")
-public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange implements PerconaChange {
-    public static final String NAME = "addUniqueConstraint";
+@DatabaseChange(name = PerconaAddPrimaryKeyChange.NAME, description = "Adds creates a primary key out of an existing column or set of columns.",
+    priority = PerconaAddPrimaryKeyChange.PRIORITY, appliesTo = "column")
+public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements PerconaChange {
+    public static final String NAME = "addPrimaryKey";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
     private Boolean usePercona;
 
     /**
-     * Generates the statements required for the add unique constraint change.
+     * Generates the statements required for the add primary key change.
      * In case of a MySQL database, percona toolkit will be used.
      * In case of generating the SQL statements for review (updateSQL) the command
      * will be added as a comment.
@@ -59,31 +55,13 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
 
-        alter.append("ADD ");
-        if (StringUtil.isNotEmpty(getConstraintName())) {
-            alter.append("CONSTRAINT ");
-            alter.append(database.escapeConstraintName(getConstraintName()));
-            alter.append(" ");
-        }
-        alter.append("UNIQUE (");
+        alter.append("ADD PRIMARY KEY (");
         List<String> columns = StringUtils.splitAndTrim(getColumnNames(), ",");
         if (columns == null) columns = Collections.emptyList();
         alter.append(database.escapeColumnNameList(StringUtils.join(columns, ", ")));
-        alter.append(")");
+        alter.append(')');
 
         return alter.toString();
-    }
-
-    @Override
-    protected Change[] createInverses() {
-        // that's the percona drop unique constraint change
-        PerconaDropUniqueConstraintChange inverse = new PerconaDropUniqueConstraintChange();
-        inverse.setSchemaName(getSchemaName());
-        inverse.setCatalogName(getCatalogName());
-        inverse.setTableName(getTableName());
-        inverse.setConstraintName(getConstraintName());
-
-        return new Change[] { inverse };
     }
 
     @Override
@@ -109,5 +87,10 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     @Override
     public String getTargetDatabaseName() {
         return getCatalogName();
+    }
+
+    @Override
+    protected Change[] createInverses() {
+        return null;
     }
 }
