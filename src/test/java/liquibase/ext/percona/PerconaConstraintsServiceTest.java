@@ -18,15 +18,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class PerconaForeignKeyServiceTest {
+public class PerconaConstraintsServiceTest {
     @BeforeAll
     public static void init() {
-        PerconaForeignKeyService.getInstance().disable();
+        PerconaConstraintsService.getInstance().disable();
     }
 
     @Test
     public void testPrefixing() {
-        PerconaForeignKeyService service = PerconaForeignKeyService.getInstance();
+        PerconaConstraintsService service = PerconaConstraintsService.getInstance();
         Assertions.assertEquals("_FK_1", service.determineCurrentConstraintName(null, createChange("table", "FK_1")));
         Assertions.assertEquals("__FK_1", service.determineCurrentConstraintName(null, createChange("table", "_FK_1")));
         Assertions.assertEquals("FK_1", service.determineCurrentConstraintName(null, createChange("table", "__FK_1")));

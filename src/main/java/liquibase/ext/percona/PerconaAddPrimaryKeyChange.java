@@ -55,6 +55,12 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
     public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
 
+        // in case there is a primary key already, we need to drop it first
+        // this should be done with one single pt-osc call
+        if (PerconaConstraintsService.getInstance().hasPrimaryKey(database, this)) {
+            alter.append("DROP PRIMARY KEY, ");
+        }
+
         alter.append("ADD PRIMARY KEY (");
         List<String> columns = StringUtils.splitAndTrim(getColumnNames(), ",");
         if (columns == null) columns = Collections.emptyList();
