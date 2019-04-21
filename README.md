@@ -115,6 +115,36 @@ Corresponding command:
     pt-online-schema-change --alter="ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (id)" ...
 
 
+### AddPrimaryKey
+
+Since: liquibase-percona 1.7.0
+
+Automatic rollback supported? no
+
+Example:
+
+    <changeSet id="2" author="Alice">
+        <addPrimaryKey tableName="person" columnNames="id, name"/>
+    </changeSet>
+
+Corresponding command:
+
+    pt-online-schema-change --alter="DROP PRIMARY KEY, ADD PRIMARY KEY (id, name)" ...
+
+**Note:** When the table has already a primary key, a "DROP PRIMARY KEY" statement is added to the
+alter command first. By default, the pt-online-schema-change will not execute this change,
+you have to set the additional option `--no-check-alter` first
+(see [check-alter](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html#id1)).
+Make sure to read this section completely.
+
+In order to figure out, whether a primary key exists already (and therefore the DROP PRIMARY KEY statement is needed),
+a database connection is required. This means, the generated migration SQL will be wrong (it only contains the
+ADD PRIMARY KEY statement).
+
+Automatic rollback is not supported by this percona change (as opposed to the plain liquibase addPrimaryKey change).
+pt-osc usually needs a primary key or a unique key in order to operate properly. If the table has no such keys,
+it most likey will refuse to operate.
+
 ### AddUniqueConstraint
 
 Since: liquibase-percona 1.3.0
