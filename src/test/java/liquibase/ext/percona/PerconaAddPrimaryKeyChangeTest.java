@@ -1,7 +1,5 @@
 package liquibase.ext.percona;
 
-import java.lang.annotation.Documented;
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +15,6 @@ import java.lang.annotation.Documented;
  */
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -25,7 +22,6 @@ import liquibase.exception.RollbackImpossibleException;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.AddPrimaryKeyStatement;
 import liquibase.statement.core.CommentStatement;
-import liquibase.statement.core.DropPrimaryKeyStatement;
 
 public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<PerconaAddPrimaryKeyChange> {
 
@@ -34,7 +30,6 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
     }
 
     private String alterText;
-    private String alterRollbackText;
 
     @Override
     protected void setupChange(PerconaAddPrimaryKeyChange change) {
@@ -43,7 +38,6 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
         change.setConstraintName("pk_id_name");
 
         alterText = "ADD PRIMARY KEY (id, name)";
-        alterRollbackText = "DROP PRIMARY KEY";
     }
 
     @Test
@@ -55,12 +49,14 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
     }
 
     @Test
-    @Disabled
     public void testWithoutPerconaRollback() throws RollbackImpossibleException {
         PTOnlineSchemaChangeStatement.available = false;
-        SqlStatement[] statements = generateRollbackStatements();
-        Assertions.assertEquals(1, statements.length);
-        Assertions.assertEquals(DropPrimaryKeyStatement.class, statements[0].getClass());
+        Assertions.assertThrows(RollbackImpossibleException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateRollbackStatements();
+            }
+        });
     }
 
     @Test
@@ -77,28 +73,18 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
     }
 
     @Test
-    @Disabled
-    public void testWithoutPerdatabaseconaRollbackAndFail() throws RollbackImpossibleException {
-        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
-        PTOnlineSchemaChangeStatement.available = false;
-
-        Assertions.assertThrows(RuntimeException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                generateRollbackStatements();
-            }
-        });
-    }
-
-    @Test
     public void testReal() {
         assertPerconaChange(alterText);
     }
 
     @Test
-    @Disabled
     public void testRealRollback() throws RollbackImpossibleException {
-        assertPerconaRollbackChange(alterRollbackText);
+        Assertions.assertThrows(RollbackImpossibleException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateRollbackStatements();
+            }
+        });
     }
 
     @Test
@@ -119,21 +105,15 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
     }
 
     @Test
-    @Disabled
     public void testRollbackSQL() throws RollbackImpossibleException {
         enableLogging();
 
-        SqlStatement[] statements = generateRollbackStatements();
-        Assertions.assertEquals(3, statements.length);
-        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assertions.assertEquals("pt-online-schema-change "
-                + "--alter-foreign-keys-method=auto "
-                + "--nocheck-unique-key-change "
-                + "--alter=\"" + alterRollbackText + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((CommentStatement)statements[0]).getText());
-        Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
-        Assertions.assertEquals(DropPrimaryKeyStatement.class, statements[2].getClass());
+        Assertions.assertThrows(RollbackImpossibleException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateRollbackStatements();
+            }
+        });
     }
 
     @Test
@@ -153,20 +133,16 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
     }
 
     @Test
-    @Disabled
     public void testRollbackSQLNoAlterSqlDryMode() throws RollbackImpossibleException {
         enableLogging();
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "true");
 
-        SqlStatement[] statements = generateRollbackStatements();
-        Assertions.assertEquals(1, statements.length);
-        Assertions.assertEquals(CommentStatement.class, statements[0].getClass());
-        Assertions.assertEquals("pt-online-schema-change "
-                + "--alter-foreign-keys-method=auto "
-                + "--nocheck-unique-key-change "
-                + "--alter=\"" + alterRollbackText + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
-                ((CommentStatement)statements[0]).getText());
+        Assertions.assertThrows(RollbackImpossibleException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                generateRollbackStatements();
+            }
+        });
     }
 
     @Test
