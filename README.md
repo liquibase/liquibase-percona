@@ -375,7 +375,9 @@ integration test.
 
 ## Changelog
 
-### Version 1.6.1 (????-??-??)
+### Version 1.7.0 (????-??-??)
+
+*   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
 
 ### Version 1.6.0 (2019-04-20)
 
