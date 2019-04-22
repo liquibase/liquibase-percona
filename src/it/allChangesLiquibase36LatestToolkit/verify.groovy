@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def perconaFullPath = "${project_build_directory}/percona-toolkit/percona-toolkit-LATEST/bin/pt-online-schema-change"
-def defaultOptions = "--alter-foreign-keys-method=auto --nocheck-unique-key-change"
+def defaultOptions = "--alter-foreign-keys-method=auto --no-check-unique-key-change --no-check-alter"
 def buildLogText = buildLog.text;
 assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --alter=\"ADD COLUMN age INT NULL\" --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person")
 assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran successfully")
@@ -38,6 +38,9 @@ assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --
 assert buildLogText.contains("ChangeSet test-changelog.xml::8::Alice ran successfully")
 assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --alter=\"DROP FOREIGN KEY _fk_person_address\"")
 assert buildLogText.contains("ChangeSet test-changelog.xml::9::Alice ran successfully")
+assert buildLogText.contains("ChangeSet test-changelog.xml::10::Alice ran successfully")
+assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --alter=\"DROP PRIMARY KEY, ADD PRIMARY KEY (id, name)\"")
+assert buildLogText.contains("ChangeSet test-changelog.xml::11::Alice ran successfully")
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
@@ -49,4 +52,6 @@ assert sqlText.contains("${perconaFullPath} ${defaultOptions} --alter=\"DROP IND
 assert sqlText.contains("${perconaFullPath} ${defaultOptions} --alter=\"MODIFY email VARCHAR(400)\"")
 assert sqlText.contains("${perconaFullPath} ${defaultOptions} --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (name)\"")
 assert sqlText.contains("${perconaFullPath} ${defaultOptions} --alter=\"DROP FOREIGN KEY _fk_person_address\"")
+// Note: only adding the primary key, not dropping it in the migration sql.
+assert sqlText.contains("${perconaFullPath} ${defaultOptions} --alter=\"ADD PRIMARY KEY (id, name)\"")
 assert !sqlText.contains("password=${config_password}")
