@@ -36,7 +36,7 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}", props)
+    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
     s = con.createStatement();
     r = s.executeQuery("SHOW INDEX FROM person")
     assert r.first(); // that's the primary key

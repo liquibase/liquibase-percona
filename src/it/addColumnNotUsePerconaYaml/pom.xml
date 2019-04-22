@@ -37,7 +37,7 @@
                 <configuration>
                     <changeLogFile>test-changelog.yaml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://@config_host@:@config_port@/@config_dbname@</url>
+                    <url>jdbc:mysql://@config_host@:@config_port@/@config_dbname@?useSSL=false</url>
                     <username>@config_user@</username>
                     <password>@config_password@</password>
                 </configuration>
