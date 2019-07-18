@@ -347,6 +347,8 @@ integration test.
 
 ### Version 1.6.1 (????-??-??)
 
+*   Fixed [#37](https://github.com/adangel/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
+
 ### Version 1.6.0 (2019-04-20)
 
 The minimum Java runtime version is now Java 1.7.
