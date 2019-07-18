@@ -87,7 +87,11 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
                 if (arg.startsWith("\"")) {
                     inQuotes = true;
                     arg = arg.substring(1);
+                } else if (arg.contains("=\"")) {
+                    inQuotes = true;
+                    arg = arg.replaceFirst("=\"", "=");
                 }
+
                 if (arg.endsWith("\"")) {
                     inQuotes = false;
                     arg = arg.substring(0, arg.length() - 1);
