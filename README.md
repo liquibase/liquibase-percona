@@ -25,6 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Version 1.7.1 (????-??-??)](#version-171---)
     *   [Version 1.7.0 (2020-07-04)](#version-170-2020-07-04)
     *   [Version 1.6.0 (2019-04-20)](#version-160-2019-04-20)
     *   [Version 1.5.2 (2019-04-14)](#version-152-2019-04-14)
@@ -376,6 +377,8 @@ integration test.
 
 ## Changelog
 
+### Version 1.7.1 (????-??-??)
+
 ### Version 1.7.0 (2020-07-04)
 
 *   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
@@ -523,12 +526,12 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.6.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `1.7.1-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.6.1-SNAPSHOT</version>
+        <version>1.7.1-SNAPSHOT</version>
     </dependency>
 
 
