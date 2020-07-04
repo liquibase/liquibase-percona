@@ -345,7 +345,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.6.1 (????-??-??)
+### Version 1.7.0 (????-??-??)
 
 *   Fixed [#37](https://github.com/adangel/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
 
