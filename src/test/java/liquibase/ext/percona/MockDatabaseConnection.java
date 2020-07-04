@@ -14,6 +14,9 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.sql.Driver;
+import java.util.Properties;
+
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.exception.DatabaseException;
@@ -103,5 +106,14 @@ public class MockDatabaseConnection implements DatabaseConnection {
 
     @Override
     public void attached(Database database) {
+    }
+
+    @Override
+    public int getPriority() {
+        return 0;
+    }
+
+    @Override
+    public void open(String url, Driver driverObject, Properties driverProperties) throws DatabaseException {
     }
 }

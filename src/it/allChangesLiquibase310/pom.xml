@@ -12,8 +12,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>@project.groupId@.it</groupId>
-    <artifactId>liquibase-percona-it-allChangesLiquibase36MySQL6</artifactId>
-    <description>Using a new mysql connector</description>
+    <artifactId>liquibase-percona-it-allChangesLiquibase310</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>my-app</name>
 
@@ -22,7 +21,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.6.3</version>
+                <version>3.10.1</version>
                 <dependencies>
                     <dependency>
                         <groupId>@project.groupId@</groupId>
@@ -32,7 +31,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>6.0.6</version>
+                        <version>@mysql.version@</version>
                     </dependency>
                 </dependencies>
                 <configuration>

@@ -71,6 +71,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, and 3.5.4 (liquibase-percona 1.4.1)
 * Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.2). Percona Toolkit 3.0.12.
 * Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.3 (liquibase-percona 1.6.0). Percona Toolkit 3.0.13.
+* Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.0.13.
 
 
 ## Supported Changes and examples
@@ -379,6 +380,7 @@ integration test.
 
 *   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
 *   Fixed [#37](https://github.com/adangel/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
+*   Fixed [#53](https://github.com/adangel/liquibase-percona/issues/53): Update to support latest liquibase 3.10.1
 
 ### Version 1.6.0 (2019-04-20)
 
