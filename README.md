@@ -381,6 +381,7 @@ integration test.
 *   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
 *   Fixed [#37](https://github.com/adangel/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
 *   Fixed [#53](https://github.com/adangel/liquibase-percona/issues/53): Update to support latest liquibase 3.10.1
+*   Fixed [#54](https://github.com/adangel/liquibase-percona/issues/54): Update mysql-connector-java to 8.0.20
 *   Fixed [#55](https://github.com/adangel/liquibase-percona/issues/55): Update percona toolkit to 3.2.0
 
 ### Version 1.6.0 (2019-04-20)

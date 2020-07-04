@@ -40,10 +40,10 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
     s = con.createStatement();
     r = s.executeQuery("SHOW INDEX FROM person")
-    assert r.first()
+    assert r.next()
     assert r.next() // we need the second row
     assertColumn(r, true, "emailIdx", "email")
     r.close()

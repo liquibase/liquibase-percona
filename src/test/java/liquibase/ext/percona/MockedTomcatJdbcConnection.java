@@ -30,8 +30,6 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.apache.tomcat.jdbc.pool.PooledConnection;
 import org.apache.tomcat.jdbc.pool.ProxyConnection;
 
-import com.mysql.jdbc.ConnectionImpl;
-
 public class MockedTomcatJdbcConnection {
 
     /**
@@ -95,18 +93,6 @@ public class MockedTomcatJdbcConnection {
         public Connection getConnection() throws SQLException {
             Properties info = new Properties();
             return new NoOpMySqlConnection("host", 3306, info, "database", "jdbc:mysql://");
-        }
-    }
-
-    private static class NoOpMySqlConnection extends ConnectionImpl {
-        private static final long serialVersionUID = 6542644310976667501L;
-        public NoOpMySqlConnection(String hostToConnectTo, int portToConnectTo, Properties info,
-                String databaseToConnectTo, String url) throws SQLException {
-            super(hostToConnectTo, portToConnectTo, info, databaseToConnectTo, url);
-        }
-        @Override
-        public void createNewIO(boolean isForReconnect) throws SQLException {
-            // overridden, so that this connection doesn't really try to connect
         }
     }
 }

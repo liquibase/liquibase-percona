@@ -33,10 +33,10 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
     s = con.createStatement();
     r = s.executeQuery("DESCRIBE person")
-    assert r.first()
+    assert r.next()
     assertColumn(r, "name", "varchar(255)", "NO", null)
     assert r.next()
     assertColumn(r, "address", "varchar(255)", "YES", null)
@@ -51,10 +51,10 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}_cross?useSSL=false", props)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}_cross?useSSL=false", props)
     s = con.createStatement();
     r = s.executeQuery("DESCRIBE person")
-    assert r.first()
+    assert r.next()
     assertColumn(r, "name", "varchar(255)", "NO", null)
     assert r.next()
     assertColumn(r, "address", "varchar(255)", "YES", null)

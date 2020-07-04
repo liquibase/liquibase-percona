@@ -43,15 +43,15 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
     s = con.createStatement();
     r = s.executeQuery("SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA='${config_dbname}' AND TABLE_NAME='person' AND CONSTRAINT_TYPE='PRIMARY KEY'")
-    assert r.first()
+    assert r.next()
     assertColumn(r, "PRIMARY", "PRIMARY KEY")
     r.close()
 
     r = s.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='${config_dbname}' AND TABLE_NAME='person' AND COLUMN_KEY='PRI' ORDER BY 1");
-    assert r.first()
+    assert r.next()
     assert r.getString(1) == "id"
     assert r.next()
     assert r.getString(1) == "name"

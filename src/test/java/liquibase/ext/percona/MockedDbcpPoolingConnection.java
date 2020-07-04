@@ -22,8 +22,6 @@ import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.BaseObjectPool;
 import org.apache.commons.pool.ObjectPool;
 
-import com.mysql.jdbc.ConnectionImpl;
-
 public class MockedDbcpPoolingConnection {
 
     /**
@@ -64,18 +62,6 @@ public class MockedDbcpPoolingConnection {
         @Override
         public void invalidateObject(Object obj) throws Exception {
             throw new UnsupportedOperationException();
-        }
-    }
-
-    private static class NoOpMySqlConnection extends ConnectionImpl {
-        private static final long serialVersionUID = 6542644310976667501L;
-        public NoOpMySqlConnection(String hostToConnectTo, int portToConnectTo, Properties info,
-                String databaseToConnectTo, String url) throws SQLException {
-            super(hostToConnectTo, portToConnectTo, info, databaseToConnectTo, url);
-        }
-        @Override
-        public void createNewIO(boolean isForReconnect) throws SQLException {
-            // overridden, so that this connection doesn't really try to connect
         }
     }
 }
