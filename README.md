@@ -25,7 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 1.7.0 (????-??-??)](#version-170---)
+    *   [Version 1.7.0 (2020-07-04)](#version-170-2020-07-04)
     *   [Version 1.6.0 (2019-04-20)](#version-160-2019-04-20)
     *   [Version 1.5.2 (2019-04-14)](#version-152-2019-04-14)
     *   [Version 1.5.1 (2018-11-10)](#version-151-2018-11-10)
@@ -376,7 +376,7 @@ integration test.
 
 ## Changelog
 
-### Version 1.7.0 (????-??-??)
+### Version 1.7.0 (2020-07-04)
 
 *   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
 *   Fixed [#37](https://github.com/adangel/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
@@ -483,7 +483,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.6.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-1.7.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -493,7 +493,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </dependency>
 
 
