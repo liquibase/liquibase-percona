@@ -13,6 +13,7 @@ package liquibase.ext.percona;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilterOutputStream;

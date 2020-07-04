@@ -69,7 +69,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         System.setProperty(Configuration.NO_ALTER_SQL_DRY_MODE, "false");
         System.setProperty(Configuration.SKIP_CHANGES, "");
 
-        PerconaForeignKeyService.getInstance().disable();
+        PerconaConstraintsService.getInstance().disable();
 
         setupChange(change);
     }

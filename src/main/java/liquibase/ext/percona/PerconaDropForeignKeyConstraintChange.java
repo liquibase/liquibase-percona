@@ -54,7 +54,7 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     public String generateAlterStatement(Database database) {
         StringBuilder alter = new StringBuilder();
 
-        String contraintName = PerconaForeignKeyService.getInstance().determineCurrentConstraintName(database, this);
+        String contraintName = PerconaConstraintsService.getInstance().determineCurrentConstraintName(database, this);
 
         alter.append("DROP FOREIGN KEY ");
         alter.append(database.escapeConstraintName(contraintName));

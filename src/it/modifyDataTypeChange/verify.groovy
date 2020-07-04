@@ -1,6 +1,5 @@
 import java.sql.ResultSet;
 
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,7 +38,7 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}", props)
+    con = new com.mysql.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
     s = con.createStatement();
     r = s.executeQuery("SHOW COLUMNS FROM person")
     assert r.first()

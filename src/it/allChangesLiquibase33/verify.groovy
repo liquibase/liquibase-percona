@@ -1,6 +1,5 @@
 import java.sql.ResultSet;
 
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,7 +22,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-def defaultOptions = "--alter-foreign-keys-method=auto --nocheck-unique-key-change"
+def defaultOptions = "--alter-foreign-keys-method=auto --no-check-unique-key-change --no-check-alter"
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::2::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"ADD COLUMN age INT NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::3::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"DROP COLUMN age\"")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::4::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"ADD UNIQUE INDEX emailIdx (email)\"")
@@ -31,6 +30,7 @@ assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml:
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::6::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"MODIFY email VARCHAR(400)\"")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::8::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (name)\"")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::9::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"DROP FOREIGN KEY _fk_person_address\"")
+assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::11::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"DROP PRIMARY KEY, ADD PRIMARY KEY (id, name)\"")
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
@@ -42,4 +42,6 @@ assert sqlText.contains("pt-online-schema-change ${defaultOptions} --alter=\"DRO
 assert sqlText.contains("pt-online-schema-change ${defaultOptions} --alter=\"MODIFY email VARCHAR(400)\"")
 assert sqlText.contains("pt-online-schema-change ${defaultOptions} --alter=\"ADD CONSTRAINT fk_person_address FOREIGN KEY (person_id) REFERENCES person (name)\"")
 assert sqlText.contains("pt-online-schema-change ${defaultOptions} --alter=\"DROP FOREIGN KEY _fk_person_address\"")
+// Note: only adding the primary key, not dropping it in the migration sql.
+assert sqlText.contains("pt-online-schema-change ${defaultOptions} --alter=\"ADD PRIMARY KEY (id, name)\"")
 assert !sqlText.contains("password=${config_password}")

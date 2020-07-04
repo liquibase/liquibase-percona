@@ -57,4 +57,18 @@
     <changeSet id="9" author="Alice">
         <dropForeignKeyConstraint baseTableName="address" constraintName="fk_person_address" />
     </changeSet>
+
+    <changeSet id="10" author="Alice">
+        <createTable tableName="other_person">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)" />
+            <column name="email" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11" author="Alice">
+        <addPrimaryKey tableName="other_person" columnNames="id, name"/>
+    </changeSet>
 </databaseChangeLog>

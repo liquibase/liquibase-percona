@@ -27,14 +27,15 @@ import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.SnapshotControl;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.structure.core.ForeignKey;
+import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 
-public class PerconaForeignKeyService {
-    private static PerconaForeignKeyService instance = new PerconaForeignKeyService();
+public class PerconaConstraintsService {
+    private static PerconaConstraintsService instance = new PerconaConstraintsService();
     private Logger log = LogFactory.getInstance().getLog();
     private boolean enabled = true;
 
-    public static PerconaForeignKeyService getInstance() {
+    public static PerconaConstraintsService getInstance() {
         return instance;
     }
 
@@ -121,5 +122,36 @@ public class PerconaForeignKeyService {
         } else {
             return "_" + constraintName;
         }
+    }
+
+    /**
+     * Checks whether the table, to which a primary key should be added, has already a primary key.
+     *
+     * <p>Note: This needs database access.
+     *
+     * @param database the database
+     * @param change the add primary key change
+     * @return <code>true</code> if the table has already a primary key, <code>false</code> otherwise.
+     */
+    public boolean hasPrimaryKey(Database database, PerconaAddPrimaryKeyChange change) {
+        boolean result = false;
+
+        if (enabled && !PerconaChangeUtil.isDryRun(database) && PerconaChangeUtil.isConnected(database)) {
+            log.debug("Searching for primary key in table " + change.getTableName());
+
+            try {
+                PrimaryKey primaryKeyExample = new PrimaryKey("primary", change.getCatalogName(), change.getSchemaName(), change.getTableName());
+                result = SnapshotGeneratorFactory.getInstance().has(primaryKeyExample, database);
+            } catch (DatabaseException e) {
+                // this might happen, if the table does not exist yet.
+                // the primary key is checked already during changelog validation before any change might have been executed.
+                log.debug("Failed to find primary key for table: " + change.getTableName(), e);
+            } catch (InvalidExampleException e) {
+                throw new UnexpectedLiquibaseException("Failed to find primary key for table: " + change.getTableName(), e);
+            }
+
+            log.debug("No primary key in table " + change.getTableName() + " found.");
+        }
+        return result;
     }
 }
