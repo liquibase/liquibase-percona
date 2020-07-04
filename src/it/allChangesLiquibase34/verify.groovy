@@ -24,7 +24,7 @@ File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
 def defaultOptions = "--alter-foreign-keys-method=auto --nocheck-unique-key-change"
-assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::2::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"ADD COLUMN age INT NULL\" --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person")
+assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::2::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"ADD COLUMN age INT NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::3::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"DROP COLUMN age\"")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::4::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"ADD UNIQUE INDEX emailIdx (email)\"")
 assert buildLogText.contains("liquibase: test-changelog.xml: test-changelog.xml::5::Alice: Executing: pt-online-schema-change ${defaultOptions} --alter=\"DROP INDEX emailIdx\"")

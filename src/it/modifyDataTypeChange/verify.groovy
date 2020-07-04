@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"MODIFY email VARCHAR(400)\" --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person")
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"MODIFY email VARCHAR(400)\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("Altering `testdb`.`person`...")
 assert buildLogText.contains("Successfully altered `testdb`.`person`.")
 assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran successfully")

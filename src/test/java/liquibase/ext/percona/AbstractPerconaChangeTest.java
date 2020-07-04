@@ -105,8 +105,8 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"" + alter + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=" + targetDatabaseName
-                + ",t=" + targetTableName,
+                + "--password=*** --execute "
+                + "h=localhost,P=3306,u=user,D=" + targetDatabaseName + ",t=" + targetTableName,
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
     }
 

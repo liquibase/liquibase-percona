@@ -106,7 +106,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"ADD COLUMN new_column INT NULL\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
+                + "--password=*** --execute "
+                + "h=localhost,P=3306,u=user,D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
         Assertions.assertEquals(AddColumnStatement.class, statements[2].getClass());
@@ -123,7 +124,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"DROP COLUMN new_column\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
+                + "--password=*** --execute "
+                + "h=localhost,P=3306,u=user,D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
         Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
         Assertions.assertEquals(DropColumnStatement.class, statements[2].getClass());
@@ -141,7 +143,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"ADD COLUMN new_column INT NULL\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
+                + "--password=*** --execute "
+                + "h=localhost,P=3306,u=user,D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }
 
@@ -157,7 +160,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"DROP COLUMN new_column\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=person",
+                + "--password=*** --execute "
+                + "h=localhost,P=3306,u=user,D=testdb,t=person",
                 ((CommentStatement)statements[0]).getText());
     }
 

@@ -25,7 +25,7 @@ assert buildLog.exists()
 def perconaFullPath = "${project_build_directory}/percona-toolkit/percona-toolkit-LATEST/bin/pt-online-schema-change"
 def defaultOptions = "--alter-foreign-keys-method=auto --nocheck-unique-key-change"
 def buildLogText = buildLog.text;
-assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --alter=\"ADD COLUMN age INT NULL\" --host=${config_host} --port=${config_port} --user=${config_user} --password=*** --execute D=testdb,t=person")
+assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --alter=\"ADD COLUMN age INT NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran successfully")
 assert buildLogText.contains("Executing: ${perconaFullPath} ${defaultOptions} --alter=\"DROP COLUMN age\"")
 assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully")

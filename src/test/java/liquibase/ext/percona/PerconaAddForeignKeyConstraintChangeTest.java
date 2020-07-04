@@ -114,7 +114,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"" + alterText + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
+                + "--password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
         Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
         Assertions.assertEquals(AddForeignKeyConstraintStatement.class, statements[2].getClass());
@@ -131,7 +131,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"" + alterRollbackText + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
+                + "--password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
         Assertions.assertEquals(CommentStatement.class, statements[1].getClass());
         Assertions.assertEquals(DropForeignKeyConstraintStatement.class, statements[2].getClass());
@@ -149,7 +149,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"" + alterText + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
+                + "--password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
     }
 
@@ -165,7 +165,7 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
                 + "--alter-foreign-keys-method=auto "
                 + "--nocheck-unique-key-change "
                 + "--alter=\"" + alterRollbackText + "\" "
-                + "--host=localhost --port=3306 --user=user --password=*** --execute D=testdb,t=address",
+                + "--password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=address",
                 ((CommentStatement)statements[0]).getText());
     }
 

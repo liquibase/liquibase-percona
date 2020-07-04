@@ -125,23 +125,29 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
 
         commands.add("--alter=" + alterStatement);
 
+        StringBuilder dsn = new StringBuilder(200);
+
         if (database.getConnection() != null) {
             DatabaseConnectionUtil connection = new DatabaseConnectionUtil(database.getConnection());
-            commands.add("--host=" + connection.getHost());
-            commands.add("--port=" + connection.getPort());
-            commands.add("--user=" + connection.getUser());
+            dsn.append("h=").append(connection.getHost());
+            dsn.append(",P=").append(connection.getPort());
+            dsn.append(",u=").append(connection.getUser());
+            dsn.append(',');
+
             String pw = connection.getPassword();
             if (pw != null) {
                 commands.add("--password=" + pw);
             }
         }
+        if (databaseName != null) {
+            dsn.append("D=").append(databaseName);
+        } else {
+            dsn.append("D=").append(database.getLiquibaseSchemaName());
+        }
+        dsn.append(",t=").append(tableName);
 
         commands.add("--execute");
-        if (databaseName != null) {
-            commands.add("D=" + databaseName + ",t=" + tableName);
-        } else {
-            commands.add("D=" + database.getLiquibaseSchemaName() + ",t=" + tableName);
-        }
+        commands.add(dsn.toString());
         return commands;
     }
 
