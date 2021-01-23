@@ -17,8 +17,8 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:http://github.com/adangel/liquibase-percona.git</connection>
-        <url>https://github.com/adangel/liquibase-percona</url>
+        <connection>scm:git:http://github.com/liquibase/liquibase-percona.git</connection>
+        <url>https://github.com/liquibase/liquibase-percona</url>
       <tag>HEAD</tag>
   </scm>
 
@@ -26,7 +26,7 @@
         <developer>
             <id>adangel</id>
             <name>Andreas Dangel</name>
-            <email>adangel at users.sourceforge.net</email>
+            <email>andreas.dangel at adangel.org</email>
             <timezone>+1</timezone>
         </developer>
     </developers>
