@@ -1,6 +1,6 @@
 # Liquibase Percona Extension
 
-[![Build Status](https://travis-ci.org/adangel/liquibase-percona.svg?branch=master)](https://travis-ci.org/adangel/liquibase-percona)
+[![Build Status](https://github.com/liquibase/liquibase-percona/workflows/Build/badge.svg)](https://github.com/liquibase/liquibase-percona/actions)
 
 Extension to support the tool `pt-online-schema-change` from [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/LATEST/index.html).
 This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
