@@ -35,9 +35,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <java.version>7</java.version>
-        <liquibase.version>3.10.1</liquibase.version>
-        <mysql.version>8.0.20</mysql.version>
-        <percona.toolkit.version>3.2.0</percona.toolkit.version>
+        <liquibase.version>3.10.3</liquibase.version>
+        <mysql.version>8.0.22</mysql.version>
+        <percona.toolkit.version>3.3.0</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--
@@ -316,7 +316,7 @@
                         <artifactId>maven-invoker-plugin</artifactId>
                         <version>3.2.1</version>
                         <configuration>
-                            <!-- <debug>true</debug> -->
+<!--                             <debug>true</debug> -->
                             <projectsDirectory>src/it</projectsDirectory>
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                             <preBuildHookScript>setup</preBuildHookScript>
