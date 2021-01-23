@@ -25,6 +25,7 @@ This allows to perform a non-locking database upgrade.
     *   [UsePercona flag](#usepercona-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Version 2.0.0 (????-??-??)](#version-200---)
     *   [Version 1.7.1 (????-??-??)](#version-171---)
     *   [Version 1.7.0 (2020-07-04)](#version-170-2020-07-04)
     *   [Version 1.6.0 (2019-04-20)](#version-160-2019-04-20)
@@ -304,7 +305,7 @@ This flag exists since liquibase-percona 1.3.0
 
 It is supported by using the YAML format and since liquibase 3.6.0, you can use it in XML changesets, too:
 
-    <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/adangel/liquibase-percona" liquibasePercona:usePercona="false">
+    <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/liquibase/liquibase-percona" liquibasePercona:usePercona="false">
         <column name="address" type="varchar(255)"/>
     </addColumn>
 
@@ -382,6 +383,8 @@ integration test.
 *   The minimum Java runtime version is now Java 1.8.
 *   Liquibase 4.2+ is supported.
 *   Support for older liquibase versions has been dropped.
+*   The XML namespace for this extension is now "http://github.com/liquibase/liquibase-percona". This only
+    is affecting you, if you use the [UsePercona flag](#usepercona-flag).
 
 ### Version 1.7.1 (????-??-??)
 
