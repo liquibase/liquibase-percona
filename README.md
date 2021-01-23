@@ -73,7 +73,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.2 (liquibase-percona 1.5.2). Percona Toolkit 3.0.12.
 * Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.3 (liquibase-percona 1.6.0). Percona Toolkit 3.0.13.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
-
+* Liquibase 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.2.0.
 
 ## Supported Changes and examples
 
