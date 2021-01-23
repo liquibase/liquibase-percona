@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import liquibase.Scope;
 import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
@@ -61,7 +62,7 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         database.setConnection(conn);
         JdbcExecutor executor = new JdbcExecutor();
         executor.setDatabase(database);
-        ExecutorService.getInstance().setExecutor(database, executor);
+        Scope.getCurrentScope().getSingleton(ExecutorService.class).setExecutor("jdbc", database, executor);
 
         PTOnlineSchemaChangeStatement.available = true;
         PTOnlineSchemaChangeStatement.perconaToolkitVersion = null;
@@ -118,7 +119,8 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
     }
 
     protected void enableLogging() {
-        ExecutorService.getInstance().setExecutor(database, new LoggingExecutor(null, new StringWriter(), database));
+        Scope.getCurrentScope().getSingleton(ExecutorService.class).setExecutor("jdbc",
+                database, new LoggingExecutor(null, new StringWriter(), database));
     }
 
     @Test

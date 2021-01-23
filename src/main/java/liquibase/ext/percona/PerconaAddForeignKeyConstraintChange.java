@@ -24,7 +24,7 @@ import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
+import liquibase.util.StringUtil;
 
 /**
  * Subclasses the original {@link liquibase.change.core.AddForeignKeyConstraintChange} to
@@ -66,18 +66,18 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
         alter.append("FOREIGN KEY ");
 
         alter.append("(");
-        List<String> baseColumns = StringUtils.splitAndTrim(getBaseColumnNames(), ",");
+        List<String> baseColumns = StringUtil.splitAndTrim(getBaseColumnNames(), ",");
         if (baseColumns == null) baseColumns = Collections.emptyList();
-        alter.append(database.escapeColumnNameList(StringUtils.join(baseColumns, ", ")));
+        alter.append(database.escapeColumnNameList(StringUtil.join(baseColumns, ", ")));
         alter.append(") ");
 
         alter.append("REFERENCES ");
         String referencedTable = PerconaChangeUtil.resolveReferencedPerconaTableName(getBaseTableName(), getReferencedTableName());
         alter.append(database.escapeTableName(getReferencedTableCatalogName(), getReferencedTableSchemaName(), referencedTable)).append(" ");
         alter.append("(");
-        List<String> referencedColumns = StringUtils.splitAndTrim(getReferencedColumnNames(), ",");
+        List<String> referencedColumns = StringUtil.splitAndTrim(getReferencedColumnNames(), ",");
         if (referencedColumns == null) referencedColumns = Collections.emptyList();
-        alter.append(database.escapeColumnNameList(StringUtils.join(referencedColumns, ", ")));
+        alter.append(database.escapeColumnNameList(StringUtil.join(referencedColumns, ", ")));
         alter.append(")");
 
         if (getOnDelete() != null) {

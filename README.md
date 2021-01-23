@@ -377,6 +377,12 @@ integration test.
 
 ## Changelog
 
+### Version 2.0.0 (????-??-??)
+
+*   The minimum Java runtime version is now Java 1.8.
+*   Liquibase 4.2+ is supported.
+*   Support for older liquibase versions has been dropped.
+
 ### Version 1.7.1 (????-??-??)
 
 ### Version 1.7.0 (2020-07-04)

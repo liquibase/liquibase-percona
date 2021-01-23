@@ -1,0 +1,10 @@
+liquibase.ext.percona.PerconaAddColumnChange
+liquibase.ext.percona.PerconaAddForeignKeyConstraintChange
+liquibase.ext.percona.PerconaAddPrimaryKeyChange
+liquibase.ext.percona.PerconaAddUniqueConstraintChange
+liquibase.ext.percona.PerconaCreateIndexChange
+liquibase.ext.percona.PerconaDropColumnChange
+liquibase.ext.percona.PerconaDropForeignKeyConstraintChange
+liquibase.ext.percona.PerconaDropIndexChange
+liquibase.ext.percona.PerconaDropUniqueConstraintChange
+liquibase.ext.percona.PerconaModifyDataTypeChange
