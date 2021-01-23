@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+set -e
 
 VERSION=$1
 
@@ -24,29 +25,35 @@ if [ -z "${VERSION}" ]; then
     exit 1
 fi
 
-function get() {
-    filename=$1
-    subdir=$2
-    echo "Downloading $filename..."
-    if [ -s $filename ]; then
-        tar xfz $filename
-        return 0
-    fi
+url=https://downloads.percona.com/downloads/percona-toolkit/${VERSION}/source/tarball/percona-toolkit-${VERSION}.tar.gz
+# the tags on github are unfortunately wrong and can't be used to download the source...
+#url=https://github.com/percona/percona-toolkit/archive/v${VERSION}.tar.gz
 
-    wget -q https://www.percona.com/downloads/percona-toolkit/${VERSION}/${subdir}tarball/$filename \
-        -O $filename && \
-        tar xfz $filename
-}
+filename=percona-toolkit-${VERSION}.tar.gz
+target=percona-toolkit-${VERSION}
 
-
-# first try with hardware
-get percona-toolkit-${VERSION}_x86_64.tar.gz binary/
-if [ $? != 0 ]; then
-    # try without hardware
-    get percona-toolkit-${VERSION}.tar.gz binary/
-fi
-if [ $? != 0 ]; then
-    # try lastly without subdir
-    get percona-toolkit-${VERSION}.tar.gz
+echo "Downloading ${filename}..."
+curl \
+  --location \
+  --output ${filename} \
+  ${url}
+if [ $? -ne 0 ]; then
+  echo "Download from ${url} failed..."
+  exit 1
 fi
 
+echo "Extracting..."
+tar xfz ${filename}
+
+if [ ! -d ${target} ]; then
+  echo "The directory ${target} doesn't exist - something went wrong!"
+  exit 1
+fi
+
+downloaded_version=$(tail -3 ${target}/bin/pt-online-schema-change |head -1)
+if [ "${downloaded_version}" != "pt-online-schema-change ${VERSION}" ]; then
+  echo "Wrong version downloaded: '${downloaded_version}' but expected to be '${VERSION}'"
+  exit 1
+fi
+
+echo "percona toolkit is available at: $(realpath ${target})"

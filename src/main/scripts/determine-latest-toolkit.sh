@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,25 @@
 # limitations under the License.
 #
 
-wget -q https://www.percona.com/downloads/percona-toolkit/LATEST/ -O LATEST.html
-VERSION=$(grep "<title>" LATEST.html | sed 's/.*\([0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*\).*/\1/')
+set -e
+
+# percona way:
+curl \
+  --silent \
+  --output LATEST.html \
+  https://www.percona.com/downloads/percona-toolkit/LATEST/
+
+VERSION=$(grep 'selected="selected">Percona' LATEST.html | sed 's/.*\([0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*\).*/\1/')
 echo $VERSION
+
+# github way:
+# ask github for the tags, use the first tag - hope, it is the latest
+#
+#VERSION=$(curl \
+#  --silent \
+#  --header "Accept: application/vnd.github.v3+json" \
+#  https://api.github.com/repos/percona/percona-toolkit/tags \
+#  | jq ".[0].name" --raw-output)
+#
+# output version, removing potential "v" prefix from version
+#echo ${VERSION##v}
