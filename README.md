@@ -380,6 +380,8 @@ integration test.
 
 ### Version 1.7.1 (????-??-??)
 
+*   Fixed [#58](https://github.com/liquibase/liquibase-percona/pull/58): Update versions (liquibase, percona-toolkit, mysql)
+
 ### Version 1.7.0 (2020-07-04)
 
 *   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
