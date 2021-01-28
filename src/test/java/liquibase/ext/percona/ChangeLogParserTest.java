@@ -40,7 +40,7 @@ public class ChangeLogParserTest {
     @BeforeEach
     public void setup() throws IOException {
         Map<String, String> data = new HashMap<String, String>();
-        String[] files = new String[] { "test-changelog.xml", "test-changelog.yaml", "test-changelog-percona.xml", "dbchangelog-percona.xsd"};
+        String[] files = new String[] { "test-changelog.xml", "test-changelog.yaml" };
         for (String filename : files) {
             data.put(filename, FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/" + filename)));
         }
@@ -74,16 +74,4 @@ public class ChangeLogParserTest {
         Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
         Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
     }
-
-    @Test
-    public void testReadLiquibaseUsePerconaFlagXMLPercona() throws Exception {
-        DatabaseChangeLog changelog = loadChangeLog("test-changelog-percona.xml");
-        Assertions.assertEquals(2, changelog.getChangeSets().size());
-        ChangeSet addColumnChangeset = changelog.getChangeSets().get(1);
-        Change change = addColumnChangeset.getChanges().get(0);
-        Assertions.assertEquals(PerconaAddColumnChange.class, change.getClass());
-        Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
-        Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
-    }
-
 }

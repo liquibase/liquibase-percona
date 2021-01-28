@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import liquibase.Scope;
 import liquibase.change.Change;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
@@ -28,14 +29,13 @@ import liquibase.exception.DatabaseException;
 import liquibase.executor.Executor;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
-import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
 
 public class PerconaChangeUtil {
 
-    private static Logger log = LogFactory.getInstance().getLog();
+    private static Logger log = Scope.getCurrentScope().getLog(PerconaChangeUtil.class);
     private static Map<String, Boolean> alreadyLogged = new HashMap<String, Boolean>();
 
     /**
@@ -45,7 +45,7 @@ public class PerconaChangeUtil {
      * @return <code>true</code> if dry-run is enabled and the statements should *not* be executed.
      */
     public static boolean isDryRun(Database database) {
-        Executor executor = ExecutorService.getInstance().getExecutor(database);
+        Executor executor = Scope.getCurrentScope().getSingleton(ExecutorService.class).getExecutor("jdbc", database);
         if (executor instanceof LoggingExecutor) {
             return true;
         }
@@ -75,11 +75,11 @@ public class PerconaChangeUtil {
         }
 
         if (change.getUsePercona() == null && !Configuration.getDefaultOn()) {
-            log.debug("Not using percona toolkit, because property " + Configuration.DEFAULT_ON + " is false. " + changeSetId + ":" + change.getChangeName());
+            log.fine("Not using percona toolkit, because property " + Configuration.DEFAULT_ON + " is false. " + changeSetId + ":" + change.getChangeName());
             return originalStatements;
         }
         if (change.getUsePercona() != null && !change.getUsePercona()) {
-            log.debug("Not using percona toolkit, because usePercona flag is false for " + changeSetId + ":" + change.getChangeName());
+            log.fine("Not using percona toolkit, because usePercona flag is false for " + changeSetId + ":" + change.getChangeName());
             return originalStatements;
         }
         if (Configuration.skipChange(change.getChangeName())) {

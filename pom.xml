@@ -34,8 +34,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <java.version>7</java.version>
-        <liquibase.version>3.10.3</liquibase.version>
+        <java.version>8</java.version>
+        <liquibase.version>4.2.2</liquibase.version>
         <mysql.version>8.0.22</mysql.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
 
@@ -103,7 +103,6 @@
                     <version>3.8.1</version>
                     <configuration>
                         <release>${java.version}</release>
-                        <testRelease>8</testRelease>
                         <optimize>true</optimize>
                         <debug>true</debug>
                         <encoding>${project.build.sourceEncoding}</encoding>

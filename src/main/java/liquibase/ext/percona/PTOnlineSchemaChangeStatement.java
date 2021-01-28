@@ -28,9 +28,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import liquibase.Scope;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.sql.Sql;
 import liquibase.statement.core.RuntimeStatement;
@@ -45,7 +45,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     static PerconaToolkitVersion perconaToolkitVersion = null;
     static Boolean available = null;
 
-    private static Logger log = LogFactory.getInstance().getLog();
+    private static Logger log = Scope.getCurrentScope().getLog(PTOnlineSchemaChangeStatement.class);
 
     private String databaseName;
     private String tableName;
@@ -199,36 +199,36 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         }
         pb.redirectErrorStream(true);
         Process p = null;
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        final OutputStream tee = new FilterOutputStream(outputStream) {
-            @Override
-            public void write(int b) throws IOException {
-                if (b == '\n') {
-                    log.info(outputStream.toString(Charset.defaultCharset().toString()));
-                    outputStream.reset();
-                } else {
-                    super.write(b);
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            final OutputStream tee = new FilterOutputStream(outputStream) {
+                @Override
+                public void write(int b) throws IOException {
+                    if (b == '\n') {
+                        log.info(outputStream.toString(Charset.defaultCharset().toString()));
+                        outputStream.reset();
+                    } else {
+                        super.write(b);
+                    }
                 }
-            }
-        };
-        try {
+            };
             p = pb.start();
-            final InputStream in = p.getInputStream();
-            final InputStream err = p.getErrorStream();
+            try (InputStream in = p.getInputStream();
+                 InputStream err = p.getErrorStream();
+                 OutputStream out = p.getOutputStream()) {
+                IOThread reader = new IOThread(in, tee);
+                IOThread reader2 = new IOThread(err, tee);
+                reader.start();
+                reader2.start();
 
-            IOThread reader = new IOThread(in, tee);
-            IOThread reader2 = new IOThread(err, tee);
-            reader.start();
-            reader2.start();
+                int exitCode = p.waitFor();
+                reader.join(5000);
+                reader2.join(5000);
+                // log the remaining output
+                log.info(outputStream.toString(Charset.defaultCharset().toString()));
 
-            int exitCode = p.waitFor();
-            reader.join(5000);
-            reader2.join(5000);
-            // log the remaining output
-            log.info(outputStream.toString(Charset.defaultCharset().toString()));
-
-            if (exitCode != 0) {
-                throw new RuntimeException("Percona exited with " + exitCode);
+                if (exitCode != 0) {
+                    throw new RuntimeException("Percona exited with " + exitCode);
+                }
             }
         } catch (IOException e) {
             throw new UnexpectedLiquibaseException(e);
@@ -236,12 +236,8 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             throw new UnexpectedLiquibaseException(e);
         } finally {
             if (p != null) {
-                StreamUtil.closeQuietly(p.getErrorStream());
-                StreamUtil.closeQuietly(p.getInputStream());
-                StreamUtil.closeQuietly(p.getOutputStream());
                 p.destroy();
             }
-            StreamUtil.closeQuietly(outputStream);
         }
         return null;
     }
@@ -253,7 +249,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     }
 
     private static class IOThread extends Thread {
-        private Logger log = LogFactory.getInstance().getLog();
+        private Logger log = Scope.getCurrentScope().getLog(IOThread.class);
         private InputStream from;
         private OutputStream to;
 
@@ -269,7 +265,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             try {
                 StreamUtil.copy(from, to);
             } catch (IOException e) {
-                log.debug("While copying streams", e);
+                log.fine("While copying streams", e);
             }
         }
     }
@@ -316,26 +312,26 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         Process p = null;
         try {
             p = pb.start();
-            p.waitFor();
-
-            String output = StreamUtil.getStreamContents(p.getInputStream());
-            if (output != null) {
-                Matcher matcher = Pattern.compile("(\\d+\\.\\d+\\.\\d+)").matcher(output);
-                if (matcher.find()) {
-                    perconaToolkitVersion = new PerconaToolkitVersion(matcher.group(1));
+            try (InputStream err = p.getErrorStream();
+                 InputStream in = p.getInputStream();
+                 OutputStream out = p.getOutputStream()) {
+                p.waitFor();
+                String output = StreamUtil.readStreamAsString(in);
+                if (output != null) {
+                    Matcher matcher = Pattern.compile("(\\d+\\.\\d+\\.\\d+)").matcher(output);
+                    if (matcher.find()) {
+                        perconaToolkitVersion = new PerconaToolkitVersion(matcher.group(1));
+                    }
                 }
+                available = true;
+                log.info("Using percona toolkit: " + perconaToolkitVersion);
             }
-            available = true;
-            log.info("Using percona toolkit: " + perconaToolkitVersion);
         } catch (IOException e) {
             available = false;
         } catch (InterruptedException e) {
             available = false;
         } finally {
             if (p != null) {
-                StreamUtil.closeQuietly(p.getErrorStream());
-                StreamUtil.closeQuietly(p.getInputStream());
-                StreamUtil.closeQuietly(p.getOutputStream());
                 p.destroy();
             }
         }

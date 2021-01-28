@@ -25,7 +25,7 @@ import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
+import liquibase.util.StringUtil;
 
 @DatabaseChange(name = PerconaAddPrimaryKeyChange.NAME, description = "Adds creates a primary key out of an existing column or set of columns.",
     priority = PerconaAddPrimaryKeyChange.PRIORITY, appliesTo = "column")
@@ -62,9 +62,9 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
         }
 
         alter.append("ADD PRIMARY KEY (");
-        List<String> columns = StringUtils.splitAndTrim(getColumnNames(), ",");
+        List<String> columns = StringUtil.splitAndTrim(getColumnNames(), ",");
         if (columns == null) columns = Collections.emptyList();
-        alter.append(database.escapeColumnNameList(StringUtils.join(columns, ", ")));
+        alter.append(database.escapeColumnNameList(StringUtil.join(columns, ", ")));
         alter.append(')');
 
         return alter.toString();

@@ -24,7 +24,7 @@ import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
+import liquibase.util.StringUtil;
 
 /**
  * Subclasses the original {@link liquibase.change.core.AddUniqueConstraintChange} to
@@ -66,9 +66,9 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
             alter.append(" ");
         }
         alter.append("UNIQUE (");
-        List<String> columns = StringUtils.splitAndTrim(getColumnNames(), ",");
+        List<String> columns = StringUtil.splitAndTrim(getColumnNames(), ",");
         if (columns == null) columns = Collections.emptyList();
-        alter.append(database.escapeColumnNameList(StringUtils.join(columns, ", ")));
+        alter.append(database.escapeColumnNameList(StringUtil.join(columns, ", ")));
         alter.append(")");
 
         return alter.toString();

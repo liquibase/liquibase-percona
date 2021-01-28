@@ -75,7 +75,7 @@ changes provided by liquibase-core.
 * Liquibase 3.3.5, 3.4.2, 3.5.5, and 3.6.3 (liquibase-percona 1.6.0). Percona Toolkit 3.0.13.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
-
+* Liquibase 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.2.0.
 
 ## Supported Changes and examples
 
@@ -306,7 +306,7 @@ This flag exists since liquibase-percona 1.3.0
 
 It is supported by using the YAML format and since liquibase 3.6.0, you can use it in XML changesets, too:
 
-    <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/adangel/liquibase-percona" liquibasePercona:usePercona="false">
+    <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/liquibase/liquibase-percona" liquibasePercona:usePercona="false">
         <column name="address" type="varchar(255)"/>
     </addColumn>
 
@@ -380,6 +380,14 @@ integration test.
 ## Changelog
 
 ### Version 2.0.0 (????-??-??)
+
+*   The minimum Java runtime version is now Java 1.8.
+*   Liquibase 4.2+ is supported.
+*   Support for older liquibase versions has been dropped.
+*   The XML namespace for this extension is now "http://github.com/liquibase/liquibase-percona". This only
+    is affecting you, if you use the [UsePercona flag](#usepercona-flag).
+
+*   Fixed [#56](https://github.com/liquibase/liquibase-percona/issues/56): Support liquibase 4.x
 
 ### Version 1.7.1 (2021-01-28)
 

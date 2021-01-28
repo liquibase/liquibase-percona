@@ -26,9 +26,9 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import liquibase.Scope;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
-import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 
 /**
@@ -41,7 +41,7 @@ public class DatabaseConnectionUtil {
     /** The name of the password property. */
     private static final String PASSWORD_PROPERTY_NAME = "password";
 
-    private Logger log = LogFactory.getInstance().getLog();
+    private Logger log = Scope.getCurrentScope().getLog(DatabaseConnectionUtil.class);
 
     private DatabaseConnection connection;
 

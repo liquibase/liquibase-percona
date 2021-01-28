@@ -18,10 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 import liquibase.CatalogAndSchema;
+import liquibase.Scope;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.SnapshotControl;
@@ -32,7 +32,7 @@ import liquibase.structure.core.Table;
 
 public class PerconaConstraintsService {
     private static PerconaConstraintsService instance = new PerconaConstraintsService();
-    private Logger log = LogFactory.getInstance().getLog();
+    private Logger log = Scope.getCurrentScope().getLog(PerconaConstraintsService.class);
     private boolean enabled = true;
 
     public static PerconaConstraintsService getInstance() {
@@ -69,7 +69,7 @@ public class PerconaConstraintsService {
     }
 
     private String findForeignKey(Database database, PerconaDropForeignKeyConstraintChange change) {
-        log.debug("Searching for all foreign keys in table " + change.getBaseTableName());
+        log.fine("Searching for all foreign keys in table " + change.getBaseTableName());
 
         try {
             SnapshotControl control = new SnapshotControl(database);
@@ -83,11 +83,11 @@ public class PerconaConstraintsService {
             for (ForeignKey fk : results) {
                 Table baseTable = fk.getForeignKeyTable();
                 String constraintName = fk.getName();
-                log.debug("Found FK: " + baseTable.getName() + "." + constraintName);
+                log.fine("Found FK: " + baseTable.getName() + "." + constraintName);
 
                 if (baseTable.getName().equalsIgnoreCase(change.getBaseTableName())
                     && constraintName.endsWith(change.getConstraintName())) {
-                        log.debug("Found current foreign key constraint " + constraintName);
+                        log.fine("Found current foreign key constraint " + constraintName);
                         return constraintName;
                 }
             }
@@ -137,7 +137,7 @@ public class PerconaConstraintsService {
         boolean result = false;
 
         if (enabled && !PerconaChangeUtil.isDryRun(database) && PerconaChangeUtil.isConnected(database)) {
-            log.debug("Searching for primary key in table " + change.getTableName());
+            log.fine("Searching for primary key in table " + change.getTableName());
 
             try {
                 PrimaryKey primaryKeyExample = new PrimaryKey("primary", change.getCatalogName(), change.getSchemaName(), change.getTableName());
@@ -145,12 +145,12 @@ public class PerconaConstraintsService {
             } catch (DatabaseException e) {
                 // this might happen, if the table does not exist yet.
                 // the primary key is checked already during changelog validation before any change might have been executed.
-                log.debug("Failed to find primary key for table: " + change.getTableName(), e);
+                log.fine("Failed to find primary key for table: " + change.getTableName(), e);
             } catch (InvalidExampleException e) {
                 throw new UnexpectedLiquibaseException("Failed to find primary key for table: " + change.getTableName(), e);
             }
 
-            log.debug("No primary key in table " + change.getTableName() + " found.");
+            log.fine("No primary key in table " + change.getTableName() + " found.");
         }
         return result;
     }

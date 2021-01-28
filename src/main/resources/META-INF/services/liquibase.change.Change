@@ -12,4 +12,13 @@
 # limitations under the License.
 #
 
-liquibase.percona.options=--alter-foreign-keys-method=auto --no-check-unique-key-change --no-check-alter
+liquibase.ext.percona.PerconaAddColumnChange
+liquibase.ext.percona.PerconaAddForeignKeyConstraintChange
+liquibase.ext.percona.PerconaAddPrimaryKeyChange
+liquibase.ext.percona.PerconaAddUniqueConstraintChange
+liquibase.ext.percona.PerconaCreateIndexChange
+liquibase.ext.percona.PerconaDropColumnChange
+liquibase.ext.percona.PerconaDropForeignKeyConstraintChange
+liquibase.ext.percona.PerconaDropIndexChange
+liquibase.ext.percona.PerconaDropUniqueConstraintChange
+liquibase.ext.percona.PerconaModifyDataTypeChange
