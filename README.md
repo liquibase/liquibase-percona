@@ -386,6 +386,8 @@ integration test.
 *   The XML namespace for this extension is now "http://github.com/liquibase/liquibase-percona". This only
     is affecting you, if you use the [UsePercona flag](#usepercona-flag).
 
+*   Fixed [#56](https://github.com/liquibase/liquibase-percona/issues/56): Support liquibase 4.x
+
 ### Version 1.7.1 (????-??-??)
 
 ### Version 1.7.0 (2020-07-04)
