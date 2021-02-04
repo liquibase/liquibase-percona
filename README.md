@@ -378,7 +378,7 @@ The extension supports the following java system properties:
 *   `liquibase.percona.defaultOn`: true/false. **Default: true**. Since liquibase-percona 1.3.0
     This options allows to change the default behavior for the [UsePercona flag](#usepercona-flag). By default,
     all changes, that do not explicitly specify this flag, use the value from this system property.
-    Settings this property to `false` allows to control for each single change, whether to use Percona Toolkit
+    Setting this property to `false` allows to control for each single change, whether to use Percona Toolkit
     or not.
 
 *   `liquibase.password`: String with the password needed to connect to the database. **Default: &lt;empty&gt;**.
@@ -446,11 +446,11 @@ integration test.
 
 ### Version 1.7.0 (2020-07-04)
 
-*   Fixed [#35](https://github.com/adangel/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
-*   Fixed [#37](https://github.com/adangel/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
-*   Fixed [#53](https://github.com/adangel/liquibase-percona/issues/53): Update to support latest liquibase 3.10.1
-*   Fixed [#54](https://github.com/adangel/liquibase-percona/issues/54): Update mysql-connector-java to 8.0.20
-*   Fixed [#55](https://github.com/adangel/liquibase-percona/issues/55): Update percona toolkit to 3.2.0
+*   Fixed [#35](https://github.com/liquibase/liquibase-percona/issues/35): Add support for AddPrimaryKeyChange
+*   Fixed [#37](https://github.com/liquibase/liquibase-percona/issues/37): Using quotes for liquibase.percona.options doesn't always work
+*   Fixed [#53](https://github.com/liquibase/liquibase-percona/issues/53): Update to support latest liquibase 3.10.1
+*   Fixed [#54](https://github.com/liquibase/liquibase-percona/issues/54): Update mysql-connector-java to 8.0.20
+*   Fixed [#55](https://github.com/liquibase/liquibase-percona/issues/55): Update percona toolkit to 3.2.0
 
 ### Version 1.6.0 (2019-04-20)
 
@@ -461,17 +461,17 @@ These two options are **not** added by default anymore when pt-osc is executed. 
 now via the additional options system property. In case you have overridden this system property, make sure, to add
 these options as well, if you need them.
 
-*   Fixed [#29](https://github.com/adangel/liquibase-percona/issues/29): Allow to override --nocheck-unique-key-changes and --alter-foreign-keys-method=auto
-*   Fixed [#30](https://github.com/adangel/liquibase-percona/issues/30): Update liquibase
+*   Fixed [#29](https://github.com/liquibase/liquibase-percona/issues/29): Allow to override --nocheck-unique-key-changes and --alter-foreign-keys-method=auto
+*   Fixed [#30](https://github.com/liquibase/liquibase-percona/issues/30): Update liquibase
 
 ### Version 1.5.2 (2019-04-14)
 
-*   Fixed [#28](https://github.com/adangel/liquibase-percona/issues/28): Strange behavior when liquibase.percona.defaultOn is false
+*   Fixed [#28](https://github.com/liquibase/liquibase-percona/issues/28): Strange behavior when liquibase.percona.defaultOn is false
 
 ### Version 1.5.1 (2018-11-10)
 
-*   Fixed [#26](https://github.com/adangel/liquibase-percona/issues/26): Stack Overflow using defaultOn=false System Property
-*   [PR #27](https://github.com/adangel/liquibase-percona/pull/27): fix a typo - [kennethinsnow](https://github.com/kennethinsnow)
+*   Fixed [#26](https://github.com/liquibase/liquibase-percona/issues/26): Stack Overflow using defaultOn=false System Property
+*   [PR #27](https://github.com/liquibase/liquibase-percona/pull/27): fix a typo - [kennethinsnow](https://github.com/kennethinsnow)
 
 ### Version 1.5.0 (2018-09-30)
 
@@ -484,53 +484,53 @@ The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
 
 *   Upgraded liquibase to 3.5.5
 *   Verified compatibility to liquibase 3.6.2
-*   Fixed [#14](https://github.com/adangel/liquibase-percona/issues/14): Rollback of foreign key constraint changing constraint names problem
-*   Fixed [#15](https://github.com/adangel/liquibase-percona/issues/15): Unique key constraint cannot be added
-*   Fixed [#20](https://github.com/adangel/liquibase-percona/issues/20): Support "UsePercona flag" in XML changelogs
-*   Fixed [#22](https://github.com/adangel/liquibase-percona/issues/22): Cross database bug
+*   Fixed [#14](https://github.com/liquibase/liquibase-percona/issues/14): Rollback of foreign key constraint changing constraint names problem
+*   Fixed [#15](https://github.com/liquibase/liquibase-percona/issues/15): Unique key constraint cannot be added
+*   Fixed [#20](https://github.com/liquibase/liquibase-percona/issues/20): Support "UsePercona flag" in XML changelogs
+*   Fixed [#22](https://github.com/liquibase/liquibase-percona/issues/22): Cross database bug
 
 ### Version 1.4.1 (2018-09-27)
 
-*   Fixed [#16](https://github.com/adangel/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
-*   Fixed [#17](https://github.com/adangel/liquibase-percona/issues/17): Include Percona Toolkit into integration test
-*   Fixed [#18](https://github.com/adangel/liquibase-percona/issues/18): Use spotbugs instead of findbugs
-*   Fixed [#19](https://github.com/adangel/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
-*   Fixed [#21](https://github.com/adangel/liquibase-percona/issues/21): Couldn't determine password: JdbcConnection is unsupported: dbcp.PoolingDataSource$PoolGuardConnectionWrapper
-*   Fixed [#23](https://github.com/adangel/liquibase-percona/pull/23): Add support for dbcp2
+*   Fixed [#16](https://github.com/liquibase/liquibase-percona/issues/16): Failing test PerconaAddForeignKeyConstraintChangeTest
+*   Fixed [#17](https://github.com/liquibase/liquibase-percona/issues/17): Include Percona Toolkit into integration test
+*   Fixed [#18](https://github.com/liquibase/liquibase-percona/issues/18): Use spotbugs instead of findbugs
+*   Fixed [#19](https://github.com/liquibase/liquibase-percona/issues/19): Upgrade liquibase to 3.5.4
+*   Fixed [#21](https://github.com/liquibase/liquibase-percona/issues/21): Couldn't determine password: JdbcConnection is unsupported: dbcp.PoolingDataSource$PoolGuardConnectionWrapper
+*   Fixed [#23](https://github.com/liquibase/liquibase-percona/pull/23): Add support for dbcp2
 *   Added new system property `liquibase.percona.path` to specify the path where Percona Toolkit is installed.
 
 ### Version 1.4.0 (2017-07-21)
 
-*   Fixed [#13](https://github.com/adangel/liquibase-percona/issues/13): Use default liquibase.properties as fallback
+*   Fixed [#13](https://github.com/liquibase/liquibase-percona/issues/13): Use default liquibase.properties as fallback
 
 ### Version 1.3.1 (2017-07-21)
 
-*   Fixed [#12](https://github.com/adangel/liquibase-percona/issues/12): Cannot run migrations with the percona extension on a Spring Boot app with embedded Tomcat
+*   Fixed [#12](https://github.com/liquibase/liquibase-percona/issues/12): Cannot run migrations with the percona extension on a Spring Boot app with embedded Tomcat
 
 ### Version 1.3.0 (2016-12-18)
 
 *   Upgraded liquibase to 3.5.3
 *   Support for MySQL Connector 6.0.x in addition to 5.1.x.
-*   Fixed [#7](https://github.com/adangel/liquibase-percona/issues/7): Foreign key constraints of AddColumn is ignored
-*   Fixed [#8](https://github.com/adangel/liquibase-percona/issues/8): Support addForeignKeyConstraintChange, addUniqueConstraintChange
-*   Fixed [#9](https://github.com/adangel/liquibase-percona/issues/9): Support for enabling pt-online-schema-changes on a per-change basis
-*   Fixed [#10](https://github.com/adangel/liquibase-percona/issues/10): Build fails with java7: UnsupportedClassVersion when running DatabaseConnectionUtilTest.testGetPasswordMySQL\_6
+*   Fixed [#7](https://github.com/liquibase/liquibase-percona/issues/7): Foreign key constraints of AddColumn is ignored
+*   Fixed [#8](https://github.com/liquibase/liquibase-percona/issues/8): Support addForeignKeyConstraintChange, addUniqueConstraintChange
+*   Fixed [#9](https://github.com/liquibase/liquibase-percona/issues/9): Support for enabling pt-online-schema-changes on a per-change basis
+*   Fixed [#10](https://github.com/liquibase/liquibase-percona/issues/10): Build fails with java7: UnsupportedClassVersion when running DatabaseConnectionUtilTest.testGetPasswordMySQL\_6
 
 ### Version 1.2.1 (2016-09-13)
 
-*   [PR #4](https://github.com/adangel/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
-*   [PR #5](https://github.com/adangel/liquibase-percona/pull/5): Support afterColum attribute
+*   [PR #4](https://github.com/liquibase/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
+*   [PR #5](https://github.com/liquibase/liquibase-percona/pull/5): Support afterColum attribute
 
 ### Version 1.2.0 (2016-04-02)
 
-*   Fixed [#2](https://github.com/adangel/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
-*   Fixed [#3](https://github.com/adangel/liquibase-percona/issues/3): Altering column data types via pt-online-schema-change
+*   Fixed [#2](https://github.com/liquibase/liquibase-percona/issues/2): Adding indexes via pt-online-schema-change
+*   Fixed [#3](https://github.com/liquibase/liquibase-percona/issues/3): Altering column data types via pt-online-schema-change
 *   Added configuration property "liquibase.percona.skipChanges"
 *   Upgraded liquibase to 3.4.2
 
 ### Version 1.1.1 (2015-07-26)
 
-*   Fixed [#1](https://github.com/adangel/liquibase-percona/issues/1): Tables with foreign keys
+*   Fixed [#1](https://github.com/liquibase/liquibase-percona/issues/1): Tables with foreign keys
 
 ### Version 1.1.0 (2014-11-06)
 
@@ -642,7 +642,7 @@ To run a single integration test, execute maven like this: `./mvnw verify -Prun-
 
 ## Common Problems
 
-#### NoSuchMethodError: PerconaDropColumnChange.getColumns()Ljava/util/List
+### NoSuchMethodError: PerconaDropColumnChange.getColumns()Ljava/util/List
 
 The full error message:
 
