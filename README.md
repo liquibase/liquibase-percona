@@ -26,7 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 2.0.0 (????-??-??)](#version-200---)
+    *   [Version 2.0.0 (2021-02-04)](#version-200-2021-02-04)
     *   [Version 1.7.1 (2021-01-28)](#version-171-2021-01-28)
     *   [Version 1.7.0 (2020-07-04)](#version-170-2020-07-04)
     *   [Version 1.6.0 (2019-04-20)](#version-160-2019-04-20)
@@ -411,7 +411,7 @@ integration test.
 
 ## Changelog
 
-### Version 2.0.0 (????-??-??)
+### Version 2.0.0 (2021-02-04)
 
 *   The minimum Java runtime version is now Java 1.8.
 *   Liquibase 4+ is supported.
@@ -548,7 +548,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-1.7.1.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-2.0.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -558,7 +558,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>1.7.1</version>
+        <version>2.0.0</version>
     </dependency>
 
 
@@ -588,12 +588,12 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `2.0.0-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `2.1.0-SNAPSHOT`:
 
     <dependency>
         <groupId>com.github.adangel.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
     </dependency>
 
 
