@@ -14,6 +14,8 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,16 +54,25 @@ public class PTOnlineSchemaChangeStatementTest {
     @Test
     public void testBuildCommand() {
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --alter-foreign-keys-method=auto, --nocheck-unique-key-change, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
     }
 
     @Test
+    public void testBuildCommandWithPerconaOptions() {
+        PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
+                "ADD COLUMN new_column INT NULL", Optional.of("--per-change-option"));
+        Assertions.assertEquals(
+                "[pt-online-schema-change, --per-change-option, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
+                String.valueOf(statement.buildCommand(database)));
+    }
+
+    @Test
     public void testBuildCommand2() {
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL, ADD COLUMN email VARCHAR(255) NULL");
+                "ADD COLUMN new_column INT NULL, ADD COLUMN email VARCHAR(255) NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --alter-foreign-keys-method=auto, --nocheck-unique-key-change, --alter=ADD COLUMN new_column INT NULL, ADD COLUMN email VARCHAR(255) NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
@@ -70,7 +81,7 @@ public class PTOnlineSchemaChangeStatementTest {
     @Test
     public void testPrintCommand() {
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN new_column INT NULL\" --password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=person",
                 statement.printCommand(database));
@@ -80,7 +91,7 @@ public class PTOnlineSchemaChangeStatementTest {
     public void testAdditionalOptions() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config /tmp/percona.conf");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --config, /tmp/percona.conf, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
@@ -90,7 +101,7 @@ public class PTOnlineSchemaChangeStatementTest {
     public void testMultipleAdditionalOptions() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config /tmp/percona.conf --alter-foreign-keys-method=auto");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --config, /tmp/percona.conf, --alter-foreign-keys-method=auto, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
@@ -100,7 +111,7 @@ public class PTOnlineSchemaChangeStatementTest {
     public void testAdditionalOptionsWithSpaces() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config \"/tmp/file with spaces.conf\"");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --config, /tmp/file with spaces.conf, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
@@ -110,7 +121,7 @@ public class PTOnlineSchemaChangeStatementTest {
     public void testAdditionalOptionsWithQuotes() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config \"/tmp/percona.conf\"");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --config, /tmp/percona.conf, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
@@ -120,7 +131,7 @@ public class PTOnlineSchemaChangeStatementTest {
     public void testAdditionalOptionsMultipleWithQuotes() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--critical-load=\"Threads_running=160\" --alter-foreign-keys-method=\"auto\"");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --critical-load=Threads_running=160, --alter-foreign-keys-method=auto, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
@@ -130,7 +141,7 @@ public class PTOnlineSchemaChangeStatementTest {
     public void testAdditionalOptionsMultipleWithQuotesAndSpaces() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--arg1=\"val1 val2\" --alter-foreign-keys-method=\"auto\"");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
-                "ADD COLUMN new_column INT NULL");
+                "ADD COLUMN new_column INT NULL", Optional.empty());
         Assertions.assertEquals(
                 "[pt-online-schema-change, --arg1=val1 val2, --alter-foreign-keys-method=auto, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));

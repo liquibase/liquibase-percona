@@ -1,6 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--->
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona" elementFormDefault="qualified">
+def con, s;
+try {
+    def props = new Properties();
+    props.setProperty("user", config_user)
+    props.setProperty("password", config_password)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}?useSSL=false", props)
+    s = con.createStatement();
+    s.execute("DROP DATABASE IF EXISTS `${config_dbname}`")
+    s.execute("CREATE DATABASE `${config_dbname}`")
+} finally {
+    s?.close();
+    con?.close();
+}
 
-    <xs:attribute name="usePercona" type="xs:boolean" default="true" />
-    <xs:attribute name="perconaOptions" type="xs:string" default="" />
+println "Prepared empty database `${config_dbname}`"
 
-</xs:schema>
+return true

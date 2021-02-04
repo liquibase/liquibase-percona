@@ -33,8 +33,6 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
     public static final String NAME = "addPrimaryKey";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
-    private Boolean usePercona;
-
     /**
      * Generates the statements required for the add primary key change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -71,21 +69,6 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
     }
 
     @Override
-    @DatabaseChangeProperty(requiredForDatabase = {})
-    public Boolean getUsePercona() {
-        return usePercona;
-    }
-
-    public void setUsePercona(Boolean usePercona) {
-        this.usePercona = usePercona;
-    }
-
-    @Override
-    public String getChangeName() {
-        return NAME;
-    }
-
-    @Override
     public String getTargetTableName() {
         return getTableName();
     }
@@ -99,4 +82,35 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
     protected Change[] createInverses() {
         return null;
     }
+
+    //CPD-OFF - common PerconaChange implementation
+    private Boolean usePercona;
+
+    private String perconaOptions;
+
+    @Override
+    public String getChangeName() {
+        return NAME;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public Boolean getUsePercona() {
+        return usePercona;
+    }
+
+    public void setUsePercona(Boolean usePercona) {
+        this.usePercona = usePercona;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public String getPerconaOptions() {
+        return perconaOptions;
+    }
+
+    public void setPerconaOptions(String perconaOptions) {
+        this.perconaOptions = perconaOptions;
+    }
+    //CPD-ON
 }

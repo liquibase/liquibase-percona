@@ -22,4 +22,10 @@
             <column name="address" type="varchar(255)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="3" author="Alice">
+        <addColumn tableName="person" liquibasePercona:perconaOptions="--foo">
+            <column name="email" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

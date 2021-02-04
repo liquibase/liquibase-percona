@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import liquibase.Scope;
 import liquibase.change.Change;
@@ -67,11 +68,9 @@ public class PerconaChangeUtil {
             Database database, SqlStatement[] originalStatements) {
 
         String changeSetId = "unknown changeset id";
-        if (change instanceof Change) {
-            ChangeSet changeSet = ((Change)change).getChangeSet();
-            if (changeSet != null) {
-                changeSetId = changeSet.getId() + ":" + changeSet.getAuthor();
-            }
+        ChangeSet changeSet = ((Change)change).getChangeSet();
+        if (changeSet != null) {
+            changeSetId = changeSet.getId() + ":" + changeSet.getAuthor();
         }
 
         if (change.getUsePercona() == null && !Configuration.getDefaultOn()) {
@@ -95,7 +94,8 @@ public class PerconaChangeUtil {
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
                         change.getTargetDatabaseName(),
                         change.getTargetTableName(),
-                        change.generateAlterStatement(database));
+                        change.generateAlterStatement(database),
+                        Optional.ofNullable(change.getPerconaOptions()));
 
                 if (isDryRun(database)) {
                     CommentStatement commentStatement = new CommentStatement(statement.printCommand(database));

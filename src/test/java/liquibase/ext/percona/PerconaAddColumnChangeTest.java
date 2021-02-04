@@ -349,4 +349,10 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assertions.assertEquals(1, statements.length);
         Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
     }
+
+    @Test
+    public void withPerconaOptions() {
+        getChange().setPerconaOptions("--foo --bar");
+        assertPerconaChange("ADD COLUMN new_column INT NULL");
+    }
 }

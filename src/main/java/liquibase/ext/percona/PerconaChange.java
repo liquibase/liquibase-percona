@@ -14,11 +14,14 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import liquibase.change.Change;
 import liquibase.database.Database;
 
-public interface PerconaChange {
+public interface PerconaChange extends Change {
 
     Boolean getUsePercona();
+
+    String getPerconaOptions();
 
     String getChangeName();
 

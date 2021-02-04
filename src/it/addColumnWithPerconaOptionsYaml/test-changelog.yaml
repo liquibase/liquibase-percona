@@ -17,19 +17,8 @@ databaseChangeLog:
       changes:
         - addColumn:
             tableName: person
-            usePercona: false
+            perconaOptions: "--alter-foreign-keys-method=drop_swap --nocheck-unique-key-change"
             columns:
               - column:
                   name: address
-                  type: varchar(255)
-  - changeSet:
-      id: 3
-      author: Alice
-      changes:
-        - addColumn:
-            tableName: person
-            perconaOptions: "--foo"
-            columns:
-              - column:
-                  name: email
                   type: varchar(255)

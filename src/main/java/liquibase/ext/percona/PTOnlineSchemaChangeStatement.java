@@ -24,6 +24,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,11 +51,14 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     private String databaseName;
     private String tableName;
     private String alterStatement;
+    private Optional<String> perconaOptions;
 
-    public PTOnlineSchemaChangeStatement(String databaseName, String tableName, String alterStatement) {
+    public PTOnlineSchemaChangeStatement(String databaseName, String tableName, String alterStatement,
+            Optional<String> perconaOptions) {
         this.databaseName = databaseName;
         this.tableName = tableName;
         this.alterStatement = alterStatement;
+        this.perconaOptions = perconaOptions;
     }
 
     /**
@@ -120,7 +124,9 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         commands.add(getFullToolkitPath());
 
         // must be the first on the command line, otherwise "--config" cannot be used
-        if (!Configuration.getAdditionalOptions().isEmpty()) {
+        if (perconaOptions.isPresent()) {
+            commands.addAll(tokenize(perconaOptions.get()));
+        } else if (!Configuration.getAdditionalOptions().isEmpty()) {
             commands.addAll(tokenize(Configuration.getAdditionalOptions()));
         }
 
