@@ -26,6 +26,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Version 2.1.0 (????-??-??)](#version-210---)
     *   [Version 2.0.0 (2021-02-04)](#version-200-2021-02-04)
     *   [Version 1.7.1 (2021-01-28)](#version-171-2021-01-28)
     *   [Version 1.7.0 (2020-07-04)](#version-170-2020-07-04)
@@ -410,6 +411,8 @@ integration test.
 
 
 ## Changelog
+
+### Version 2.1.0 (????-??-??)
 
 ### Version 2.0.0 (2021-02-04)
 
