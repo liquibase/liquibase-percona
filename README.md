@@ -435,6 +435,7 @@ integration test.
 *   Fixed [#56](https://github.com/liquibase/liquibase-percona/issues/56): Support liquibase 4.x
 *   Fixed [#57](https://github.com/liquibase/liquibase-percona/issues/57): Support perconaOptions per change
 *   Fixed [#64](https://github.com/liquibase/liquibase-percona/issues/64): Different changeset checksums with and without liquibase-percona
+*   Fixed [#65](https://github.com/liquibase/liquibase-percona/issues/65): Make build reproducible
 
 ### Version 1.7.1 (2021-01-28)
 
