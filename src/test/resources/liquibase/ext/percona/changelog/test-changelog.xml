@@ -4,8 +4,10 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
+            http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona https://raw.githubusercontent.com/liquibase/liquibase-percona/liquibase-percona-2.0.0/src/main/resources/dbchangelog-ext-liquibase-percona.xsd">
 
     <changeSet id="1" author="Alice">
         <createTable tableName="person">
@@ -16,7 +18,7 @@
     </changeSet>
 
     <changeSet id="2" author="Alice">
-        <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/liquibase/liquibase-percona" liquibasePercona:usePercona="false">
+        <addColumn tableName="person" liquibasePercona:usePercona="false">
             <column name="address" type="varchar(255)"/>
         </addColumn>
     </changeSet>
