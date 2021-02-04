@@ -308,7 +308,7 @@ This flag exists since liquibase-percona 1.3.0
 It is supported by using the YAML format and since liquibase 3.6.0, you can use it in XML changesets, too:
 
     <addColumn tableName="person"
-            xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona" 
+            xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
             liquibasePercona:usePercona="false">
         <column name="address" type="varchar(255)"/>
     </addColumn>
@@ -338,8 +338,8 @@ This flag exists since liquibase-percona 2.0.0.
 It is supported by using the YAML format and in XML changesets:
 
     <addColumn tableName="person"
-        xmlns:liquibasePercona="http://github.com/liquibase/liquibase-percona"
-        liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto">
+            xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
+            liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto">
         <column name="address" type="varchar(255)"/>
     </addColumn>
 
@@ -420,7 +420,7 @@ integration test.
     
     This only is affecting you, if you use the [UsePercona flag](#usepercona-flag).
     
-    There is also a XSD schema available, if you want to validate your XML changeset:
+    There is now also a XSD schema available, if you want to validate your XML changeset:
     <https://raw.githubusercontent.com/liquibase/liquibase-percona/liquibase-percona-2.0.0/src/main/resources/dbchangelog-ext-liquibase-percona.xsd>
     
     See the file [test-changelog.xml](https://github.com/liquibase/liquibase-percona/blob/master/src/test/resources/liquibase/ext/percona/changelog/test-changelog.xml) for an example.

@@ -20,6 +20,7 @@
     targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona" elementFormDefault="qualified">
 
-    <xs:attribute name="usePercona" type="xs:boolean" />
+    <xs:attribute name="usePercona" type="xs:boolean" default="true" />
+    <xs:attribute name="perconaOptions" type="xs:string" default="" />
 
 </xs:schema>

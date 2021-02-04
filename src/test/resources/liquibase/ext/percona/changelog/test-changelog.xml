@@ -24,7 +24,7 @@
     </changeSet>
 
     <changeSet id="3" author="Alice">
-        <addColumn tableName="person" xmlns:liquibasePercona="http://github.com/liquibase/liquibase-percona" liquibasePercona:perconaOptions="--foo">
+        <addColumn tableName="person" liquibasePercona:perconaOptions="--foo">
             <column name="email" type="varchar(255)"/>
         </addColumn>
     </changeSet>
