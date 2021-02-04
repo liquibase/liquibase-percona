@@ -27,10 +27,12 @@ public class PerconaModifyDataTypeChangeTest extends AbstractPerconaChangeTest<P
         change.setTableName("person");
         change.setColumnName("name");
         change.setNewDataType("VARCHAR(300)");
+
+        alterText = "MODIFY name VARCHAR(300)";
     }
 
     @Test
     public void testChangeColumnType() {
-        assertPerconaChange("MODIFY name VARCHAR(300)");
+        assertPerconaChange(alterText);
     }
 }

@@ -15,7 +15,9 @@ package liquibase.ext.percona;
  */
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
@@ -133,6 +135,7 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
         return usePercona;
     }
 
+    @Override
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
     }
@@ -143,8 +146,17 @@ public class PerconaAddForeignKeyConstraintChange extends AddForeignKeyConstrain
         return perconaOptions;
     }
 
+    @Override
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
+    }
+
+    @Override
+    public Set<String> getSerializableFields() {
+        Set<String> fields = new HashSet<>(super.getSerializableFields());
+        fields.remove("usePercona");
+        fields.remove("perconaOptions");
+        return Collections.unmodifiableSet(fields);
     }
     //CPD-ON
 }

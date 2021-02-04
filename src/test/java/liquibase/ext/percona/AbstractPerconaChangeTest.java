@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.Scope;
+import liquibase.change.Change;
+import liquibase.change.CheckSum;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MySQLDatabase;
@@ -29,6 +31,7 @@ import liquibase.exception.RollbackImpossibleException;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
 import liquibase.executor.jvm.JdbcExecutor;
+import liquibase.serializer.core.string.StringChangeLogSerializer;
 import liquibase.statement.SqlStatement;
 
 @ExtendWith(RestoreSystemPropertiesExtension.class)
@@ -39,6 +42,7 @@ public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
     private final Class<T> changeClazz;
     private String targetTableName = "person";
     private String targetDatabaseName = "testdb";
+    protected String alterText;
 
     public AbstractPerconaChangeTest(Class<T> clazz) {
         changeClazz = clazz;
@@ -127,5 +131,72 @@ public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
     public void testUnitializedChange() throws Exception {
         change = changeClazz.getConstructor().newInstance();
         change.generateStatements(database);
+    }
+
+    @Test
+    public void testWithDisabledPercona() {
+        getChange().setUsePercona(false);
+        SqlStatement[] statements = generateStatements();
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertNotEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void testWithDisabledPerconaViaDefaultOn() {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        SqlStatement[] statements = generateStatements();
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertNotEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void testWithDisabledPerconaViaDefaultOnUseDefault() {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        getChange().setUsePercona(null);
+        SqlStatement[] statements = generateStatements();
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertNotEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void testWithDisabledPerconaViaDefaultOnButUsePerconaForSingleChange() {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        getChange().setUsePercona(true);
+        SqlStatement[] statements = generateStatements();
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+    }
+
+    @Test
+    public void withPerconaOptions() {
+        getChange().setPerconaOptions("--foo --bar");
+        assertPerconaChange(alterText);
+    }
+
+    private static void assertSameChecksum(String expectedSerializedChange, CheckSum expectedChecksum,
+            Change change) {
+        Assertions.assertEquals(expectedSerializedChange, new StringChangeLogSerializer().serialize(change, false));
+        Assertions.assertEquals(expectedChecksum, change.generateCheckSum());
+    }
+
+    @Test
+    public void verifyChecksum() {
+        String serializedChange = new StringChangeLogSerializer().serialize(getChange(), false);
+        CheckSum checksum = getChange().generateCheckSum();
+
+        getChange().setUsePercona(false);
+        assertSameChecksum(serializedChange, checksum, getChange());
+
+        getChange().setUsePercona(true);
+        assertSameChecksum(serializedChange, checksum, getChange());
+
+        getChange().setUsePercona(null);
+        assertSameChecksum(serializedChange, checksum, getChange());
+
+        getChange().setPerconaOptions("--custom-percona-option");
+        assertSameChecksum(serializedChange, checksum, getChange());
+
+        getChange().setPerconaOptions(null);
+        assertSameChecksum(serializedChange, checksum, getChange());
     }
 }

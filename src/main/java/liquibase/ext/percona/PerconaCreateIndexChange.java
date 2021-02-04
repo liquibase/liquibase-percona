@@ -1,5 +1,8 @@
 package liquibase.ext.percona;
 
+import java.util.Collections;
+import java.util.HashSet;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +18,7 @@ package liquibase.ext.percona;
  */
 
 import java.util.Iterator;
+import java.util.Set;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.change.Change;
@@ -42,7 +46,7 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
     @Override
     public String generateAlterStatement( Database database ) {
         StringBuilder alter = new StringBuilder();
-        
+
         alter.append( "ADD ");
         if (this.isUnique() != null && this.isUnique()) {
             alter.append( "UNIQUE " );
@@ -108,6 +112,7 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
         return usePercona;
     }
 
+    @Override
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
     }
@@ -118,8 +123,17 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
         return perconaOptions;
     }
 
+    @Override
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
+    }
+
+    @Override
+    public Set<String> getSerializableFields() {
+        Set<String> fields = new HashSet<>(super.getSerializableFields());
+        fields.remove("usePercona");
+        fields.remove("perconaOptions");
+        return Collections.unmodifiableSet(fields);
     }
     //CPD-ON
 }

@@ -15,7 +15,10 @@ package liquibase.ext.percona;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -208,6 +211,7 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
         return usePercona;
     }
 
+    @Override
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
     }
@@ -218,8 +222,17 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
         return perconaOptions;
     }
 
+    @Override
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
+    }
+
+    @Override
+    public Set<String> getSerializableFields() {
+        Set<String> fields = new HashSet<>(super.getSerializableFields());
+        fields.remove("usePercona");
+        fields.remove("perconaOptions");
+        return Collections.unmodifiableSet(fields);
     }
     //CPD-ON
 }

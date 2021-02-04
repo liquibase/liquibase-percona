@@ -37,11 +37,13 @@ public class PerconaCreateIndexChangeTest extends AbstractPerconaChangeTest<Perc
         change.setTableName( "person" );
         change.setIndexName( "theIndexName" );
         change.setUnique( true );
+
+        alterText = "ADD UNIQUE INDEX theIndexName (indexedColumn)";
     }
 
     @Test
     public void testCreateNewIndexReal() {
-        assertPerconaChange("ADD UNIQUE INDEX theIndexName (indexedColumn)");
+        assertPerconaChange(alterText);
     }
 
     @Test

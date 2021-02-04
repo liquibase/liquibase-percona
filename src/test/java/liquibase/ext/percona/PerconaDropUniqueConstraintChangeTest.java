@@ -28,8 +28,6 @@ public class PerconaDropUniqueConstraintChangeTest extends AbstractPerconaChange
         super(PerconaDropUniqueConstraintChange.class);
     }
 
-    private String alterText;
-
     @Override
     protected void setupChange(PerconaDropUniqueConstraintChange change) {
         change.setTableName("person");

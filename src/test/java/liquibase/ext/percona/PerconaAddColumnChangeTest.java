@@ -41,6 +41,8 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         change.addColumn(column);
         change.setTableName("person");
         change.setCatalogName("testdb");
+
+        alterText = "ADD COLUMN new_column INT NULL";
     }
 
     @Test
@@ -87,7 +89,7 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
 
     @Test
     public void testReal() {
-        assertPerconaChange("ADD COLUMN new_column INT NULL");
+        assertPerconaChange(alterText);
     }
 
     @Test
@@ -314,45 +316,5 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
         Assertions.assertEquals("ADD COLUMN testColumn BIGINT NULL, "
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _person_new(id)",
                 c.convertColumnToSql(column, database));
-    }
-
-    @Test
-    public void testWithDisabledPercona() {
-        getChange().setUsePercona(false);
-        SqlStatement[] statements = generateStatements();
-        Assertions.assertEquals(1, statements.length);
-        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
-    }
-
-    @Test
-    public void testWithDisabledPerconaViaDefaultOn() {
-        System.setProperty(Configuration.DEFAULT_ON, "false");
-        SqlStatement[] statements = generateStatements();
-        Assertions.assertEquals(1, statements.length);
-        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
-    }
-
-    @Test
-    public void testWithDisabledPerconaViaDefaultOnUseDefault() {
-        System.setProperty(Configuration.DEFAULT_ON, "false");
-        getChange().setUsePercona(null);
-        SqlStatement[] statements = generateStatements();
-        Assertions.assertEquals(1, statements.length);
-        Assertions.assertEquals(AddColumnStatement.class, statements[0].getClass());
-    }
-
-    @Test
-    public void testWithDisabledPerconaViaDefaultOnButUsePerconaForSingleChange() {
-        System.setProperty(Configuration.DEFAULT_ON, "false");
-        getChange().setUsePercona(true);
-        SqlStatement[] statements = generateStatements();
-        Assertions.assertEquals(1, statements.length);
-        Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
-    }
-
-    @Test
-    public void withPerconaOptions() {
-        getChange().setPerconaOptions("--foo --bar");
-        assertPerconaChange("ADD COLUMN new_column INT NULL");
     }
 }

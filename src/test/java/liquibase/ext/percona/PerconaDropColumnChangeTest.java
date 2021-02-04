@@ -34,6 +34,8 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
         change.setColumnName("col_test");
         change.setTableName("person");
         change.getColumns().clear();
+
+        alterText = "DROP COLUMN col_test";
     }
 
     @Test
@@ -76,7 +78,7 @@ public class PerconaDropColumnChangeTest extends AbstractPerconaChangeTest<Perco
 
     @Test
     public void testReal() {
-        assertPerconaChange("DROP COLUMN col_test");
+        assertPerconaChange(alterText);
     }
 
     @Test

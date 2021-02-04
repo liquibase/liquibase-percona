@@ -31,7 +31,6 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         super(PerconaAddForeignKeyConstraintChange.class);
     }
 
-    private String alterText;
     private String alterRollbackText;
 
     @Override

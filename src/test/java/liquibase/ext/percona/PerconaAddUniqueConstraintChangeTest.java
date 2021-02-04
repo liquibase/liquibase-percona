@@ -30,7 +30,6 @@ public class PerconaAddUniqueConstraintChangeTest extends AbstractPerconaChangeT
         super(PerconaAddUniqueConstraintChange.class);
     }
 
-    private String alterText;
     private String alterRollbackText;
 
     @Override

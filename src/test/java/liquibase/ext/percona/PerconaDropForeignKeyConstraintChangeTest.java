@@ -28,8 +28,6 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         super(PerconaDropForeignKeyConstraintChange.class);
     }
 
-    private String alterText;
-
     @Override
     protected void setupChange(PerconaDropForeignKeyConstraintChange change) {
         change.setBaseTableName("address");

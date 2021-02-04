@@ -29,8 +29,6 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
         super(PerconaAddPrimaryKeyChange.class);
     }
 
-    private String alterText;
-
     @Override
     protected void setupChange(PerconaAddPrimaryKeyChange change) {
         change.setTableName("person");

@@ -427,9 +427,14 @@ integration test.
     
     Note: Usage of the schema is optional. In order to use the custom flags provided by this extension, you
     only need to declare the namespace.
+*   The checksum calculation for changes that used [UsePercona flag](#usepercona-flag) changed. You might
+    need to recreate the changelog entries for these changes with the
+    [clearCheckSums](https://docs.liquibase.com/commands/community/clearchecksums.html) command.
+    See [#64](https://github.com/liquibase/liquibase-percona/issues/64) for the explanation.
 
 *   Fixed [#56](https://github.com/liquibase/liquibase-percona/issues/56): Support liquibase 4.x
 *   Fixed [#57](https://github.com/liquibase/liquibase-percona/issues/57): Support perconaOptions per change
+*   Fixed [#64](https://github.com/liquibase/liquibase-percona/issues/64): Different changeset checksums with and without liquibase-percona
 
 ### Version 1.7.1 (2021-01-28)
 

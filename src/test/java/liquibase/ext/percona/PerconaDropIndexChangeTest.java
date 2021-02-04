@@ -26,10 +26,12 @@ public class PerconaDropIndexChangeTest extends AbstractPerconaChangeTest<Percon
     protected void setupChange(PerconaDropIndexChange change) {
         change.setTableName( "person" );
         change.setIndexName( "theIndexName" );
+
+        alterText = "DROP INDEX theIndexName";
     }
 
     @Test
     public void testDropIndexReal() {
-        assertPerconaChange("DROP INDEX theIndexName");
+        assertPerconaChange(alterText);
     }
 }

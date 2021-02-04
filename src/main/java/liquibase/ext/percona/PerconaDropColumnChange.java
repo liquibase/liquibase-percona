@@ -1,5 +1,9 @@
 package liquibase.ext.percona;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,6 +99,7 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
         return usePercona;
     }
 
+    @Override
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
     }
@@ -105,8 +110,17 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
         return perconaOptions;
     }
 
+    @Override
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
+    }
+
+    @Override
+    public Set<String> getSerializableFields() {
+        Set<String> fields = new HashSet<>(super.getSerializableFields());
+        fields.remove("usePercona");
+        fields.remove("perconaOptions");
+        return Collections.unmodifiableSet(fields);
     }
     //CPD-ON
 }

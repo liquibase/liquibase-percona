@@ -21,7 +21,11 @@ public interface PerconaChange extends Change {
 
     Boolean getUsePercona();
 
+    void setUsePercona(Boolean usePercona);
+
     String getPerconaOptions();
+
+    void setPerconaOptions(String perconaOptions);
 
     String getChangeName();
 
