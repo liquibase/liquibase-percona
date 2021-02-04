@@ -28,10 +28,6 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
     public static final String NAME = "dropIndex";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
-    private Boolean usePercona;
-
-    private String perconaOptions;
-
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
@@ -56,6 +52,26 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
     }
 
     @Override
+    public String getTargetTableName() {
+        return getTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
+
+    //CPD-OFF - common PerconaChange implementation
+    private Boolean usePercona;
+
+    private String perconaOptions;
+
+    @Override
+    public String getChangeName() {
+        return NAME;
+    }
+
+    @Override
     @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
@@ -74,19 +90,5 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
     }
-
-    @Override
-    public String getChangeName() {
-        return NAME;
-    }
-
-    @Override
-    public String getTargetTableName() {
-        return getTableName();
-    }
-
-    @Override
-    public String getTargetDatabaseName() {
-        return getCatalogName();
-    }
+    //CPD-ON
 }

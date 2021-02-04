@@ -32,10 +32,6 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     public static final String NAME = "dropForeignKeyConstraint";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
-    private Boolean usePercona;
-
-    private String perconaOptions;
-
     /**
      * Generates the statements required for the drop foreign key constraint change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -65,6 +61,26 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     }
 
     @Override
+    public String getTargetTableName() {
+        return getBaseTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getBaseTableCatalogName();
+    }
+
+    //CPD-OFF - common PerconaChange implementation
+    private Boolean usePercona;
+
+    private String perconaOptions;
+
+    @Override
+    public String getChangeName() {
+        return NAME;
+    }
+
+    @Override
     @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
@@ -83,19 +99,5 @@ public class PerconaDropForeignKeyConstraintChange extends DropForeignKeyConstra
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
     }
-
-    @Override
-    public String getChangeName() {
-        return NAME;
-    }
-
-    @Override
-    public String getTargetTableName() {
-        return getBaseTableName();
-    }
-
-    @Override
-    public String getTargetDatabaseName() {
-        return getBaseTableCatalogName();
-    }
+    //CPD-ON
 }

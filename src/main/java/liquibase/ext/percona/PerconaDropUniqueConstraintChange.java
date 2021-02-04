@@ -32,10 +32,6 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
     public static final String NAME = "dropUniqueConstraint";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
-    private Boolean usePercona;
-
-    private String perconaOptions;
-
     /**
      * Generates the statements required for the drop unique constraint change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -63,6 +59,26 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
     }
 
     @Override
+    public String getTargetTableName() {
+        return getTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
+
+    //CPD-OFF - common PerconaChange implementation
+    private Boolean usePercona;
+
+    private String perconaOptions;
+
+    @Override
+    public String getChangeName() {
+        return NAME;
+    }
+
+    @Override
     @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
@@ -81,19 +97,5 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
     }
-
-    @Override
-    public String getChangeName() {
-        return NAME;
-    }
-
-    @Override
-    public String getTargetTableName() {
-        return getTableName();
-    }
-
-    @Override
-    public String getTargetDatabaseName() {
-        return getCatalogName();
-    }
+    //CPD-ON
 }

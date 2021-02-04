@@ -37,10 +37,6 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     public static final String NAME = "addUniqueConstraint";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
-    private Boolean usePercona;
-
-    private String perconaOptions;
-
     /**
      * Generates the statements required for the add unique constraint change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -89,6 +85,26 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     }
 
     @Override
+    public String getTargetTableName() {
+        return getTableName();
+    }
+
+    @Override
+    public String getTargetDatabaseName() {
+        return getCatalogName();
+    }
+
+    //CPD-OFF - common PerconaChange implementation
+    private Boolean usePercona;
+
+    private String perconaOptions;
+
+    @Override
+    public String getChangeName() {
+        return NAME;
+    }
+
+    @Override
     @DatabaseChangeProperty(requiredForDatabase = {})
     public Boolean getUsePercona() {
         return usePercona;
@@ -107,19 +123,5 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
     public void setPerconaOptions(String perconaOptions) {
         this.perconaOptions = perconaOptions;
     }
-
-    @Override
-    public String getChangeName() {
-        return NAME;
-    }
-
-    @Override
-    public String getTargetTableName() {
-        return getTableName();
-    }
-
-    @Override
-    public String getTargetDatabaseName() {
-        return getCatalogName();
-    }
+    //CPD-ON
 }
