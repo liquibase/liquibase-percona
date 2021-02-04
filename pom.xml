@@ -8,6 +8,11 @@
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
 
+    <issueManagement>
+        <url>https://github.com/liquibase/liquibase-percona/issues</url>
+        <system>github</system>
+    </issueManagement>
+
     <inceptionYear>2014</inceptionYear>
     <licenses>
         <license>
@@ -356,8 +361,4 @@
             </build>
         </profile>
     </profiles>
-    <issueManagement>
-        <url>https://github.com/adangel/liquibase-percona/issues</url>
-        <system>github</system>
-    </issueManagement>
 </project>
