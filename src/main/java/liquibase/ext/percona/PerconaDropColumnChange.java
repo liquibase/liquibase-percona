@@ -37,6 +37,8 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
 
     private Boolean usePercona;
 
+    private String perconaOptions;
+
     /**
      * Generates the statements required for the drop column change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -79,6 +81,16 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
 
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public String getPerconaOptions() {
+        return perconaOptions;
+    }
+
+    public void setPerconaOptions(String perconaOptions) {
+        this.perconaOptions = perconaOptions;
     }
 
     @Override

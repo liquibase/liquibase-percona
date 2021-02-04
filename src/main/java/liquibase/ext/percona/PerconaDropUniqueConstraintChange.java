@@ -34,6 +34,8 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
 
     private Boolean usePercona;
 
+    private String perconaOptions;
+
     /**
      * Generates the statements required for the drop unique constraint change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -68,6 +70,16 @@ public class PerconaDropUniqueConstraintChange extends DropUniqueConstraintChang
 
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public String getPerconaOptions() {
+        return perconaOptions;
+    }
+
+    public void setPerconaOptions(String perconaOptions) {
+        this.perconaOptions = perconaOptions;
     }
 
     @Override

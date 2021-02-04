@@ -35,6 +35,8 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
 
     private Boolean usePercona;
 
+    private String perconaOptions;
+
     /**
      * Generates the statements required for the add primary key change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -78,6 +80,16 @@ public class PerconaAddPrimaryKeyChange extends AddPrimaryKeyChange implements P
 
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public String getPerconaOptions() {
+        return perconaOptions;
+    }
+
+    public void setPerconaOptions(String perconaOptions) {
+        this.perconaOptions = perconaOptions;
     }
 
     @Override

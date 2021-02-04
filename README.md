@@ -310,6 +310,35 @@ It is supported by using the YAML format and since liquibase 3.6.0, you can use 
         <column name="address" type="varchar(255)"/>
     </addColumn>
 
+### PerconaOptions flag
+
+Each change allows to specify options that are used when executing pt-osc. If specified, this option
+overrides the system property [`liquibase.percona.options`](#system-properties). If not specified, then
+the system property will be used.
+
+Example:
+
+    - changeSet:
+        id: 2
+        author: Alice
+        changes:
+          - addColumn:
+              tableName: person
+              perconaOptions: "--alter-foreign-keys-method=auto"
+              columns:
+                - column:
+                    name: address
+                    type: varchar(255)
+
+This flag exists since liquibase-percona 2.0.0.
+
+It is supported by using the YAML format and in XML changesets:
+
+    <addColumn tableName="person"
+        xmlns:liquibasePercona="http://github.com/liquibase/liquibase-percona"
+        liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto">
+        <column name="address" type="varchar(255)"/>
+    </addColumn>
 
 ### System Properties
 

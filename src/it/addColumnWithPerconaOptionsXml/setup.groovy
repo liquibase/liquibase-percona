@@ -1,5 +1,3 @@
-package liquibase.ext.percona;
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +12,20 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-import liquibase.change.Change;
-import liquibase.database.Database;
-
-public interface PerconaChange extends Change {
-
-    Boolean getUsePercona();
-
-    String getPerconaOptions();
-
-    String getChangeName();
-
-    String getTargetDatabaseName();
-
-    String getTargetTableName();
-
-    String generateAlterStatement(Database database);
+def con, s;
+try {
+    def props = new Properties();
+    props.setProperty("user", config_user)
+    props.setProperty("password", config_password)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}?useSSL=false", props)
+    s = con.createStatement();
+    s.execute("DROP DATABASE IF EXISTS `${config_dbname}`")
+    s.execute("CREATE DATABASE `${config_dbname}`")
+} finally {
+    s?.close();
+    con?.close();
 }
+
+println "Prepared empty database `${config_dbname}`"
+
+return true

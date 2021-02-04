@@ -39,6 +39,8 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
 
     private Boolean usePercona;
 
+    private String perconaOptions;
+
     /**
      * Generates the statements required for the add unique constraint change.
      * In case of a MySQL database, percona toolkit will be used.
@@ -94,6 +96,16 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
 
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public String getPerconaOptions() {
+        return perconaOptions;
+    }
+
+    public void setPerconaOptions(String perconaOptions) {
+        this.perconaOptions = perconaOptions;
     }
 
     @Override

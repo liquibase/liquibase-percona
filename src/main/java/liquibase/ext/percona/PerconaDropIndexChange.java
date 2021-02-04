@@ -30,6 +30,8 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
 
     private Boolean usePercona;
 
+    private String perconaOptions;
+
     @Override
     public SqlStatement[] generateStatements( Database database )
     {
@@ -61,6 +63,16 @@ public class PerconaDropIndexChange extends DropIndexChange implements PerconaCh
 
     public void setUsePercona(Boolean usePercona) {
         this.usePercona = usePercona;
+    }
+
+    @Override
+    @DatabaseChangeProperty(requiredForDatabase = {})
+    public String getPerconaOptions() {
+        return perconaOptions;
+    }
+
+    public void setPerconaOptions(String perconaOptions) {
+        this.perconaOptions = perconaOptions;
     }
 
     @Override

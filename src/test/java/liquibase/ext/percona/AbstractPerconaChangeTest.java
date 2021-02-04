@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.Scope;
-import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MySQLDatabase;
@@ -33,7 +32,7 @@ import liquibase.executor.jvm.JdbcExecutor;
 import liquibase.statement.SqlStatement;
 
 @ExtendWith(RestoreSystemPropertiesExtension.class)
-public abstract class AbstractPerconaChangeTest<T extends Change> {
+public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
 
     private Database database;
     private T change;
@@ -103,9 +102,10 @@ public abstract class AbstractPerconaChangeTest<T extends Change> {
         Assertions.assertEquals(1, statements.length);
         Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assertions.assertEquals("pt-online-schema-change "
-                + "--alter-foreign-keys-method=auto "
-                + "--nocheck-unique-key-change "
-                + "--alter=\"" + alter + "\" "
+                + (change.getPerconaOptions() == null
+                        ? "--alter-foreign-keys-method=auto --nocheck-unique-key-change"
+                        : change.getPerconaOptions())
+                + " --alter=\"" + alter + "\" "
                 + "--password=*** --execute "
                 + "h=localhost,P=3306,u=user,D=" + targetDatabaseName + ",t=" + targetTableName,
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
