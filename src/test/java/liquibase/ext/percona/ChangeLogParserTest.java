@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import liquibase.change.Change;
 import liquibase.changelog.ChangeLogParameters;
-import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
@@ -53,25 +52,30 @@ public class ChangeLogParserTest {
         return parser.parse(filename, new ChangeLogParameters(), resourceAccessor);
     }
 
+    private static void assertChange(Change change, Class<? extends PerconaChange> type, Boolean usePercona,
+            String perconaOptions) {
+        Assertions.assertEquals(type, change.getClass());
+        Assertions.assertEquals(usePercona, ((PerconaChange)change).getUsePercona());
+        Assertions.assertEquals(perconaOptions, ((PerconaChange)change).getPerconaOptions());
+    }
+
+    private static void assertChangeLog(DatabaseChangeLog changelog) {
+        Assertions.assertEquals(3, changelog.getChangeSets().size());
+        Change change = changelog.getChangeSets().get(1).getChanges().get(0);
+        assertChange(change, PerconaAddColumnChange.class, Boolean.FALSE, null);
+        change = changelog.getChangeSets().get(2).getChanges().get(0);
+        assertChange(change, PerconaAddColumnChange.class, null, "--foo");
+    }
+
     @Test
     public void testReadLiquibaseUsePerconaFlagYAML() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.yaml");
-        Assertions.assertEquals(2, changelog.getChangeSets().size());
-        ChangeSet addColumnChangeset = changelog.getChangeSets().get(1);
-        Change change = addColumnChangeset.getChanges().get(0);
-        Assertions.assertEquals(PerconaAddColumnChange.class, change.getClass());
-        Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
-        Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
+        assertChangeLog(changelog);
     }
 
     @Test
     public void testReadLiquibaseUsePerconaFlagXML() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.xml");
-        Assertions.assertEquals(2, changelog.getChangeSets().size());
-        ChangeSet addColumnChangeset = changelog.getChangeSets().get(1);
-        Change change = addColumnChangeset.getChanges().get(0);
-        Assertions.assertEquals(PerconaAddColumnChange.class, change.getClass());
-        Assertions.assertNotNull(((PerconaAddColumnChange)change).getUsePercona());
-        Assertions.assertFalse(((PerconaAddColumnChange)change).getUsePercona());
+        assertChangeLog(changelog);
     }
 }
