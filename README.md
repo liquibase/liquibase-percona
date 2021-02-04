@@ -382,7 +382,7 @@ integration test.
 ### Version 2.0.0 (????-??-??)
 
 *   The minimum Java runtime version is now Java 1.8.
-*   Liquibase 4.2+ is supported.
+*   Liquibase 4+ is supported.
 *   Support for older liquibase versions has been dropped.
 *   The XML namespace for this extension is now "http://github.com/liquibase/liquibase-percona". This only
     is affecting you, if you use the [UsePercona flag](#usepercona-flag).
