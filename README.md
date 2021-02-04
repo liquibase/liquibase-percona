@@ -429,6 +429,7 @@ integration test.
     only need to declare the namespace.
 
 *   Fixed [#56](https://github.com/liquibase/liquibase-percona/issues/56): Support liquibase 4.x
+*   Fixed [#57](https://github.com/liquibase/liquibase-percona/issues/57): Support perconaOptions per change
 
 ### Version 1.7.1 (2021-01-28)
 
