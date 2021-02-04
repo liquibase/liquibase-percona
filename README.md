@@ -23,6 +23,7 @@ This allows to perform a non-locking database upgrade.
     *   [ModifyDataType](#modifydatatype)
 *   [Configuration](#configuration)
     *   [UsePercona flag](#usepercona-flag)
+    *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
     *   [Version 2.0.0 (????-??-??)](#version-200---)
