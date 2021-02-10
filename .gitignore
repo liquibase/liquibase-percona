@@ -3,3 +3,5 @@ target
 .classpath
 .pmd
 .settings/
+.idea/
+liquibase-percona.iml
