@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/liquibase/liquibase-percona/workflows/Build/badge.svg)](https://github.com/liquibase/liquibase-percona/actions)
 [![Build Status](https://travis-ci.org/liquibase/liquibase-percona.svg?branch=master)](https://travis-ci.org/liquibase/liquibase-percona)
-![Maven Central](https://img.shields.io/maven-central/v/com.github.adangel.liquibase.ext/liquibase-percona)
+![Maven Central](https://img.shields.io/maven-central/v/org.liquibase.ext/liquibase-percona)
 
 Extension to support the tool `pt-online-schema-change` from [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/LATEST/index.html).
 This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
@@ -28,7 +28,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 2.1.0 (????-??-??)](#version-210---)
+    *   [Version 4.3.0 (????-??-??)](#version-430---)
     *   [Version 2.0.0 (2021-02-04)](#version-200-2021-02-04)
     *   [Version 1.7.1 (2021-01-28)](#version-171-2021-01-28)
     *   [Version 1.7.0 (2020-07-04)](#version-170-2020-07-04)
@@ -80,7 +80,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.0 (liquibase-percona 2.1.0). Percona Toolkit 3.3.0.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.0 (liquibase-percona 4.3.0). Percona Toolkit 3.3.0.
 
 ## Supported Changes and examples
 
@@ -415,8 +415,21 @@ integration test.
 
 ## Changelog
 
-### Version 2.1.0 (????-??-??)
+### Version 4.3.0 (????-??-??)
 
+*   The maven coordinates have changed. This extension is now available like the other liquibase extensions in
+    the group `org.liquibase.ext`.
+    
+    In order to add this extension, use the following snippet:
+    
+        <dependency>
+            <groupId>org.liquibase.ext</groupId>
+            <artifactId>liquibase-percona</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+    
+
+*   [#66](https://github.com/liquibase/liquibase-percona/issues/66): Change maven coordinates to be org.liquibase.ext
 *   [#74](https://github.com/liquibase/liquibase-percona/pull/74): Update Liquibase to 4.3.0
 
 ### Version 2.0.0 (2021-02-04)
@@ -551,7 +564,7 @@ The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
 
 The jar files can be downloaded manually from maven:
 
-<http://repo.maven.apache.org/maven2/com/github/adangel/liquibase/ext/liquibase-percona/>
+<http://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/>
 
 
 ### Command line liquibase
@@ -564,9 +577,9 @@ The shell script `liquibase` / `liquibase.bat` will automatically pick this up a
 Add the following dependency to the liquibase plugin:
 
     <dependency>
-        <groupId>com.github.adangel.liquibase.ext</groupId>
+        <groupId>org.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>2.0.0</version>
+        <version>4.3.0</version>
     </dependency>
 
 
@@ -574,7 +587,7 @@ Add the following dependency to the liquibase plugin:
 
 Snapshot builds contain the latest features which are not yet available in a release.
 
-Download: <https://oss.sonatype.org/content/repositories/snapshots/com/github/adangel/liquibase/ext/liquibase-percona/>
+Download: <https://oss.sonatype.org/content/repositories/snapshots/org/liquibase/ext/liquibase-percona/>
 
 Enable the snapshot repository via Maven:
 
@@ -596,12 +609,12 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `2.1.0-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.3.1-SNAPSHOT`:
 
     <dependency>
-        <groupId>com.github.adangel.liquibase.ext</groupId>
+        <groupId>org.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>4.3.1-SNAPSHOT</version>
     </dependency>
 
 
