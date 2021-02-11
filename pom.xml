@@ -42,7 +42,7 @@
         <project.build.outputTimestamp>2021-02-04T20:26:22Z</project.build.outputTimestamp>
 
         <java.version>8</java.version>
-        <liquibase.version>4.2.2</liquibase.version>
+        <liquibase.version>4.3.0</liquibase.version>
         <mysql.version>8.0.22</mysql.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
 
@@ -109,10 +109,12 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <release>${java.version}</release>
                         <optimize>true</optimize>
                         <debug>true</debug>
                         <encoding>${project.build.sourceEncoding}</encoding>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <verbose>true</verbose>
                     </configuration>
                 </plugin>
 
