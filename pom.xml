@@ -42,7 +42,7 @@
         <project.build.outputTimestamp>2021-02-11T17:01:32Z</project.build.outputTimestamp>
 
         <java.version>8</java.version>
-        <liquibase.version>4.3.0</liquibase.version>
+        <liquibase.version>4.3.1</liquibase.version>
         <mysql.version>8.0.22</mysql.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
 
