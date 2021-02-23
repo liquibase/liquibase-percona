@@ -41,9 +41,9 @@
 
         <project.build.outputTimestamp>2021-02-22T20:48:40Z</project.build.outputTimestamp>
 
-        <java.version>1.8</java.version>
-        <liquibase.version>4.3.0</liquibase.version>
-        <mysql.version>8.0.22</mysql.version>
+      <java.version>1.8</java.version>
+        <liquibase.version>4.3.1</liquibase.version>
+        <mysql.version>8.0.23</mysql.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.27</version>
+            <version>1.28</version>
         </dependency>
 
         <dependency>
@@ -403,7 +403,7 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>3.2.1</version>
+                        <version>3.2.2</version>
                         <configuration>
 <!--                             <debug>true</debug> -->
                             <projectsDirectory>src/it</projectsDirectory>
