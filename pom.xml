@@ -3,16 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
+    <version>4.3.2-SNAPSHOT</version>
     <name>Liquibase Percona Extension</name>
-    <version>4.3.1-SNAPSHOT</version>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
-
-    <issueManagement>
-        <url>https://github.com/liquibase/liquibase-percona/issues</url>
-        <system>github</system>
-    </issueManagement>
-
+    <organization>
+        <name>Liquibase.org</name>
+        <url>http://www.liquibase.org</url>
+    </organization>
     <inceptionYear>2014</inceptionYear>
     <licenses>
         <license>
@@ -20,13 +18,15 @@
             <name>Apache License, Version 2.0</name>
         </license>
     </licenses>
-
+    <issueManagement>
+        <url>https://github.com/liquibase/liquibase-percona/issues</url>
+        <system>github</system>
+    </issueManagement>
     <scm>
         <connection>scm:git:http://github.com/liquibase/liquibase-percona.git</connection>
         <url>https://github.com/liquibase/liquibase-percona</url>
-      <tag>HEAD</tag>
-  </scm>
-
+        <tag>HEAD</tag>
+    </scm>
     <developers>
         <developer>
             <id>adangel</id>
@@ -39,9 +39,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <project.build.outputTimestamp>2021-02-11T17:01:32Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2021-02-22T20:48:40Z</project.build.outputTimestamp>
 
-        <java.version>8</java.version>
+      <java.version>1.8</java.version>
         <liquibase.version>4.3.1</liquibase.version>
         <mysql.version>8.0.23</mysql.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
@@ -70,6 +70,7 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.28</version>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -101,152 +102,119 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <optimize>true</optimize>
-                        <debug>true</debug>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <verbose>true</verbose>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M1</version>
-                    <configuration>
-                        <mavenExecutorId>forked-path</mavenExecutorId>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <pushChanges>false</pushChanges>
-                        <localCheckout>true</localCheckout>
-                        <arguments>-Psonatype-oss-release</arguments>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.14.0</version>
+                <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
-                    <targetJdk>1.${java.version}</targetJdk>
-                    <printFailingErrors>true</printFailingErrors>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <optimize>true</optimize>
+                    <debug>true</debug>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <reportFormat>plain</reportFormat>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>1.8</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <stagingRepository>/tmp/maven-snapshot</stagingRepository>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <pushChanges>false</pushChanges>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <author>false</author>
+                    <doctitle>Liquibase CDI ${project.version} API</doctitle>
+                    <quiet>true</quiet>
+                    <doclint>none</doclint>
+                    <encoding>UTF-8</encoding>
+                    <jarOutputDirectory>${project.basedir}/target</jarOutputDirectory>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>pmd</id>
+                        <id>jar-javadoc</id>
                         <goals>
-                            <goal>check</goal>
-                            <goal>cpd-check</goal>
+                            <goal>jar</goal>
                         </goals>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.2.0</version>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.12.1</version>
                 <executions>
                     <execution>
-                        <id>spotbugs</id>
                         <goals>
-                            <goal>check</goal>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>compile</goal>
+                            <goal>compileTests</goal>
+                            <goal>removeStubs</goal>
+                            <goal>removeTestStubs</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
-					<configuration>
-                        <stagingRepository>/tmp/maven-snapshot</stagingRepository>
-						<mavenExecutorId>forked-path</mavenExecutorId>
-                        <pushChanges>false</pushChanges>
-					</configuration>
-				</plugin>
-
-
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<configuration>
-						<skip>false</skip>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.8</version>
-					<extensions>true</extensions>
-					<executions>
-						<execution>
-							<id>default-deploy</id>
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<serverId>sonatype-nexus-staging</serverId>
-						<nexusUrl>https://oss.sonatype.org/service/local/staging/deploy/maven2/</nexusUrl>
-					</configuration>
-				</plugin>
-
-				<plugin>
-    					<groupId>org.apache.maven.plugins</groupId>
-    					<artifactId>maven-javadoc-plugin</artifactId>
-					<configuration>
-						<author>false</author>
-        					<doctitle>Liquibase CDI ${project.version} API</doctitle>
-        					<quiet>true</quiet>
-        					<doclint>none</doclint>
-        					<encoding>UTF-8</encoding>
-        					<jarOutputDirectory>${project.basedir}/target</jarOutputDirectory>
-    					</configuration>
-    					<executions>
-        					<execution>
-            						<id>jar-javadoc</id>
-            						<goals>
-                						<goal>jar</goal>
-            						</goals>
-            						<phase>package</phase>
-        					</execution>
-    					</executions>
-				</plugin>				
-
-
-			</plugins>
-
-	</build>
-
+        </plugins>
+    </build>
     <distributionManagement>
         <repository>
             <id>sonatype-nexus-staging</id>
             <name>Nexus Release Repository</name>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-
         </repository>
         <snapshotRepository>
             <id>sonatype-nexus-snapshots</id>
@@ -254,7 +222,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
     <profiles>
         <profile>
             <!-- Required for deployment to Sonatype -->
