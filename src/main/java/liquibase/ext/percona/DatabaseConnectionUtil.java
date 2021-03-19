@@ -134,11 +134,6 @@ public class DatabaseConnectionUtil {
                 Class<?> mariadbConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
                         "org.mariadb.jdbc.MariaDbConnection");
 
-                // Unknown MySQL/MariaDB Connector?
-                if (connectionImplClass == null || mariadbConnectionClass == null) {
-                    throw new RuntimeException("Couldn't find class ConnectionImpl");
-                }
-                
                 boolean isMySQL = false;
                 boolean isMariaDB = false;
 
