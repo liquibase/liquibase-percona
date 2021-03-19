@@ -63,8 +63,8 @@ This allows to perform a non-locking database upgrade.
 
 ## Supported Databases
 
-MySQL is the only supported database.
-The extension checks whether it is being run against a MySQL database. If not, it falls back to the default
+MySQL and MariaDB are the only supported databases.
+The extension checks whether it is being run against a MySQL/MariaDB database. If not, it falls back to the default
 changes provided by liquibase-core.
 
 
@@ -417,6 +417,8 @@ integration test.
 ## Changelog
 
 ### Version 4.3.? (????-??-??)
+
+*   [#60](https://github.com/liquibase/liquibase-percona/issues/60): Add support for MariaDB JConnector
 
 ### Version 4.3.1 (2021-02-23)
 
