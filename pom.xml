@@ -186,6 +186,7 @@
                     <stagingRepository>/tmp/maven-snapshot</stagingRepository>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                     <pushChanges>false</pushChanges>
+                    <releaseProfiles>release-sign-artifacts</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>
@@ -287,12 +288,6 @@
         <profile>
             <!-- Required for deployment to Sonatype -->
             <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
