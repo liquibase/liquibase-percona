@@ -126,26 +126,45 @@ public class DatabaseConnectionUtil {
                 jdbcCon = getDelegatedDbcp2Connection(jdbcCon);
                 jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
 
-
                 Class<?> connectionImplClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
                         "com.mysql.jdbc.ConnectionImpl",   // MySQL Connector 5.1.38: com.mysql.jdbc.ConnectionImpl
                         "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 6.0.4: com.mysql.cj.jdbc.ConnectionImpl
                     );
 
-                // Unknown MySQL Connector version?
-                if (connectionImplClass == null) {
+                Class<?> mariadbConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "org.mariadb.jdbc.MariaDbConnection");
+
+                // Unknown MySQL/MariaDB Connector?
+                if (connectionImplClass == null || mariadbConnectionClass == null) {
                     throw new RuntimeException("Couldn't find class ConnectionImpl");
                 }
+                
+                boolean isMySQL = false;
+                boolean isMariaDB = false;
 
-                if (!connectionImplClass.isInstance(jdbcCon)) {
-                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
+                if (connectionImplClass != null && connectionImplClass.isInstance(jdbcCon)) {
+                    isMySQL = true;
+                }
+                if (mariadbConnectionClass != null && mariadbConnectionClass.isInstance(jdbcCon)) {
+                    isMariaDB = true;
                 }
 
-                // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
-                Properties props = ReflectionUtils.readField(connectionImplClass, jdbcCon, "props");
-                String password = props.getProperty(PASSWORD_PROPERTY_NAME);
-                if (password != null && !password.trim().isEmpty()) {
-                    return password;
+                if (isMySQL) {
+                    // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
+                    Properties props = ReflectionUtils.readField(connectionImplClass, jdbcCon, "props");
+                    String password = props.getProperty(PASSWORD_PROPERTY_NAME);
+                    if (password != null && !password.trim().isEmpty()) {
+                        return password;
+                    }
+                } else if (isMariaDB) {
+                    Object protocol = ReflectionUtils.readField(mariadbConnectionClass, jdbcCon, "protocol");
+                    Object urlParser = ReflectionUtils.invokeMethod(protocol.getClass(), protocol, "getUrlParser");
+                    Object password = ReflectionUtils.invokeMethod(urlParser.getClass(), urlParser, "getPassword");
+                    if (password != null && !password.toString().trim().isEmpty()) {
+                        return password.toString();
+                    }
+                } else {
+                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
                 }
             } catch (Exception e) {
                 log.warning("Couldn't determine the password from JdbcConnection", e);
