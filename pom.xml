@@ -104,6 +104,27 @@
     </dependencies>
     <build>
         <plugins>
+            <!--
+              for reproducible builds, maven-jar-plugin, maven-source-plugin, maven-assembly-plugin
+              and maven-javadoc-plugin >= 3.2.0 is required.
+              See https://maven.apache.org/guides/mini/guide-reproducible-builds.html
+             -->
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
@@ -156,9 +177,11 @@
                 <version>3.2.0</version>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <!-- reproducible builds: version >= 3.0.0-M1 will automatically update
+                     the property "project.build.outputTimestamp" during the release in the same
+                     commit that updates the version. -->
+                <version>3.0.0-M1</version>
                 <configuration>
                     <stagingRepository>/tmp/maven-snapshot</stagingRepository>
                     <mavenExecutorId>forked-path</mavenExecutorId>
@@ -183,6 +206,8 @@
                     <doclint>none</doclint>
                     <encoding>UTF-8</encoding>
                     <jarOutputDirectory>${project.basedir}/target</jarOutputDirectory>
+                    <!-- reproducible builds: avoid timestamps in generated files -->
+                    <notimestamp>true</notimestamp>
                 </configuration>
                 <executions>
                     <execution>
