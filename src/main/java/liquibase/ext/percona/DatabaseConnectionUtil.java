@@ -50,7 +50,7 @@ public class DatabaseConnectionUtil {
     }
 
     public String getHost() {
-        Pattern p = Pattern.compile("jdbc:mysql://([^@]+@)?([^:/]+)");
+        Pattern p = Pattern.compile("jdbc:(?:mysql|mariadb):(?:replication:|loadbalance:|sequential:|aurora:)?//([^@]+@)?([^:/]+)");
         Matcher m = p.matcher(connection.getURL());
         if (m.find()) {
             return m.group(2);
@@ -59,7 +59,7 @@ public class DatabaseConnectionUtil {
     }
 
     public String getPort() {
-        Pattern p = Pattern.compile("jdbc:mysql://[^:/]+:(\\d+)");
+        Pattern p = Pattern.compile("jdbc:(?:mysql|mariadb):(?:replication:|loadbalance:|sequential:|aurora:)?//[^:/]+:(\\d+)");
         Matcher m = p.matcher(connection.getURL());
         if (m.find()) {
             return m.group(1);

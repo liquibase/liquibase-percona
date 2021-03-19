@@ -44,6 +44,9 @@ public class DatabaseConnectionUtilTest {
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://127.0.0.1:3306/testdb"));
         Assertions.assertEquals("127.0.0.1", util.getHost());
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mariadb://127.0.0.1:3306/testdb"));
+        Assertions.assertEquals("127.0.0.1", util.getHost());
     }
 
     @Test
@@ -58,7 +61,10 @@ public class DatabaseConnectionUtilTest {
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://localhost/testdb"));
         Assertions.assertEquals("3306", util.getPort());
-    }
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mariadb://127.0.0.1:3307/testdb"));
+        Assertions.assertEquals("3307", util.getPort());
+}
 
     @Test
     public void testGetUser() {
