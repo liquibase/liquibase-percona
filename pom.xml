@@ -41,7 +41,7 @@
 
         <project.build.outputTimestamp>2021-02-22T20:48:40Z</project.build.outputTimestamp>
 
-      <java.version>1.8</java.version>
+        <java.version>1.8</java.version>
         <liquibase.version>4.3.1</liquibase.version>
         <mysql.version>8.0.23</mysql.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
@@ -106,12 +106,14 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -129,8 +131,8 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -165,14 +167,15 @@
             </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
                 <configuration>
                     <skip>false</skip>
                 </configuration>
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
                     <author>false</author>
                     <doctitle>Liquibase CDI ${project.version} API</doctitle>
