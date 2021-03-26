@@ -28,7 +28,8 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Version 4.3.2 (????-??-??)](#version-432---)
+    *   [Version 4.?.? (????-??-??)](#version-4---)
+    *   [Version 4.3.2 (2021-03-26)](#version-432-2021-03-26)
     *   [Version 4.3.1 (2021-02-23)](#version-431-2021-02-23)
     *   [Version 2.0.0 (2021-02-04)](#version-200-2021-02-04)
     *   [Version 1.7.1 (2021-01-28)](#version-171-2021-01-28)
@@ -63,7 +64,7 @@ This allows to perform a non-locking database upgrade.
 
 ## Supported Databases
 
-MySQL and MariaDB are the only supported databases.
+MySQL and MariaDB (since 4.3.2) are the only supported databases.
 The extension checks whether it is being run against a MySQL/MariaDB database. If not, it falls back to the default
 changes provided by liquibase-core.
 
@@ -81,7 +82,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.1 (liquibase-percona 4.3.1). Percona Toolkit 3.3.0.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.2 (liquibase-percona 4.3.2). Percona Toolkit 3.3.0.
 
 ## Supported Changes and examples
 
@@ -416,9 +417,13 @@ integration test.
 
 ## Changelog
 
-### Version 4.3.? (????-??-??)
+### Version 4.?.? (????-??-??)
+
+### Version 4.3.2 (2021-03-26)
 
 *   [#60](https://github.com/liquibase/liquibase-percona/issues/60): Add support for MariaDB JConnector
+*   [#85](https://github.com/liquibase/liquibase-percona/issues/85): liquibase-percona 4.3.1 is not reproducible anymore
+*   [#88](https://github.com/liquibase/liquibase-percona/pull/88): Support for Liquibase 4.3.2
 
 ### Version 4.3.1 (2021-02-23)
 
@@ -576,7 +581,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.3.1.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.3.2.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -586,7 +591,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>org.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>4.3.1</version>
+        <version>4.3.2</version>
     </dependency>
 
 
@@ -616,12 +621,12 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.3.2-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.3.3-SNAPSHOT`:
 
     <dependency>
         <groupId>org.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.3.3-SNAPSHOT</version>
     </dependency>
 
 
