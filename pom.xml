@@ -44,6 +44,7 @@
         <java.version>1.8</java.version>
         <liquibase.version>4.3.1</liquibase.version>
         <mysql.version>8.0.23</mysql.version>
+        <mariadb.connector.version>2.7.2</mariadb.connector.version>
         <percona.toolkit.version>3.3.0</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
@@ -52,6 +53,9 @@
         and the docker-maven-plugin will store it in this property.
         If you want a fixed port, just define the property here.
         <config_port>3306</config_port>
+
+        The same for mariadb
+        <config_port_mariadb>3307</config_port_mariadb>
          -->
         <config_user>root</config_user>
         <config_password>root</config_password>
@@ -81,6 +85,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.connector.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -383,6 +393,30 @@
                                         </wait>
                                     </run>
                                 </image>
+                                <image>
+                                    <name>mariadb:10</name>
+                                    <alias>liquibase-percona-mariadb</alias>
+                                    <run>
+                                        <env>
+                                            <MYSQL_ROOT_PASSWORD>${config_password}</MYSQL_ROOT_PASSWORD>
+                                        </env>
+                                        <containerNamePattern>%a</containerNamePattern>
+                                        <network>
+                                            <mode>bridge</mode>
+                                        </network>
+                                        <ports>
+                                            <port>config_port_mariadb:3306</port>
+                                        </ports>
+                                        <wait>
+                                            <tcp>
+                                                <ports>
+                                                    <port>3306</port>
+                                                </ports>
+                                            </tcp>
+                                            <time>180000</time>
+                                        </wait>
+                                    </run>
+                                </image>
                             </images>
                         </configuration>
                         <executions>
@@ -423,6 +457,7 @@
                             <scriptVariables>
                                 <config_host>${config_host}</config_host>
                                 <config_port>${config_port}</config_port>
+                                <config_port_mariadb>${config_port_mariadb}</config_port_mariadb>
                                 <config_user>${config_user}</config_user>
                                 <config_password>${config_password}</config_password>
                                 <config_dbname>${config_dbname}</config_dbname>

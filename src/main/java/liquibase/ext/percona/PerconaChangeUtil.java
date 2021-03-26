@@ -89,6 +89,8 @@ public class PerconaChangeUtil {
 
         List<SqlStatement> statements = new ArrayList<SqlStatement>(Arrays.asList(originalStatements));
 
+        // Note: MariaDB is a subclass of MySQLDatabase - so the Percona changes are
+        // used for both MySQLDatabase and MariaDBDatabase.
         if (database instanceof MySQLDatabase) {
             if (PTOnlineSchemaChangeStatement.isAvailable()) {
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
