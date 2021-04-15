@@ -593,7 +593,7 @@ Add the following dependency to the liquibase plugin:
     <dependency>
         <groupId>org.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>4.3.2</version>
+        <version>4.3.3</version>
     </dependency>
 
 
@@ -623,12 +623,12 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.3.3-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.3.4-SNAPSHOT`:
 
     <dependency>
         <groupId>org.liquibase.ext</groupId>
         <artifactId>liquibase-percona</artifactId>
-        <version>4.3.3-SNAPSHOT</version>
+        <version>4.3.4-SNAPSHOT</version>
     </dependency>
 
 
