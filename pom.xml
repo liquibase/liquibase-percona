@@ -188,10 +188,10 @@
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <!-- reproducible builds: version >= 3.0.0-M1 will automatically update
+                <!-- reproducible builds: version >= 3.0.0-M4 will automatically update
                      the property "project.build.outputTimestamp" during the release in the same
                      commit that updates the version. -->
-                <version>3.0.0-M1</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <stagingRepository>/tmp/maven-snapshot</stagingRepository>
                     <mavenExecutorId>forked-path</mavenExecutorId>
