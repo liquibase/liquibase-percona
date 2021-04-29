@@ -1,0 +1,13 @@
+# Doc: https://docs.github.com/en/code-security/supply-chain-security/configuration-options-for-dependency-updates
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+    - dependency-name: "mysql:mysql-connector-java"
+      versions:
+      - 5.1.49
+      - 6.0.6
