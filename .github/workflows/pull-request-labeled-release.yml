@@ -9,12 +9,22 @@ on:
 
 jobs:
   integration-tests:
-    name: Java ${{ matrix.java }}
+    name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}
     runs-on: ubuntu-latest
     if: contains( github.event.pull_request.labels.*.name, 'Extension Release Candidate :rocket:' )
     strategy:
       matrix:
         java: [8, 11, 16]
+        mysql: [8]
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testdb
+          MYSQL_PASSWORD: root
+        ports:
+          - 3306:3306
     steps:
     - uses: actions/checkout@v2
     - name: Cache Local Maven Repository

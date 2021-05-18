@@ -57,6 +57,10 @@
         The same for mariadb
         <config_port_mariadb>3307</config_port_mariadb>
          -->
+
+        <!-- exposing port for GitHub Actions, comment if you would like to take advantage of the above -->
+        <config_port>3306</config_port>
+
         <config_user>root</config_user>
         <config_password>root</config_password>
         <config_dbname>testdb</config_dbname>
@@ -112,6 +116,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
 
@@ -234,7 +239,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
+                        <version>3.2.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -268,7 +273,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.0.1</version>
                         <configuration>
                             <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                             <gpgArguments>
