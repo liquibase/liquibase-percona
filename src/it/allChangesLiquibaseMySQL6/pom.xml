@@ -38,7 +38,7 @@
                 <configuration>
                     <changeLogFile>test-changelog.xml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://@config_host@:@config_port@/@config_dbname@?useSSL=false</url>
+                    <url>jdbc:mysql://@config_host@:@config_port@/@config_dbname@?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
                     <username>@config_user@</username>
                     <password>@config_password@</password>
                 </configuration>

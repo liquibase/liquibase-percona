@@ -1,7 +1,6 @@
 # Liquibase Percona Extension
 
 [![Build Status](https://github.com/liquibase/liquibase-percona/workflows/Build/badge.svg)](https://github.com/liquibase/liquibase-percona/actions)
-[![Build Status](https://travis-ci.org/liquibase/liquibase-percona.svg?branch=master)](https://travis-ci.org/liquibase/liquibase-percona)
 [![Reproducible Builds](https://img.shields.io/badge/Reproducible_Builds-ok-green?labelColor=blue)](https://github.com/jvm-repo-rebuild/reproducible-central#org.liquibase.ext:liquibase-percona)
 [![Maven Central](https://img.shields.io/maven-central/v/org.liquibase.ext/liquibase-percona)](https://search.maven.org/artifact/org.liquibase.ext/liquibase-percona)
 
@@ -666,9 +665,10 @@ In order to execute the integration tests, run `./mvnw clean verify -Prun-its`.
 Please note, that you'll need:
 
 1.  [docker](https://www.docker.com/).
-    During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) will be started.
+    During the pre-integration-test phase the [official mysql image](https://hub.docker.com/_/mysql/) and
+    [maria db image](https://hub.docker.com/_/mariadb/) will be started.
     Under debian, execute `sudo apt-get install docker.io`.
-2.  Internet access to download the docker image the first time. And to download
+2.  Internet access to download the docker images the first time. And to download
     [percona toolkit](https://www.percona.com/downloads/percona-toolkit/). The build system will add the downloaded
     toolkit automatically to the `PATH`.
 3.  The percona toolkit requires perl with mysql dbi libraries.

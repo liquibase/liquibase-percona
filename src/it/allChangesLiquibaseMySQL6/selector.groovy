@@ -12,20 +12,10 @@
  * limitations under the License.
  */
 
-def con, s;
-try {
-    def props = new Properties();
-    props.setProperty("user", config_user)
-    props.setProperty("password", config_password)
-    con = new org.mariadb.jdbc.Driver().connect("jdbc:mariadb://${config_host}:${config_port_mariadb}?useSSL=false&allowPublicKeyRetrieval=true", props)
-    s = con.createStatement();
-    s.execute("DROP DATABASE IF EXISTS `${config_dbname}`")
-    s.execute("CREATE DATABASE `${config_dbname}`")
-} finally {
-    s?.close();
-    con?.close();
+// MySQL connector 6 is incompatible with MySQL DB 8.
+if ("${mysql_image}".startsWith("mysql:8")) {
+    println "Skipping test because mysql image is ${mysql_image}"
+    return false
 }
-
-println "Prepared empty database `${config_dbname}`"
 
 return true
