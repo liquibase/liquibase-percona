@@ -50,19 +50,37 @@ try {
     con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false&allowPublicKeyRetrieval=true", props)
     s = con.createStatement();
     r = s.executeQuery("SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA='${config_dbname}' AND TABLE_NAME='test_table' ORDER BY CONSTRAINT_NAME ASC")
+    count = 0
+
     assert r.next()
+    // in MySQL 8, "_fk..." is sorted first
+    if (r.getString(1) == "_fk_test_column3") {
+        count++
+        assertColumn(r, "_fk_test_column3", "FOREIGN KEY")
+        assert r.next()
+    }
+
+    count++
     assertColumn(r, "fk_test_column", "FOREIGN KEY")
     assert r.next()
+    count++
     assertColumn(r, "fk_test_column4", "FOREIGN KEY")
     assert r.next()
+    count++
     assertColumn(r, "PRIMARY", "PRIMARY KEY")
     assert r.next()
+    count++
     assertColumn(r, "uc_test_column", "UNIQUE")
     assert r.next()
+    count++
     assertColumn(r, "uc_test_column3", "UNIQUE")
-    assert r.next()
-    assertColumn(r, "_fk_test_column3", "FOREIGN KEY")
+
+    if (r.next()) {
+        count++
+        assertColumn(r, "_fk_test_column3", "FOREIGN KEY")
+    }
     r.close()
+    assert count == 6
 } finally {
     s?.close();
     con?.close();

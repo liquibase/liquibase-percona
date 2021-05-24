@@ -513,6 +513,8 @@
                                 <config_user>${config_user}</config_user>
                                 <config_password>${config_password}</config_password>
                                 <config_dbname>${config_dbname}</config_dbname>
+                                <mysql_image>${mysql_image}</mysql_image>
+                                <mariadb_image>${mariadb_image}</mariadb_image>
                                 <project_build_directory>${project.build.directory}</project_build_directory>
                             </scriptVariables>
                             <environmentVariables>

@@ -49,7 +49,8 @@ try {
     assert r.next()
     assertColumn(r, "email", "varchar(255)", "YES", null)
     assert r.next()
-    assertColumn(r, "age", "int(11)", "YES", null)
+    // for MySQL 5.7, the type is int(11), for MySQL 8, it is int
+    assertColumn(r, "age", "int", "YES", null)
     r.close()
 } finally {
     s?.close();
@@ -58,7 +59,7 @@ try {
 
 def assertColumn(resultset, name, type, nullable, defaultValue) {
     assert name == resultset.getString(1)
-    assert type == resultset.getString(2)
+    assert resultset.getString(2).contains(type)
     assert nullable == resultset.getString(3)
     assert defaultValue == resultset.getString(5)
 }
