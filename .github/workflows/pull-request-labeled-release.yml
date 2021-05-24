@@ -9,24 +9,19 @@ on:
 
 jobs:
   integration-tests:
-    name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}
+    name: Java ${{ matrix.java }}
     runs-on: ubuntu-latest
     if: contains( github.event.pull_request.labels.*.name, 'Extension Release Candidate :rocket:' )
     strategy:
       matrix:
         java: [8, 11, 16]
-        mysql: [8]
-    services:
-      mysql:
-        image: mysql:${{ matrix.mysql }}
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testdb
-          MYSQL_PASSWORD: root
-        ports:
-          - 3306:3306
     steps:
     - uses: actions/checkout@v2
+    - name: Install Perl modules
+      uses: perl-actions/install-with-cpanm@v1
+      with:
+        install: |
+          DBD::mysql
     - name: Cache Local Maven Repository
       uses: actions/cache@v2
       with:
@@ -40,4 +35,4 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'adopt'
     - name: Test With Maven
-      run: mvn clean verify --file pom.xml
+      run: ./mvnw -B clean verify --file pom.xml -Prun-its

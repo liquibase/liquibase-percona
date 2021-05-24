@@ -22,7 +22,7 @@ jobs:
             gpg-passphrase: GPG_PASSPHRASE
 
         - name: Publish to the Maven Central Repository
-          run: mvn clean deploy -Dmaven.test.skip -P release
+          run: ./mvnw -B clean deploy -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip --file pom.xml -Prelease
           env:
             MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
             MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}

@@ -9,7 +9,7 @@ jobs:
   build:
     name: Build Artifact
     runs-on: ubuntu-latest
-    if: github.ref == 'main'&& github.event.pull_request.merged && contains( github.event.pull_request.labels.*.name, 'Extension Release Candidate :rocket:' )
+    if: ${{ github.base_ref == 'main' && github.event.pull_request.merged && contains( github.event.pull_request.labels.*.name, 'Extension Release Candidate :rocket:' ) }}
     steps:
       - uses: actions/checkout@v2
       - name: Cache Local Maven Repository
@@ -25,18 +25,9 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          server-id: sonatype-nexus-staging
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_SECRET }}
-          gpg-passphrase: GPG_PASSPHRASE
 
       - name: Build With Maven
-        run: mvn clean install -Dmaven.test.skip
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: ./mvnw -B clean package -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip --file pom.xml
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -118,9 +109,9 @@ jobs:
 
       - name: Bump POM Version for Development
         run: |
-          mvn versions:set -DnextSnapshot=true
+          ./mvnw -B versions:set -DnextSnapshot=true
           git add pom.xml
-          git commit -m "Version Bumped to Snapshot for Developent"
+          git commit -m "Version Bumped to Snapshot for Development"
           git push "https://liquibot:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:${{ github.base_ref }} --follow-tags --tags
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}

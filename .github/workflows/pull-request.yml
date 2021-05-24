@@ -32,7 +32,7 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'adopt'
     - name: Run Unit Tests With Maven
-      run: mvn surefire:test --file pom.xml
+      run: ./mvnw -B clean test --file pom.xml
 
   # This step is the automation to create a release based on a liquibase core bump
   # If a manual release is required, the steps below will need to be done manually prior
@@ -74,11 +74,13 @@ jobs:
 
       - name: Bump POM Version for Next Release
         run: |
-          mvn versions:set -DnewVersion=$VERSION_TAG
+          ./mvnw -B versions:set -DnewVersion=$VERSION_TAG
+          sed -i "s/project.build.outputTimestamp>[^<]\+</project.build.outputTimestamp>$(date -u -Iseconds)</" pom.xml
           git add pom.xml
           git commit -m "Version Bumped to $VERSION_TAG"
           git tag -a -m "Version Bumped to $VERSION_TAG" liquibase-percona-$VERSION_TAG
           git push "https://liquibot:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:${{ github.event.pull_request.head.ref }} --follow-tags --tags
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
 
