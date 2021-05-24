@@ -38,7 +38,7 @@
                 <configuration>
                     <changeLogFile>test-changelog.xml</changeLogFile>
                     <driver>org.mariadb.jdbc.Driver</driver>
-                    <url>jdbc:mariadb://@config_host@:@config_port_mariadb@/@config_dbname@?useSSL=false</url>
+                    <url>jdbc:mariadb://@config_host@:@config_port_mariadb@/@config_dbname@?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
                     <username>@config_user@</username>
                     <password>@config_password@</password>
                 </configuration>

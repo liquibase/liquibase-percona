@@ -40,7 +40,7 @@ try {
     def props = new Properties();
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false", props)
+    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false&allowPublicKeyRetrieval=true", props)
     s = con.createStatement();
     r = s.executeQuery("DESCRIBE person")
     assert r.next()
