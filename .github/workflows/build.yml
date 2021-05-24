@@ -70,11 +70,7 @@ jobs:
     - run: echo $VERSION_TAG
 
     - name: Deploy Snapshot with Maven
-      if: |
-        ${{ github.repository == 'liquibase/liquibase-percona'
-            && github.ref == 'main'
-            && contains(env.VERSION_TAG, 'SNAPSHOT')
-        }}
+      if: ${{ github.repository == 'liquibase/liquibase-percona' && github.ref == 'main' && contains(env.VERSION_TAG, 'SNAPSHOT') }}
       run: ./mvnw -B clean deploy -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip --file pom.xml -Prelease
       env:
         MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
