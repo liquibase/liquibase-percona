@@ -99,11 +99,13 @@ Automatic rollback supported? yes
 
 Example:
 
-    <changeSet id="2" author="Alice">
-        <addColumn tableName="person">
-            <column name="address" type="varchar(255)"/>
-        </addColumn>
-    </changeSet>
+```xml
+<changeSet id="2" author="Alice">
+    <addColumn tableName="person">
+        <column name="address" type="varchar(255)"/>
+    </addColumn>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -118,11 +120,13 @@ Automatic rollback supported? yes
 
 Example:
 
-    <changeSet id="3" author="Alice">
-        <addForeignKeyConstraint constraintName="fk_person_address"
-            referencedTableName="person" referencedColumnNames="id"
-            baseTableName="address" baseColumnNames="person_id"/>
-    </changeSet>
+```xml
+<changeSet id="3" author="Alice">
+    <addForeignKeyConstraint constraintName="fk_person_address"
+        referencedTableName="person" referencedColumnNames="id"
+        baseTableName="address" baseColumnNames="person_id"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -137,9 +141,11 @@ Automatic rollback supported? no
 
 Example:
 
-    <changeSet id="2" author="Alice">
-        <addPrimaryKey tableName="person" columnNames="id, name"/>
-    </changeSet>
+```xml
+<changeSet id="2" author="Alice">
+    <addPrimaryKey tableName="person" columnNames="id, name"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -167,9 +173,11 @@ Automatic rollback supported? yes
 
 Example:
 
-    <changeSet id="2" author="Alice">
-        <addUniqueConstraint columnNames="id, name" tableName="person" constraintName="uq_id_name"/>
-    </changeSet>
+```xml
+<changeSet id="2" author="Alice">
+    <addUniqueConstraint columnNames="id, name" tableName="person" constraintName="uq_id_name"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -189,11 +197,13 @@ Automatic rollback supported? yes
 
 Example:
 
-    <changeSet id="2" author="Alice">
-        <createIndex indexName="emailIdx" tableName="person" unique="true">
-            <column name="email"/>
-        </createIndex>
-    </changeSet>
+```xml
+<changeSet id="2" author="Alice">
+    <createIndex indexName="emailIdx" tableName="person" unique="true">
+        <column name="email"/>
+    </createIndex>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -213,9 +223,11 @@ Automatic rollback supported? no
 
 Example:
 
-    <changeSet id="2" author="Alice">
-        <dropColumn tableName="person" columnName="age"/>
-    </changeSet>
+```xml
+<changeSet id="2" author="Alice">
+    <dropColumn tableName="person" columnName="age"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -230,9 +242,11 @@ Automatic rollback supported? no
 
 Example:
 
-    <changeSet id="4" author="Alice">
-        <dropForeignKeyConstraint baseTableName="address" constraintName="fk_person_address" />
-    </changeSet>
+```xml
+<changeSet id="4" author="Alice">
+    <dropForeignKeyConstraint baseTableName="address" constraintName="fk_person_address" />
+</changeSet>
+```
 
 Corresponding command:
 
@@ -247,9 +261,11 @@ Automatic rollback supported? no
 
 Example:
 
-    <changeSet id="3" author="Alice">
-        <dropUniqueConstraint tableName="person" constraintName="uq_id_name"/>
-    </changeSet>
+```xml
+<changeSet id="3" author="Alice">
+    <dropUniqueConstraint tableName="person" constraintName="uq_id_name"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -264,9 +280,11 @@ Automatic rollback supported? no
 
 Example:
 
-    <changeSet id="3" author="Alice">
-        <dropIndex indexName="emailIdx" tableName="person"/>
-    </changeSet>
+```xml
+<changeSet id="3" author="Alice">
+    <dropIndex indexName="emailIdx" tableName="person"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -281,9 +299,11 @@ Automatic rollback supported? no
 
 Example:
 
-    <changeSet id="2" author="Alice">
-        <modifyDataType tableName="person" columnName="email" newDataType="VARCHAR(400)"/>
-    </changeSet>
+```xml
+<changeSet id="2" author="Alice">
+    <modifyDataType tableName="person" columnName="email" newDataType="VARCHAR(400)"/>
+</changeSet>
+```
 
 Corresponding command:
 
@@ -300,27 +320,31 @@ By default, the percona toolkit is used, see also the system property `liquibase
 
 Example:
 
-    - changeSet:
-        id: 2
-        author: Alice
-        changes:
-          - addColumn:
-              tableName: person
-              usePercona: false
-              columns:
-                - column:
-                    name: address
-                    type: varchar(255)
+```yaml
+- changeSet:
+    id: 2
+    author: Alice
+    changes:
+      - addColumn:
+          tableName: person
+          usePercona: false
+          columns:
+            - column:
+                name: address
+                type: varchar(255)
+```
 
 This flag exists since liquibase-percona 1.3.0
 
 It is supported by using the YAML format and since liquibase 3.6.0, you can use it in XML changesets, too:
 
-    <addColumn tableName="person"
-            xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
-            liquibasePercona:usePercona="false">
-        <column name="address" type="varchar(255)"/>
-    </addColumn>
+```xml
+<addColumn tableName="person"
+        xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
+        liquibasePercona:usePercona="false">
+    <column name="address" type="varchar(255)"/>
+</addColumn>
+```
 
 ### PerconaOptions flag
 
@@ -330,27 +354,31 @@ the system property will be used.
 
 Example:
 
-    - changeSet:
-        id: 2
-        author: Alice
-        changes:
-          - addColumn:
-              tableName: person
-              perconaOptions: "--alter-foreign-keys-method=auto"
-              columns:
-                - column:
-                    name: address
-                    type: varchar(255)
+```yaml
+- changeSet:
+    id: 2
+    author: Alice
+    changes:
+      - addColumn:
+          tableName: person
+          perconaOptions: "--alter-foreign-keys-method=auto"
+          columns:
+            - column:
+                name: address
+                type: varchar(255)
+```
 
 This flag exists since liquibase-percona 2.0.0.
 
 It is supported by using the YAML format and in XML changesets:
 
-    <addColumn tableName="person"
-            xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
-            liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto">
-        <column name="address" type="varchar(255)"/>
-    </addColumn>
+```xml
+<addColumn tableName="person"
+        xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
+        liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto">
+    <column name="address" type="varchar(255)"/>
+</addColumn>
+```
 
 ### System Properties
 
@@ -598,18 +626,20 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.3.4.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.3.5.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
 
 Add the following dependency to the liquibase plugin:
 
-    <dependency>
-        <groupId>org.liquibase.ext</groupId>
-        <artifactId>liquibase-percona</artifactId>
-        <version>4.3.5</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>org.liquibase.ext</groupId>
+    <artifactId>liquibase-percona</artifactId>
+    <version>4.3.5</version>
+</dependency>
+```
 
 
 ### Using snapshots
@@ -620,31 +650,35 @@ Download: <https://oss.sonatype.org/content/repositories/snapshots/org/liquibase
 
 Enable the snapshot repository via Maven:
 
-    <project>
-        <pluginRepositories>
-            <pluginRepository>
-                <id>sonatype-nexus-snapshots</id>
-                <name>Sonatype Nexus Snapshots</name>
-                <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                <releases>
-                    <enabled>false</enabled>
-                </releases>
-                <snapshots>
-                    <enabled>true</enabled>
-                </snapshots>
-            </pluginRepository>
-        </pluginRepositories>
-    </project>
+```xml
+<project>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
+```
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
 And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.3.6-SNAPSHOT`:
 
-    <dependency>
-        <groupId>org.liquibase.ext</groupId>
-        <artifactId>liquibase-percona</artifactId>
-        <version>4.3.6-SNAPSHOT</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>org.liquibase.ext</groupId>
+    <artifactId>liquibase-percona</artifactId>
+    <version>4.3.6-SNAPSHOT</version>
+</dependency>
+```
 
 
 
