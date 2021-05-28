@@ -28,6 +28,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Next Version](#next-version)
     *   [Version 4.3.5 (2021-05-24)](#version-435-2021-05-24)
     *   [Version 4.3.4 (2021-04-28)](#version-434-2021-04-28)
     *   [Version 4.3.3 (2021-04-13)](#version-433-2021-04-13)
@@ -418,6 +419,10 @@ integration test.
 
 
 ## Changelog
+
+### Next Version
+
+*   [PR #112](https://github.com/liquibase/liquibase-percona/pull/112): Fixing typos - [Jasper Vandemalle](https://github.com/jasper-vandemalle)
 
 ### Version 4.3.5 (2021-05-24)
 
