@@ -48,7 +48,7 @@ This allows to perform a non-locking database upgrade.
     *   [Version 1.1.1 (2015-07-26)](#version-111-2015-07-26)
     *   [Version 1.1.0 (2014-11-06)](#version-110-2014-11-06)
     *   [Version 1.0.0 (2014-10-09)](#version-100-2014-10-09)
-*   [Using / Installling the extension](#using--installing-the-extension)
+*   [Using / Installing the extension](#using--installing-the-extension)
     *   [Download](#download)
     *   [Command line liquibase](#command-line-liquibase)
     *   [Via Maven](#via-maven)
@@ -155,7 +155,7 @@ ADD PRIMARY KEY statement).
 
 Automatic rollback is not supported by this percona change (as opposed to the plain liquibase addPrimaryKey change).
 pt-osc usually needs a primary key or a unique key in order to operate properly. If the table has no such keys,
-it most likey will refuse to operate.
+it most likely will refuse to operate.
 
 ### AddUniqueConstraint
 
@@ -556,7 +556,7 @@ The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
 ### Version 1.2.1 (2016-09-13)
 
 *   [PR #4](https://github.com/liquibase/liquibase-percona/pull/4): Allow passing additional command line options to pt-online-schema-change
-*   [PR #5](https://github.com/liquibase/liquibase-percona/pull/5): Support afterColum attribute
+*   [PR #5](https://github.com/liquibase/liquibase-percona/pull/5): Support afterColumn attribute
 
 ### Version 1.2.0 (2016-04-02)
 
@@ -701,7 +701,7 @@ a highly flexible & unified billing platform.
 
 * [Percona](http://www.percona.com/)
 * [Percona Toolkit Latest Documentation](https://www.percona.com/doc/percona-toolkit/LATEST/index.html)
-* [Percone Toolkit on GitHub](https://github.com/percona/percona-toolkit)
+* [Percona Toolkit on GitHub](https://github.com/percona/percona-toolkit)
 * [Percona Toolkit 3.0 Documentation: pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html)
 * [Percona Toolkit 2.2 Documentation: pt-online-schema-change](http://www.percona.com/doc/percona-toolkit/2.2/pt-online-schema-change.html)
 * [Liquibase on GitHub](https://github.com/liquibase/liquibase)
