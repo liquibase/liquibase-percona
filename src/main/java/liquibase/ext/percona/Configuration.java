@@ -37,6 +37,8 @@ public final class Configuration {
     public static final String PERCONA_TOOLKIT_PATH = "liquibase.percona.path";
     /** Enable debug output for pt-osc. */
     public static final String PERCONA_TOOLKIT_DEBUG = "liquibase.percona.ptdebug";
+    /** Keep liquibase's database connection alive while pt-online-schema-change is running. */
+    public static final String KEEPALIVE = "liquibase.percona.keepAlive";
 
     private static final String DEFAULT_ADDITIONAL_OPTIONS = "--alter-foreign-keys-method=auto --nocheck-unique-key-change";
 
@@ -74,5 +76,9 @@ public final class Configuration {
 
     public static boolean isPerconaToolkitDebug() {
         return Boolean.parseBoolean(System.getProperty(PERCONA_TOOLKIT_DEBUG, "false"));
+    }
+
+    public static boolean isKeepAlive() {
+        return Boolean.parseBoolean(System.getProperty(KEEPALIVE, "true"));
     }
 }

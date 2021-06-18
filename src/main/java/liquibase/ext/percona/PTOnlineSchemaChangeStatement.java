@@ -21,16 +21,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import liquibase.Scope;
 import liquibase.database.Database;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.logging.Logger;
 import liquibase.sql.Sql;
@@ -199,6 +205,11 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         List<String> cmndline = buildCommand(database);
         log.info("Executing: " + filterCommands(cmndline));
 
+        KeepAliveThread keepAlive = new KeepAliveThread(database);
+        if (Configuration.isKeepAlive()) {
+            keepAlive.start();
+        }
+
         ProcessBuilder pb = new ProcessBuilder(cmndline);
         if (Configuration.isPerconaToolkitDebug()) {
             pb.environment().put("PTDEBUG", "1");
@@ -229,6 +240,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
                 int exitCode = p.waitFor();
                 reader.join(5000);
                 reader2.join(5000);
+                keepAlive.interrupt();
                 // log the remaining output
                 log.info(outputStream.toString(Charset.defaultCharset().toString()));
 
@@ -252,6 +264,51 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
     public String toString() {
         return PTOnlineSchemaChangeStatement.class.getSimpleName()
                 + "[database: " + databaseName + ", table: " + tableName + ", alterStatement: " + alterStatement + "]";
+    }
+
+    private static class KeepAliveThread extends Thread {
+        private final Database database;
+
+        public KeepAliveThread(Database database) {
+            this.database = database;
+        }
+
+        @Override
+        public void run() {
+            boolean running = true;
+            JdbcConnection connection = (JdbcConnection) database.getConnection();
+            long keepAlive = 28800L;
+
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("show variables where variable_name = 'wait_timeout'");
+                try (ResultSet rs = stmt.getResultSet()) {
+                    if (rs.next()) {
+                        keepAlive = rs.getLong(2);
+                    }
+                }
+            } catch (SQLException | DatabaseException e) {
+                log.warning("Couldn't determine wait_timeout for keepAlive, using default", e);
+            }
+
+            long sleepTime = keepAlive / 2;
+            log.info("KeepAlive every " + sleepTime + " seconds");
+
+            while (running) {
+                try (Statement stmt = connection.createStatement()) {
+                    log.fine("Pinging database...");
+                    stmt.execute("SELECT 1");
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(sleepTime));
+                } catch (SQLException | DatabaseException e) {
+                    log.severe("Couldn't ping database", e);
+                    running = false;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    running = false;
+                }
+            }
+
+            log.info("KeepAlive thread finished");
+        }
     }
 
     private static class IOThread extends Thread {
