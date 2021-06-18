@@ -32,14 +32,18 @@ url=https://downloads.percona.com/downloads/percona-toolkit/${VERSION}/source/ta
 filename=percona-toolkit-${VERSION}.tar.gz
 target=percona-toolkit-${VERSION}
 
-echo "Downloading ${filename}..."
-curl \
-  --location \
-  --output ${filename} \
-  ${url}
-if [ $? -ne 0 ]; then
-  echo "Download from ${url} failed..."
-  exit 1
+if [ -e "${filename}" ]; then
+  echo "Skipping download ${filename}..."
+else
+  echo "Downloading ${filename}..."
+  curl \
+    --location \
+    --output ${filename} \
+    ${url}
+  if [ $? -ne 0 ]; then
+    echo "Download from ${url} failed..."
+    exit 1
+  fi
 fi
 
 echo "Extracting..."
