@@ -149,7 +149,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
         if (databaseName != null) {
             dsn.append("D=").append(databaseName);
         } else {
-            dsn.append("D=").append(database.getLiquibaseSchemaName());
+            dsn.append("D=").append(database.getLiquibaseCatalogName());
         }
         dsn.append(",t=").append(tableName);
 
