@@ -1,4 +1,4 @@
-name: Run Unit Tests
+name: Run Tests
 
 on:
   pull_request:
@@ -19,6 +19,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Install Perl modules
+      uses: perl-actions/install-with-cpanm@v1
+      with:
+        install: |
+          DBD::mysql
     - name: Cache Local Maven Repository
       uses: actions/cache@v2
       with:
@@ -31,8 +36,8 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
         distribution: 'adopt'
-    - name: Run Unit Tests With Maven
-      run: ./mvnw -B clean test --file pom.xml
+    - name: Run Unit and Integration Tests With Maven
+      run: ./mvnw -B clean verify --file pom.xml -Prun-its
 
   # This step is the automation to create a release based on a liquibase core bump
   # If a manual release is required, the steps below will need to be done manually prior

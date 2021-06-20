@@ -59,7 +59,7 @@ public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
         System.setProperty(Configuration.LIQUIBASE_PASSWORD, "root");
 
         database = new MySQLDatabase();
-        database.setLiquibaseSchemaName("testdb");
+        database.setLiquibaseCatalogName("testdb");
         DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb",
                 "user@localhost");
         database.setConnection(conn);
