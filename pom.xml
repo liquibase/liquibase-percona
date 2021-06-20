@@ -40,7 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
-        <project.build.outputTimestamp>2021-06-20T10:01:08+00:00</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2021-06-20T10:22:03+00:00</project.build.outputTimestamp>
 
         <java.version>1.8</java.version>
         <liquibase.version>4.4.0</liquibase.version>
