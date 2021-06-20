@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "--version" ]; then
+    echo "pt-online-schema-change substitute 0.0.0"
+    exit 0
+fi
+
+WAIT_TIME=15
+
+echo "pt-osc dummy: waiting for ${WAIT_TIME} seconds..."
+sleep ${WAIT_TIME}s
+echo "done."

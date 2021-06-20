@@ -434,6 +434,12 @@ The extension supports the following java system properties:
     This option enables the debug output of pt-osc by setting the environment variable `PTDEBUG` before
     starting pt-osc.
 
+*   `liquibase.percona.keepAlive`: true/false. **Default: true** Since liquibase-percona 4.3.6
+    This option allows to disable the keepalive thread if there are any problems with it. The keepalive thread
+    pings the database while pt-online-schema-change is executing. This avoids that the server closes
+    liquibase's connection as it is idle during pt-osc. The server variable "wait_timeout" controls
+    when the connection is considered stale and dropped by the server. This variable is used to
+    determine how often the server will be pinged.
 
 You can set these properties by using the standard java `-D` option:
 
@@ -451,6 +457,7 @@ integration test.
 ### Next Version
 
 *   [PR #112](https://github.com/liquibase/liquibase-percona/pull/112): Fixing typos - [Jasper Vandemalle](https://github.com/jasper-vandemalle)
+*   [#106](https://github.com/liquibase/liquibase-percona/issues/106): MySQL connection times out after pt-online-schema-change run
 *   [#118](https://github.com/liquibase/liquibase-percona/pull/118): Use catalogName instead of schemaName
 
 ### Version 4.3.5 (2021-05-24)
