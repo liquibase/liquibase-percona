@@ -284,20 +284,24 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
                 try (ResultSet rs = stmt.getResultSet()) {
                     if (rs.next()) {
                         keepAlive = rs.getLong(2);
+                    } else {
+                        log.warning("Couldn't determine wait_timeout for keepAlive, using default");
                     }
                 }
             } catch (SQLException | DatabaseException e) {
                 log.warning("Couldn't determine wait_timeout for keepAlive, using default", e);
             }
 
-            long sleepTime = keepAlive / 2;
-            log.info("KeepAlive every " + sleepTime + " seconds");
+            long sleepTimeInMillis = TimeUnit.SECONDS.toMillis(keepAlive) / 2;
+            // make sure, we don't ping more often than every 500 ms.
+            sleepTimeInMillis = Math.max(500, sleepTimeInMillis);
+            log.info("KeepAlive every " + sleepTimeInMillis + " millis");
 
             while (running) {
                 try (Statement stmt = connection.createStatement()) {
                     log.fine("Pinging database...");
                     stmt.execute("SELECT 1");
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(sleepTime));
+                    Thread.sleep(sleepTimeInMillis);
                 } catch (SQLException | DatabaseException e) {
                     log.severe("Couldn't ping database", e);
                     running = false;
