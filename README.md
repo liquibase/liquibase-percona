@@ -28,7 +28,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Next Version](#next-version)
+    *   [Version 4.4.0 (2021-??-??)](#version-440-2021--)
     *   [Version 4.3.5 (2021-05-24)](#version-435-2021-05-24)
     *   [Version 4.3.4 (2021-04-28)](#version-434-2021-04-28)
     *   [Version 4.3.3 (2021-04-13)](#version-433-2021-04-13)
@@ -85,7 +85,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5 (liquibase-percona 4.3.5). Percona Toolkit 3.3.0.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.0 (liquibase-percona 4.4.0). Percona Toolkit 3.3.1.
 
 ## Supported Changes and examples
 
@@ -434,7 +434,7 @@ The extension supports the following java system properties:
     This option enables the debug output of pt-osc by setting the environment variable `PTDEBUG` before
     starting pt-osc.
 
-*   `liquibase.percona.keepAlive`: true/false. **Default: true** Since liquibase-percona 4.3.6
+*   `liquibase.percona.keepAlive`: true/false. **Default: true** Since liquibase-percona 4.4.0
     This option allows to disable the keepalive thread if there are any problems with it. The keepalive thread
     pings the database while pt-online-schema-change is executing. This avoids that the server closes
     liquibase's connection as it is idle during pt-osc. The server variable "wait_timeout" controls
@@ -454,7 +454,9 @@ integration test.
 
 ## Changelog
 
-### Next Version
+### Version 4.4.0 (2021-??-??)
+
+*  Support for Liquibase 4.4.0.
 
 *   [PR #112](https://github.com/liquibase/liquibase-percona/pull/112): Fixing typos - [Jasper Vandemalle](https://github.com/jasper-vandemalle)
 *   [#106](https://github.com/liquibase/liquibase-percona/issues/106): MySQL connection times out after pt-online-schema-change run
