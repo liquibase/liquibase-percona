@@ -8,14 +8,14 @@ on:
       - synchronize
 
 jobs:
-  unit-test:
+  test:
     name: Java ${{ matrix.java }}
     runs-on: ubuntu-latest
     # Only run job if untagged as release. Will run for all PRs and release PRs during the first run.
     if: ${{ !contains( github.event.pull_request.labels.*.name, 'Extension Release Candidate :rocket:' ) }}
     strategy:
       matrix:
-        java: [8, 11, 16]
+        java: [8]
 
     steps:
     - uses: actions/checkout@v2
@@ -45,7 +45,7 @@ jobs:
   label:
     name: Label as Release Candidate
     runs-on: ubuntu-latest
-    needs: [ unit-test ]
+    needs: [ test ]
     if: contains( github.event.pull_request.head.ref, 'dependabot/maven/org.liquibase-liquibase-core' )
     steps:
       - uses: actions/checkout@v2

@@ -1,21 +1,57 @@
 # Release Workflow
-The release automation is designed to quickly release updates to liquibase extensions. This routinely happens when there is an update to liquibase core. There are unique automates automated steps when a pull requests is created by dependabot for a `Bump liquibase-core from *.*.* to *.*.*`, but these steps can also be taken manually for a patch or other manual release.
+
+The release automation is designed to quickly release updates to liquibase extensions. This routinely happens
+when there is an update to liquibase core. There are unique automates automated steps when a pull requests
+is created by dependabot for a `Bump liquibase-core from *.*.* to *.*.*`, but these steps can also be
+taken manually for a patch or other manual release.
 
 ## Triggers
+
 ### Pull Request Opened
-When all pull requests are opened the Unit Tests will run and they must pass before the PR can be merged. For a liquibase core bump PR, the application version in the POM will automatically be set to match the liquibase core version and the property `project.build.outputTimestamp` will be updated. If creating a manual PR for release, the `<version>*.*.*</version>` tag in the POM will need to be set to the correct version without the `SNAPSHOT` suffix in order to release to Sonatype Nexus and don't forget `project.build.outputTimestamp`. For example, `<version>4.3.5.1/version>` to release a patch version for the extension release for liquibase core 4.3.5.
+
+When all pull requests are opened the Tests will run and they must pass before the PR can be merged.
+For a liquibase core bump PR, the application version in the POM will automatically be set to match
+the liquibase core version and the property `project.build.outputTimestamp` will be updated.
+If creating a manual PR for release, the `<version>*.*.*</version>` tag in the POM will need to be set
+to the correct version without the `SNAPSHOT` suffix in order to release to Sonatype Nexus and
+don't forget `project.build.outputTimestamp`.
+For example, `<version>4.3.5.1/version>` to release a patch version for the extension release
+for liquibase core 4.3.5.
+
 ### Pull Request Labeled as Release Candidate
-If the `Extension Release Candidate :rocket:` label is applied to the PR, this is the trigger for GitHub Actions to run the full Integration Test suite matrix on the pull requests because this commit will become the next release. For a liquibase core bump, this label will automatically be applied to the dependabot PR. If this is a manual release, manually applying the label will also start the release testing and subsequent automation.
+
+If the `Extension Release Candidate :rocket:` label is applied to the PR, this is the trigger for
+GitHub Actions to run the full Integration Test suite matrix on the pull requests because this commit will
+become the next release. For a liquibase core bump, this label will automatically be applied to the
+dependabot PR. If this is a manual release, manually applying the label will also start the release testing
+and subsequent automation.
+
+Note that you have to create a tag for the release candidate manually as well, when applying the label
+for a manual release. The tag should point to the commit which sets the version (usually the last
+commit of the PR).
+
 ### Pull Request is Approved and Merged to Main
-If a Pull Request is merged into main and is labeled as release candidate the following automation steps will be taken:
+
+If a Pull Request is merged into the branch `main` and is labeled as release candidate the following
+automation steps will be taken:
+
 *   Signed artifact is built
 *   A draft GitHub Release is created proper tagging, version name, and artifact
 *   The application version in the POM on the main branch is bumped to be the next SNAPSHOT version for development
+
 ### Draft Release is Published
-Once the GitHub release is published, the signed artifact is uploaded to Sonatype Nexus. The `<autoReleaseAfterClose>true</autoReleaseAfterClose>` option is defined in the POM, so for all releases without the `SNAPSHOT` suffix, they will automatically release after all the staging test have passed. If everything goes well, no further manual action is required. 
+
+Once the GitHub release is published, the signed artifact is uploaded to Sonatype Nexus.
+The `<autoReleaseAfterClose>true</autoReleaseAfterClose>` option is defined in the POM, so for
+all releases without the `SNAPSHOT` suffix, they will automatically release after all
+the staging test have passed. If everything goes well, no further manual action is required.
 
 ## Testing
-The workflow separates Unit Test from Integration Tests and runs them at separate times, as mentioned above. In order to separate the tests, they must be in separate files. Put all Unit Tests into files that end with `Test.java` and Integration Test files should end with `IT.java`. For example the tests for the Liquibase Postgresql Extension now look like:
+
+The workflow separates Unit Test from Integration Tests and runs them at separate times, as mentioned above.
+In order to separate the tests, they must be in separate files. Put all Unit Tests into files that end with `Test.java` and Integration Test files should end with `IT.java`.
+For example the tests for the Liquibase Postgresql Extension now look like:
+
 ```
 > src
     > test
@@ -27,12 +63,18 @@ The workflow separates Unit Test from Integration Tests and runs them at separat
                 > vacuum
                     VacuumChangeTest.java
 ```
-Any tests that require a JDBC connection to a running database are integration tests and should be in the `IT.java` files.
 
-Liquibase Percona has extended integration tests. These integration tests start MySQL and MariaDB docker instances and run the integration tests from `src/it/*`. The integration tests are only executed, if the profile `run-its` is activated, e.g. `./mvnw verify -Prun-its`.
+Any tests that require a JDBC connection to a running database are integration tests and
+should be in the `IT.java` files.
+
+Liquibase Percona has extended integration tests. These integration tests start MySQL and MariaDB docker instances
+and run the integration tests from `src/it/*`. The integration tests are only executed, if the profile `run-its`
+is activated, e.g. `./mvnw verify -Prun-its`.
 
 ## Repository Configuration
+
 The automation requires the below secrets and configuration in order to run.
+
 ### BOT TOKEN
 Github secret named: `BOT_TOKEN`
 
@@ -42,6 +84,7 @@ Github Actions bot cannot trigger events, so a liquibase robot user is needed to
 Github secret named: `GPG_SECRET`
 
 According to [the advanced java setup docs for github actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg) the GPG key should be exported by: `gpg --armor --export-secret-keys YOUR_ID`. From the datical/build-maven:jdk-8 docker container, this can be export by the following:
+
 ```bash
 $ docker run -it -u root docker.artifactory.datical.net/datical/build-maven:jdk-8 bash
 
@@ -78,10 +121,12 @@ The password or token for the sonatype account. Current managed and shared via l
 
 ### Label Settings
 Create a label with the following settings:
+
 * Label name: `Extension Release Candidate :rocket:`
 * Description: `Release Candidate for Extension`
 * Color: `#ff3d00`
 
 ## Useful Links
+
 *   [Advanced Java Setup for GitHub Actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg)
 *   [Deploying to Sonatype Nexus with Apache Maven](https://central.sonatype.org/publish/publish-maven/)

@@ -1,4 +1,4 @@
-name: Build, Test, and Prepare Release Candidate
+name: Build and Test Release Candidate
 
 on:
   pull_request:
