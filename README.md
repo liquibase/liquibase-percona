@@ -458,6 +458,7 @@ integration test.
 
 *   [PR #112](https://github.com/liquibase/liquibase-percona/pull/112): Fixing typos - [Jasper Vandemalle](https://github.com/jasper-vandemalle)
 *   [#106](https://github.com/liquibase/liquibase-percona/issues/106): MySQL connection times out after pt-online-schema-change run
+*   [#118](https://github.com/liquibase/liquibase-percona/pull/118): Use catalogName instead of schemaName
 
 ### Version 4.3.5 (2021-05-24)
 
