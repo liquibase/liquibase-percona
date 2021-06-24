@@ -631,7 +631,7 @@ The plugin is only compatible with version 3.0.12 or later of Percona Toolkit.
 
 The jar files can be downloaded manually from maven:
 
-<http://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/>
+<https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/>
 
 
 ### Command line liquibase
