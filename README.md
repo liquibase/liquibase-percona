@@ -455,6 +455,10 @@ integration test.
 
 ## Changelog
 
+### Next
+
+*   [#122](https://github.com/liquibase/liquibase-percona/pull/122): Add docker image with liquibase, liquibase-percona and percona toolkit
+
 ### Version 4.4.0 (2021-06-20)
 
 *  Support for Liquibase 4.4.0.
