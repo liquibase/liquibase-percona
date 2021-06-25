@@ -54,6 +54,7 @@ This allows to perform a non-locking database upgrade.
     *   [Download](#download)
     *   [Command line liquibase](#command-line-liquibase)
     *   [Via Maven](#via-maven)
+    *   [Docker](#docker)
     *   [Using snapshots](#using-snapshots)
 *   [Notes](#notes)
 *   [Building this extension](#building-this-extension)
@@ -454,6 +455,10 @@ integration test.
 
 ## Changelog
 
+### Next
+
+*   [#122](https://github.com/liquibase/liquibase-percona/pull/122): Add docker image with liquibase, liquibase-percona and percona toolkit
+
 ### Version 4.4.0 (2021-06-20)
 
 *  Support for Liquibase 4.4.0.
@@ -651,6 +656,36 @@ Add the following dependency to the liquibase plugin:
 </dependency>
 ```
 
+### Docker
+
+You can also create a docker image which combines liquibase, liquibase-percona and percona toolkit.
+The `Dockerfile` is located in the folder `docker` and is based on the official
+[liquibase docker image](https://hub.docker.com/r/liquibase/liquibase).
+
+In order to build the image locally run this command: `cd docker; docker build -t lb-percona .`
+
+The you can simply run liquibase. The liquibase-percona extension and pt-online-schema-change
+will automatically be picked up:
+
+```
+docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog lb-percona \
+    --url="jdbc:mysql://<IP OR HOSTNAME>:3306/<DATABASE>" \
+    --changeLogFile=com/example/changelog.xml \
+    --username=<USERNAME> --password=<PASSWORD> \
+    --logLevel=info \
+    update
+```
+
+You can also run pt-online-schema-change directly, e.g.:
+
+```
+docker run --rm lb-percona /usr/local/bin/pt-online-schema-change \
+    --alter-foreign-keys-method=auto --nocheck-unique-key-change \
+    --alter="ADD COLUMN name VARCHAR(50) NOT NULL" \
+    --password=<PASSWORD> \
+    --dry-run --print \
+    h=<IP OR HOSTNAME>,P=3306,u=<USERNAME>,D=<DATABASE>,t=<TABLE NAME>
+```
 
 ### Using snapshots
 
