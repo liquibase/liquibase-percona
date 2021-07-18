@@ -14,6 +14,7 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -27,9 +28,13 @@ import com.mysql.cj.protocol.NetworkResources;
 
 public class NoOpMySqlConnection extends ConnectionImpl {
     private static final long serialVersionUID = 6542644310976667501L;
+
+    private final Properties info;
+
     public NoOpMySqlConnection(String hostToConnectTo, int portToConnectTo, Properties info,
             String databaseToConnectTo, String url) throws SQLException {
         super(convert(hostToConnectTo, portToConnectTo, info, databaseToConnectTo, url));
+        this.info = info;
     }
 
     private static HostInfo convert(String hostToConnectTo, int portToConnectTo, Properties info,
@@ -60,6 +65,22 @@ public class NoOpMySqlConnection extends ConnectionImpl {
             public NetworkResources getNetworkResources() {
                 // overridden, so that this connection doesn't really try to connect
                 return null;
+            }
+        };
+    }
+
+    @Override
+    public DatabaseMetaData getMetaData() throws SQLException {
+        final String user = info.getProperty(PropertyKey.USER.getKeyName());
+        return new com.mysql.cj.jdbc.DatabaseMetaData(this, "testdb", null) {
+            @Override
+            public String getURL() throws SQLException {
+                return "jdbc:mysql://user@localhost:3306/testdb";
+            }
+
+            @Override
+            public String getUserName() throws SQLException {
+                return user;
             }
         };
     }

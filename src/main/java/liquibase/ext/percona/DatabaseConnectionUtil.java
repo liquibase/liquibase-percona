@@ -43,36 +43,122 @@ public class DatabaseConnectionUtil {
 
     private Logger log = Scope.getCurrentScope().getLog(DatabaseConnectionUtil.class);
 
-    private DatabaseConnection connection;
+    private final String host;
+    private final String port;
+    private final String user;
+    private final String password;
 
     public DatabaseConnectionUtil(DatabaseConnection connection) {
-        this.connection = connection;
+        this.host = determineHost(connection.getURL());
+        this.port = determinePort(connection.getURL());
+        this.user = determineUser(connection.getConnectionUserName());
+        this.password = determinePassword(connection);
     }
 
     public String getHost() {
+        return this.host;
+    }
+
+    public String getPort() {
+        return this.port;
+    }
+
+    public String getUser() {
+        return this.user;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    private static String determineHost(String url) {
         Pattern p = Pattern.compile("jdbc:(?:mysql|mariadb):(?:replication:|loadbalance:|sequential:|aurora:)?//([^@]+@)?([^:/]+)");
-        Matcher m = p.matcher(connection.getURL());
+        Matcher m = p.matcher(url);
         if (m.find()) {
             return m.group(2);
         }
         return "";
     }
 
-    public String getPort() {
+    private static String determinePort(String url) {
         Pattern p = Pattern.compile("jdbc:(?:mysql|mariadb):(?:replication:|loadbalance:|sequential:|aurora:)?//[^:/]+:(\\d+)");
-        Matcher m = p.matcher(connection.getURL());
+        Matcher m = p.matcher(url);
         if (m.find()) {
             return m.group(1);
         }
         return "3306";
     }
 
-    public String getUser() {
-        String connectionUserName = connection.getConnectionUserName();
+    private static String determineUser(String connectionUserName) {
         if (connectionUserName.contains("@")) {
             return connectionUserName.substring(0, connectionUserName.indexOf('@'));
         }
         return connectionUserName;
+    }
+
+    private String determinePassword(DatabaseConnection connection) {
+        String liquibasePassword = Configuration.getLiquibasePassword();
+        if (liquibasePassword != null) {
+            return liquibasePassword;
+        }
+    
+        if (connection instanceof JdbcConnection) {
+            try {
+                Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
+                jdbcCon = getDelegatedDbcpConnection(jdbcCon);
+                jdbcCon = getDelegatedDbcp2Connection(jdbcCon);
+                jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
+    
+                Class<?> connectionImplClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "com.mysql.jdbc.ConnectionImpl",   // MySQL Connector 5.1.38: com.mysql.jdbc.ConnectionImpl
+                        "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 6.0.4: com.mysql.cj.jdbc.ConnectionImpl
+                    );
+    
+                Class<?> mariadbConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "org.mariadb.jdbc.MariaDbConnection");
+    
+                boolean isMySQL = false;
+                boolean isMariaDB = false;
+    
+                if (connectionImplClass != null && connectionImplClass.isInstance(jdbcCon)) {
+                    isMySQL = true;
+                }
+                if (mariadbConnectionClass != null && mariadbConnectionClass.isInstance(jdbcCon)) {
+                    isMariaDB = true;
+                }
+    
+                if (isMySQL) {
+                    // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
+                    Properties props = ReflectionUtils.readField(connectionImplClass, jdbcCon, "props");
+                    String password = props.getProperty(PASSWORD_PROPERTY_NAME);
+                    if (password != null && !password.trim().isEmpty()) {
+                        return password;
+                    }
+                } else if (isMariaDB) {
+                    Object protocol = ReflectionUtils.readField(mariadbConnectionClass, jdbcCon, "protocol");
+                    Object urlParser = ReflectionUtils.invokeMethod(protocol.getClass(), protocol, "getUrlParser");
+                    Object password = ReflectionUtils.invokeMethod(urlParser.getClass(), urlParser, "getPassword");
+                    if (password != null && !password.toString().trim().isEmpty()) {
+                        return password.toString();
+                    }
+                } else {
+                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
+                }
+            } catch (Exception e) {
+                log.warning("Couldn't determine the password from JdbcConnection", e);
+            }
+        }
+    
+        try {
+            Properties liquibaseProperties = loadLiquibaseProperties();
+            if (liquibaseProperties.containsKey(PASSWORD_PROPERTY_NAME)) {
+                return liquibaseProperties.getProperty(PASSWORD_PROPERTY_NAME);
+            }
+        } catch (IOException e) {
+            log.warning("Couldn't read " + DEFAULT_LIQUIBASE_PROPERTIES_FILENAME + " file", e);
+        }
+    
+        return null;
     }
 
     /**
@@ -111,71 +197,6 @@ public class DatabaseConnectionUtil {
         Connection result = ReflectionUtils.invokeMethod("org.apache.commons.dbcp2.DelegatingConnection",
                 con, "getInnermostDelegateInternal");
         return result != null ? result : con;
-    }
-
-    public String getPassword() {
-        String liquibasePassword = Configuration.getLiquibasePassword();
-        if (liquibasePassword != null) {
-            return liquibasePassword;
-        }
-
-        if (connection instanceof JdbcConnection) {
-            try {
-                Connection jdbcCon = ((JdbcConnection) connection).getWrappedConnection();
-                jdbcCon = getDelegatedDbcpConnection(jdbcCon);
-                jdbcCon = getDelegatedDbcp2Connection(jdbcCon);
-                jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
-
-                Class<?> connectionImplClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
-                        "com.mysql.jdbc.ConnectionImpl",   // MySQL Connector 5.1.38: com.mysql.jdbc.ConnectionImpl
-                        "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 6.0.4: com.mysql.cj.jdbc.ConnectionImpl
-                    );
-
-                Class<?> mariadbConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
-                        "org.mariadb.jdbc.MariaDbConnection");
-
-                boolean isMySQL = false;
-                boolean isMariaDB = false;
-
-                if (connectionImplClass != null && connectionImplClass.isInstance(jdbcCon)) {
-                    isMySQL = true;
-                }
-                if (mariadbConnectionClass != null && mariadbConnectionClass.isInstance(jdbcCon)) {
-                    isMariaDB = true;
-                }
-
-                if (isMySQL) {
-                    // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
-                    Properties props = ReflectionUtils.readField(connectionImplClass, jdbcCon, "props");
-                    String password = props.getProperty(PASSWORD_PROPERTY_NAME);
-                    if (password != null && !password.trim().isEmpty()) {
-                        return password;
-                    }
-                } else if (isMariaDB) {
-                    Object protocol = ReflectionUtils.readField(mariadbConnectionClass, jdbcCon, "protocol");
-                    Object urlParser = ReflectionUtils.invokeMethod(protocol.getClass(), protocol, "getUrlParser");
-                    Object password = ReflectionUtils.invokeMethod(urlParser.getClass(), urlParser, "getPassword");
-                    if (password != null && !password.toString().trim().isEmpty()) {
-                        return password.toString();
-                    }
-                } else {
-                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
-                }
-            } catch (Exception e) {
-                log.warning("Couldn't determine the password from JdbcConnection", e);
-            }
-        }
-
-        try {
-            Properties liquibaseProperties = loadLiquibaseProperties();
-            if (liquibaseProperties.containsKey(PASSWORD_PROPERTY_NAME)) {
-                return liquibaseProperties.getProperty(PASSWORD_PROPERTY_NAME);
-            }
-        } catch (IOException e) {
-            log.warning("Couldn't read " + DEFAULT_LIQUIBASE_PROPERTIES_FILENAME + " file", e);
-        }
-
-        return null;
     }
 
     private Properties loadLiquibaseProperties() throws IOException {
