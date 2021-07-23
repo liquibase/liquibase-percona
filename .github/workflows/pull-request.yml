@@ -46,7 +46,7 @@ jobs:
     name: Label as Release Candidate
     runs-on: ubuntu-latest
     needs: [ test ]
-    if: contains( github.event.pull_request.head.ref, 'dependabot/maven/org.liquibase-liquibase-core' )
+    if: ${{ contains( github.event.pull_request.head.ref, 'dependabot/maven/org.liquibase-liquibase-core' ) || contains( github.event.pull_request.head.ref, 'dependabot/maven/main/org.liquibase-liquibase-core' ) }}
     steps:
       - uses: actions/checkout@v2
         with:
