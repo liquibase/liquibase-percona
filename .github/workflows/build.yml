@@ -1,6 +1,11 @@
 name: Build
 
-on: push
+on:
+  push:
+    branches:
+      - '**'
+      # dependabot branches are built via pull requests
+      - '!dependabot/**'
 
 jobs:
   integration-tests:
