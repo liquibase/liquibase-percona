@@ -1,4 +1,6 @@
-FROM liquibase/liquibase
+FROM liquibase/liquibase:4.4.3
+
+RUN lpm add mysql --global
 
 USER root
 RUN apt-get update \
@@ -10,8 +12,8 @@ RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/
 USER liquibase
 
 # Download liquibase-percona extension
-ARG LB_PERCONA_VERSION=4.4.0
-ARG LB_PERCONA_SHA1=35129b68faa3a4a17c3ad3e26068fb3f31ae911c
+ARG LB_PERCONA_VERSION=4.4.3
+ARG LB_PERCONA_SHA1=35d964e0b5483f40a3f4bb4150086bf44a4949f2
 RUN wget --no-verbose -O /liquibase/lib/liquibase-percona.jar https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar \
 #    && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
 #    && gpg --auto-key-locate keyserver --keyserver ha.pool.sks-keyservers.net --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
@@ -25,4 +27,3 @@ RUN wget --no-verbose -O /liquibase/percona-toolkit-${PERCONA_TOOLKIT_VERSION}.t
     && tar -C /liquibase -xzf percona-toolkit-${PERCONA_TOOLKIT_VERSION}.tar.gz \
     && mv /liquibase/percona-toolkit-${PERCONA_TOOLKIT_VERSION} /liquibase/percona-toolkit \
     && rm /liquibase/percona-toolkit-${PERCONA_TOOLKIT_VERSION}.tar.gz
-
