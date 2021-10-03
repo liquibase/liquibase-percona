@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'
-      # dependabot branches are built via pull requests
+      # dependabot branches are built via pull request event
       - '!dependabot/**'
 
 jobs:
@@ -58,12 +58,15 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_SECRET }}
         gpg-passphrase: GPG_PASSPHRASE
 
-    - name: Set Version Tag ENV from POM
-      run: ./.github/set-version-from-pom.sh
-    - run: echo $VERSION_TAG
+    - id: version
+      name: Determine Version from POM
+      shell: bash
+      run: |
+        VERSION="$(./mvnw -B -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout)"
+        echo "::set-output name=version::${VERSION}"
 
     - name: Deploy Snapshot with Maven
-      if: ${{ contains(env.VERSION_TAG, 'SNAPSHOT') }}
+      if: ${{ contains(steps.version.outputs.version, 'SNAPSHOT') }}
       run: ./mvnw -B clean deploy -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip --file pom.xml -Prelease
       env:
         MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
