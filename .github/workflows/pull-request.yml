@@ -24,18 +24,14 @@ jobs:
       with:
         install: |
           DBD::mysql
-    - name: Cache Local Maven Repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+
     - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@v2
       with:
         java-version: ${{ matrix.java }}
-        distribution: 'adopt'
+        distribution: 'temurin'
+        cache: 'maven'
+
     - name: Run Unit and Integration Tests With Maven
       run: ./mvnw -B clean verify --file pom.xml -Prun-its
 
