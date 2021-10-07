@@ -1,4 +1,4 @@
-FROM liquibase/liquibase:4.4.3
+FROM liquibase/liquibase:4.5.0
 
 RUN lpm add mysql --global
 
@@ -12,12 +12,12 @@ RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/
 USER liquibase
 
 # Download liquibase-percona extension
-ARG LB_PERCONA_VERSION=4.4.3
-ARG LB_PERCONA_SHA1=35d964e0b5483f40a3f4bb4150086bf44a4949f2
+ARG LB_PERCONA_VERSION=4.5.0
+ARG LB_PERCONA_SHA256=cda0ebcbde11f1f761e7d5289e33f1fcca7b4090b08efbd36462a2bb593d7024
 RUN wget --no-verbose -O /liquibase/lib/liquibase-percona.jar https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar \
 #    && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
 #    && gpg --auto-key-locate keyserver --keyserver ha.pool.sks-keyservers.net --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
-    && echo "$LB_PERCONA_SHA1  /liquibase/lib/liquibase-percona.jar" | sha1sum -c - 
+    && echo "$LB_PERCONA_SHA256  /liquibase/lib/liquibase-percona.jar" | sha256sum -c - 
 
 # Download percona toolkit
 ARG PERCONA_TOOLKIT_VERSION=3.3.1
