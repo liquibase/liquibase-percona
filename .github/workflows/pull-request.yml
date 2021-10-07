@@ -34,4 +34,6 @@ jobs:
         cache: 'maven'
 
     - name: Run Unit and Integration Tests With Maven
-      run: ./mvnw -B clean verify --file pom.xml -Prun-its
+      run: |
+        ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+            clean verify -Prun-its

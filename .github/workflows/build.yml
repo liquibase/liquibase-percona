@@ -29,8 +29,13 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: 'maven'
-    - name: Test With Maven
-      run: ./mvnw -B clean verify --file pom.xml -Prun-its -Dmysql_image=mysql:${{ matrix.mysql }} -Dmariadb_image=mariadb:${{ matrix.mariadb }}
+    - name: Run Integration Tests With Maven
+      shell: bash
+      run: |
+        ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+            clean verify -Prun-its \
+            -Dmysql_image=mysql:${{ matrix.mysql }} \
+            -Dmariadb_image=mariadb:${{ matrix.mariadb }}
 
   snapshot-deploy:
     name: Deploy Snapshot to Sonatype
@@ -67,7 +72,10 @@ jobs:
 
     - name: Deploy Snapshot with Maven
       if: ${{ contains(steps.version.outputs.version, 'SNAPSHOT') }}
-      run: ./mvnw -B clean deploy -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip --file pom.xml -Prelease
+      run: |
+        ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+             -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip \
+             clean deploy -Prelease
       env:
         MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
