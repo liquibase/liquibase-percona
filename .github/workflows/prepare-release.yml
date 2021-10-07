@@ -1,0 +1,157 @@
+name: Prepare Release Extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Extension Version (defaults to liquibase-core)'
+        required: false
+        default: ''
+
+jobs:
+  setup:
+    name: Prepare Versions and Create Tag
+    runs-on: ubuntu-latest
+    outputs:
+      extensionVersion: ${{ steps.determine_version.outputs.extensionVersion }}
+      liquibaseVersion: ${{ steps.determine_version.outputs.liquibaseVersion }}
+      releaseNotes: ${{ steps.determine_version.outputs.releaseNotes }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+          persist-credentials: true
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - id: determine_version
+        name: Determine Version for Next Release
+        shell: bash
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+          LIQUIBASE_VERSION="$(./mvnw -B -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=liquibase.version -DforceStdout)"
+          EXTENSION_VERSION="${INPUT_VERSION:-$LIQUIBASE_VERSION}"
+          if [ "$EXTENSION_VERSION" = "$LIQUIBASE_VERSION" ]; then
+              RELEASE_NOTES="Support for Liquibase ${LIQUIBASE_VERSION}."
+          else
+              RELEASE_NOTES="TODO"
+          fi
+          echo "::set-output name=extensionVersion::${EXTENSION_VERSION}"
+          echo "::set-output name=liquibaseVersion::${LIQUIBASE_VERSION}"
+          echo "::set-output name=releaseNotes::${RELEASE_NOTES}"
+
+      - name: Bump POM Version for Next Release, create Tag, bump version for development
+        shell: bash
+        run: |
+          ./mvnw -B org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DnewVersion=$VERSION
+          sed -i "s/project.build.outputTimestamp>[^<]\+</project.build.outputTimestamp>$(date -u -Iseconds)</" pom.xml
+          git add pom.xml
+          git config user.name "liquibot"
+          git config user.email "liquibot@liquibase.org"
+          git commit -m "Version Bumped to $VERSION"
+          git tag -a -m "Version Bumped to $VERSION" "liquibase-percona-$VERSION"
+          ./mvnw -B org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DnextSnapshot=true
+          git add pom.xml
+          git commit -m "Version Bumped to Snapshot for Development"
+          git push origin HEAD:main --follow-tags --tags
+        env:
+          VERSION: ${{ steps.determine_version.outputs.extensionVersion }}
+
+  build:
+    needs: setup
+    name: "Build and Unit Test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
+          persist-credentials: false
+
+      - name: Install Perl modules
+        uses: perl-actions/install-with-cpanm@v1
+        with:
+          install: |
+            DBD::mysql
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build and Test With Maven
+        shell: bash
+        run: |
+          ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+                clean verify
+
+      - name: Save Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: liquibase-percona
+          path: |
+            target/*.jar
+
+
+  integration-tests:
+    needs: setup
+    name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [8, 11, 17]
+        mysql: [5.7, 8]
+        mariadb: [10]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
+          persist-credentials: false
+
+      - name: Install Perl modules
+        uses: perl-actions/install-with-cpanm@v1
+        with:
+          install: |
+            DBD::mysql
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Integration Tests With Maven
+        shell: bash
+        run: |
+          ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+              clean verify -Prun-its \
+              -Dpmd.skip -Dcpd.skip -Dspotbugs.skip \
+              -Dmysql_image=mysql:${{ matrix.mysql }} \
+              -Dmariadb_image=mariadb:${{ matrix.mariadb }}
+
+  draft-release:
+    needs: [setup, build, integration-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: liquibase-percona
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: v${{ needs.setup.outputs.extensionVersion }}
+          tag_name: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
+          draft: true
+          body: ${{ needs.setup.outputs.releaseNotes }}
+          files: target/liquibase-percona-*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

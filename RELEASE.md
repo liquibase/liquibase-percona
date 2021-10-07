@@ -1,43 +1,66 @@
 # Release Workflow
 
 The release automation is designed to quickly release updates to liquibase extensions. This routinely happens
-when there is an update to liquibase core. There are unique automates automated steps when a pull requests
-is created by dependabot for a `Bump liquibase-core from *.*.* to *.*.*`, but these steps can also be
-taken manually for a patch or other manual release.
+when there is a new release of liquibase core.
+
+The release process is semi-automated so that you still have control over e.g. the release notes and
+when the release is happening and you have the ability to merge other PRs as well before the release.
+
+The update of liquibase core is triggered by a pull request by dependabot. This PR is created automatically
+and signals: liquibase core is generally available via maven central. You need to manually merge
+this PR after you've reviewed the changes and test results.
+
+After that, you can immediately trigger manually the workflow "prepare-release". You could start
+this workflow also later when it is more convenient for you and you have time to fix potential issues.
+
+The workflow "prepare-release" will create a draft release on github. By publishing this draft release,
+the new extension version is made available via maven central.
 
 ## Triggers
 
 ### Pull Request Opened
 
-When all pull requests are opened the Tests will run and they must pass before the PR can be merged.
-For a liquibase core bump PR, the application version in the POM will automatically be set to match
-the liquibase core version and the property `project.build.outputTimestamp` will be updated.
-If creating a manual PR for release, the `<version>*.*.*</version>` tag in the POM will need to be set
-to the correct version without the `SNAPSHOT` suffix in order to release to Sonatype Nexus and
-don't forget `project.build.outputTimestamp`.
-For example, `<version>4.3.5.1/version>` to release a patch version for the extension release
-for liquibase core 4.3.5.
+Dependabot checks daily whether there are new updates for your dependencies. One of these
+dependencies is `org.liquibase:liquibase-core`. Once a PR for this dependency arrives, you know: It's
+time for a new extension release.
 
-### Pull Request Labeled as Release Candidate
+This pull request executes the usual build which includes integration tests.
+You should verify, that all tests pass before merging the PR.
 
-If the `Extension Release Candidate :rocket:` label is applied to the PR, this is the trigger for
-GitHub Actions to run the full Integration Test suite matrix on the pull requests because this commit will
-become the next release. For a liquibase core bump, this label will automatically be applied to the
-dependabot PR. If this is a manual release, manually applying the label will also start the release testing
-and subsequent automation.
+### Manual workflow "prepare-release"
 
-Note that you have to create a tag for the release candidate manually as well, when applying the label
-for a manual release. The tag should point to the commit which sets the version (usually the last
-commit of the PR).
+Once you are satisfied with what's in the release, you can trigger manually the workflow "prepare-release"
+via the github web ui: <https://github.com/liquibase/liquibase-percona/actions/workflows/prepare-release.yml>.
 
-### Pull Request is Approved and Merged to Main
+This workflow will prepare a release from branch `main` and can be executed at any time. Updates to
+liquibase-core or any other release you want to publish for your extension.
 
-If a Pull Request is merged into the branch `main` and is labeled as release candidate the following
-automation steps will be taken:
+You can specify an extensionVersion - that is the "to-be-released" version of your extension. You can leave it
+empty, if you create a new release to support a new liquibase-core version. Then the extension will have the
+same version as liquibase-core (e.g. 4.5.0). If you create an patch version for your extension, then you
+can enter here for example 4.5.0.1.
 
-*   Signed artifact is built
-*   A draft GitHub Release is created proper tagging, version name, and artifact
-*   The application version in the POM on the main branch is bumped to be the next SNAPSHOT version for development
+This workflow will perform the following steps:
+
+*   Updates the version to the extension version in the `pom.xml` including the property
+    `project.build.outputTimestamp` (in order to support reproducible builds)
+*   Creates a new tag
+*   Updates the version to the next SNAPSHOT development version
+*   Pushes these changes to the main branch
+*   Runs the integration tests
+*   Creates a draft release on github
+
+The push uses the automatically generated `GITHUB_TOKEN` provided by [Github Actions](https://docs.github.com/en/actions/security-guides/automatic-token-authentication).
+So there is no need for an additional token.
+
+All changes for workflow always happen on the branch `main`. This means, releases can currently only
+be created from `main`. If there is a patch release needed for an older version, then this release
+needs to be done completely manually.
+
+You can now download the extension jar from the draft release and do local testing.
+Also don't forget to review the release notes.
+
+If you are satisfied with the release, you can publish it. This will trigger the next step.
 
 ### Draft Release is Published
 
@@ -46,39 +69,22 @@ The `<autoReleaseAfterClose>true</autoReleaseAfterClose>` option is defined in t
 all releases without the `SNAPSHOT` suffix, they will automatically release after all
 the staging test have passed. If everything goes well, no further manual action is required.
 
-## Testing
+Note: This workflow will actually checkout the sources from the extension version tag and
+build the extension (without running tests) again, signs the artifacts and uploads it to Sonatype Nexus.
+Hence it's good, when the extension allows for reproducible builds. Otherwise the jar file and the
+github release would be different from the jar file in Maven Central.
 
-The workflow separates Unit Test from Integration Tests and runs them at separate times, as mentioned above.
-In order to separate the tests, they must be in separate files. Put all Unit Tests into files that end with `Test.java` and Integration Test files should end with `IT.java`.
-For example the tests for the Liquibase Postgresql Extension now look like:
-
-```
-> src
-    > test
-        > java
-            > liquibase.ext
-                > copy
-                    CopyChangeIT.java
-                    CopyChangeTest.java
-                > vacuum
-                    VacuumChangeTest.java
-```
-
-Any tests that require a JDBC connection to a running database are integration tests and
-should be in the `IT.java` files.
+## Tests
 
 Liquibase Percona has extended integration tests. These integration tests start MySQL and MariaDB docker instances
 and run the integration tests from `src/it/*`. The integration tests are only executed, if the profile `run-its`
 is activated, e.g. `./mvnw verify -Prun-its`.
 
+By default, these tests run automatically for every build from the main branch.
+
 ## Repository Configuration
 
 The automation requires the below secrets and configuration in order to run.
-
-### BOT TOKEN
-Github secret named: `BOT_TOKEN`
-
-Github Actions bot cannot trigger events, so a liquibase robot user is needed to trigger automated events. An access token belonging to the liquibase robot user should be added to the repository secrets and named `BOT_TOKEN`. 
 
 ### GPG SECRET
 Github secret named: `GPG_SECRET`
@@ -119,14 +125,8 @@ Github secret named: `SONATYPE_TOKEN`
 
 The password or token for the sonatype account. Current managed and shared via lastpass for the Shared-DevOps group.
 
-### Label Settings
-Create a label with the following settings:
-
-* Label name: `Extension Release Candidate :rocket:`
-* Description: `Release Candidate for Extension`
-* Color: `#ff3d00`
-
 ## Useful Links
 
+*   [Github Actions Documentation](https://docs.github.com/en/actions)
 *   [Advanced Java Setup for GitHub Actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg)
 *   [Deploying to Sonatype Nexus with Apache Maven](https://central.sonatype.org/publish/publish-maven/)

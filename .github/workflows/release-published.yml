@@ -14,7 +14,7 @@ jobs:
           uses: actions/setup-java@v2
           with:
             java-version: '11'
-            distribution: 'adopt'
+            distribution: 'temurin'
             server-id: sonatype-nexus-staging
             server-username: MAVEN_USERNAME
             server-password: MAVEN_PASSWORD
@@ -22,7 +22,10 @@ jobs:
             gpg-passphrase: GPG_PASSPHRASE
 
         - name: Publish to the Maven Central Repository
-          run: ./mvnw -B clean deploy -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip --file pom.xml -Prelease
+          run: |
+            ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+               -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip \
+               clean deploy -Prelease
           env:
             MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
             MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
