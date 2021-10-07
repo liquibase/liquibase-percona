@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Extension Version (defaults to liquibase-core)'
+        description: 'Extension Version (defaults to liquibase-core):'
         required: false
         default: ''
 
@@ -44,6 +44,10 @@ jobs:
           echo "::set-output name=extensionVersion::${EXTENSION_VERSION}"
           echo "::set-output name=liquibaseVersion::${LIQUIBASE_VERSION}"
           echo "::set-output name=releaseNotes::${RELEASE_NOTES}"
+          
+          echo "extensionVersion=${EXTENSION_VERSION}"
+          echo "liquibaseVersion=${LIQUIBASE_VERSION}"
+          echo "releaseNotes=${RELEASE_NOTES}"
 
       - name: Bump POM Version for Next Release, create Tag, bump version for development
         shell: bash
@@ -53,11 +57,11 @@ jobs:
           git add pom.xml
           git config user.name "liquibot"
           git config user.email "liquibot@liquibase.org"
-          git commit -m "Version Bumped to $VERSION"
-          git tag -a -m "Version Bumped to $VERSION" "liquibase-percona-$VERSION"
+          git commit -m "[release] Version Bumped to $VERSION"
+          git tag -a -m "[release] Version Bumped to $VERSION" "liquibase-percona-$VERSION"
           ./mvnw -B org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DnextSnapshot=true
           git add pom.xml
-          git commit -m "Version Bumped to Snapshot for Development"
+          git commit -m "[release] Version Bumped to Snapshot for Development"
           git push origin HEAD:main --follow-tags --tags
         env:
           VERSION: ${{ steps.determine_version.outputs.extensionVersion }}
@@ -152,6 +156,6 @@ jobs:
           tag_name: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
           draft: true
           body: ${{ needs.setup.outputs.releaseNotes }}
-          files: target/liquibase-percona-*.jar
+          files: liquibase-percona-*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
