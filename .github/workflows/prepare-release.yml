@@ -62,7 +62,7 @@ jobs:
           ./mvnw -B org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DnextSnapshot=true
           git add pom.xml
           git commit -m "[release] Version Bumped to Snapshot for Development"
-          git push origin HEAD:main --follow-tags --tags
+          git push origin --atomic --follow-tags --tags HEAD:main
         env:
           VERSION: ${{ steps.determine_version.outputs.extensionVersion }}
 
