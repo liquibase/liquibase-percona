@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/liquibase/liquibase-percona/workflows/Build/badge.svg)](https://github.com/liquibase/liquibase-percona/actions)
 [![Reproducible Builds](https://img.shields.io/badge/Reproducible_Builds-ok-green?labelColor=blue)](https://github.com/jvm-repo-rebuild/reproducible-central#org.liquibase.ext:liquibase-percona)
 [![Maven Central](https://img.shields.io/maven-central/v/org.liquibase.ext/liquibase-percona)](https://search.maven.org/artifact/org.liquibase.ext/liquibase-percona)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/andreasdangel/liquibase-percona/latest?label=docker%20version)](https://hub.docker.com/r/andreasdangel/liquibase-percona)
 
 Extension to support the tool `pt-online-schema-change` from [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/LATEST/index.html).
 This extension replaces a couple of the default changes to use `pt-online-schema-change` instead of SQL.
