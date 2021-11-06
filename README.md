@@ -464,6 +464,8 @@ integration test.
 
 ### Next
 
+*   [#148](https://github.com/liquibase/liquibase-percona/issues/148): Support createIndex with specifying index prefix length
+
 ### Version 4.6.1 (2021-11-06)
 
 *   Support for Liquibase 4.6.1.

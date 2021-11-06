@@ -62,9 +62,20 @@ public class PerconaCreateIndexChange extends CreateIndexChange implements Perco
         while (iterator.hasNext()) {
             AddColumnConfig column = iterator.next();
             if (Boolean.TRUE.equals(column.getComputed())) {
+                // don't quote functions
                 alter.append(column.getName());
             } else {
-                alter.append(database.escapeColumnName(this.getCatalogName(), this.getSchemaName(), this.getTableName(), column.getName()));
+                String justColumnName = column.getName();
+                String prefixLength = "";
+                // maybe prefix length
+                int prefixLengthIndex = justColumnName.indexOf('(');
+                if (prefixLengthIndex > -1) {
+                    prefixLength = justColumnName.substring(prefixLengthIndex);
+                    justColumnName = justColumnName.substring(0, prefixLengthIndex);
+                }
+
+                alter.append(database.escapeColumnName(this.getCatalogName(), this.getSchemaName(), this.getTableName(), justColumnName));
+                alter.append(prefixLength);
             }
             if (iterator.hasNext()) {
                 alter.append(", ");
