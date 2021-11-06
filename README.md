@@ -29,6 +29,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Next](#next)
     *   [Version 4.6.1 (2021-11-06)](#version-461-2021-11-06)
     *   [Version 4.5.0 (2021-10-04)](#version-450-2021-10-04)
     *   [Version 4.4.3 (2021-08-12)](#version-443-2021-08-12)
@@ -461,6 +462,8 @@ integration test.
 
 ## Changelog
 
+### Next
+
 ### Version 4.6.1 (2021-11-06)
 
 *   Support for Liquibase 4.6.1.
@@ -665,7 +668,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.5.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.6.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -676,7 +679,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.5.0</version>
+    <version>4.6.1</version>
 </dependency>
 ```
 
@@ -713,13 +716,13 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.5.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.6.2-SNAPSHOT`:
 
 ```xml
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.5.1-SNAPSHOT</version>
+    <version>4.6.2-SNAPSHOT</version>
 </dependency>
 ```
 
