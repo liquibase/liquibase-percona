@@ -29,7 +29,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
-    *   [Next](#next)
+    *   [Version 4.6.1 (2021-11-06)](#version-461-2021-11-06)
     *   [Version 4.5.0 (2021-10-04)](#version-450-2021-10-04)
     *   [Version 4.4.3 (2021-08-12)](#version-443-2021-08-12)
     *   [Version 4.4.2 (2021-07-23)](#version-442-2021-07-23)
@@ -92,7 +92,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0 (liquibase-percona 4.5.0). Percona Toolkit 3.3.1.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.1 (liquibase-percona 4.6.1). Percona Toolkit 3.3.1.
 
 ## Supported Changes and examples
 
@@ -461,7 +461,9 @@ integration test.
 
 ## Changelog
 
-### Next
+### Version 4.6.1 (2021-11-06)
+
+*   Support for Liquibase 4.6.1.
 
 ### Version 4.5.0 (2021-10-04)
 
