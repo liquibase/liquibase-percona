@@ -12,8 +12,8 @@ RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/
 USER liquibase
 
 # Download liquibase-percona extension
-ARG LB_PERCONA_VERSION=4.6.1
-ARG LB_PERCONA_SHA256=1b0f0889a537b2e6a4b4b0c8ee035d297fc4c8faa24282752cf6148ed0d0f617
+ARG LB_PERCONA_VERSION=4.6.1.1
+ARG LB_PERCONA_SHA256=cd69211d214a098e4c94f3b56212cef1ccbe6d747990f7fdcf7c574a08fe2138
 RUN wget --no-verbose -O /liquibase/lib/liquibase-percona.jar https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar \
 #    && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
 #    && gpg --auto-key-locate keyserver --keyserver ha.pool.sks-keyservers.net --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
