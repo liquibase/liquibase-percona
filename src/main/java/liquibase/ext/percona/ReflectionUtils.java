@@ -17,9 +17,9 @@ package liquibase.ext.percona;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class ReflectionUtils {
+class ReflectionUtils {
 
-    public static Class<?> findClass(ClassLoader loader, String ... names) {
+    static Class<?> findClass(ClassLoader loader, String ... names) {
         for (String clazzName : names) {
             Class<?> clazz = loadClass(clazzName, loader);
             if (clazz != null) {
@@ -29,7 +29,7 @@ public class ReflectionUtils {
         return null;
     }
 
-    public static Class<?> loadClass(String name, ClassLoader loader) {
+    static Class<?> loadClass(String name, ClassLoader loader) {
         try {
             return loader.loadClass(name);
         } catch (ClassNotFoundException e) {
@@ -37,12 +37,12 @@ public class ReflectionUtils {
         }
     }
 
-    public static <T> T invokeMethod(String className, Object instance, String methodName) {
+    static <T> T invokeMethod(String className, Object instance, String methodName) {
         Class<?> clazz = loadClass(className, instance.getClass().getClassLoader());
         return invokeMethod(clazz, instance, methodName);
     }
 
-    public static <T> T invokeMethod(Class<?> clazz, Object instance, String methodName) {
+    static <T> T invokeMethod(Class<?> clazz, Object instance, String methodName) {
         try {
             if (clazz != null && clazz.isInstance(instance)) {
                 Method method = findMethod(clazz, methodName);
@@ -58,7 +58,7 @@ public class ReflectionUtils {
         }
     }
 
-    private static Method findMethod(Class<?> clazz, String name) throws NoSuchMethodException, SecurityException {
+    static Method findMethod(Class<?> clazz, String name) throws NoSuchMethodException, SecurityException {
         try {
             return clazz.getMethod(name);
         } catch (NoSuchMethodException e) {
@@ -66,7 +66,7 @@ public class ReflectionUtils {
         }
     }
 
-    public static <T> T readField(Class<?> clazz, Object instance, String name) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    static <T> T readField(Class<?> clazz, Object instance, String name) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Field field = clazz.getDeclaredField(name);
         field.setAccessible(true);
 
