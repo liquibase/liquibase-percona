@@ -47,6 +47,12 @@ public class PerconaCreateIndexChangeTest extends AbstractPerconaChangeTest<Perc
     }
 
     @Test
+    public void testCreateNewIndexRealWithPrefix() {
+        getChange().getColumns().get(0).setName( "indexedColumn(10)" );
+        assertPerconaChange( "ADD UNIQUE INDEX theIndexName (indexedColumn(10))" );
+    }
+
+    @Test
     public void testCreateIndexNonUnique() {
         getChange().setUnique(false);
         assertPerconaChange("ADD INDEX theIndexName (indexedColumn)");

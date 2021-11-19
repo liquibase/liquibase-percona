@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD UNIQUE INDEX emailIdx (email)\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD UNIQUE INDEX emailIdx (email(10))\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("Altering `testdb`.`person`...")
 assert buildLogText.contains("Successfully altered `testdb`.`person`.")
 assert buildLogText.contains("Index emailIdx created")
@@ -31,8 +31,12 @@ assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran success
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
 def sqlText = sql.text;
-assert sqlText.contains("pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD UNIQUE INDEX emailIdx (email)\"")
+assert sqlText.contains("pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD UNIQUE INDEX emailIdx (email(10))\"")
 assert !sqlText.contains("password=${config_password}")
+
+// Verify that index prefix length works also without liquibase-percona
+// See also https://github.com/liquibase/liquibase/issues/2191
+assert sqlText.contains("CREATE UNIQUE INDEX emailIdx ON person(email(10));")
 
 def con, s;
 try {
@@ -44,14 +48,14 @@ try {
     r = s.executeQuery("SHOW INDEX FROM person")
     assert r.next()
     assert r.next() // we need the second row
-    assertColumn(r, true, "emailIdx", "email")
+    assertColumn(r, true, "emailIdx", "email", 10)
     r.close()
 } finally {
     s?.close();
     con?.close();
 }
 
-def assertColumn(resultset, unique, keyName, columnName) {
+def assertColumn(resultset, unique, keyName, columnName, subPart) {
     assert keyName == resultset.getString(3)
 
     if (unique) {
@@ -60,8 +64,7 @@ def assertColumn(resultset, unique, keyName, columnName) {
         assert 1 == resultset.getInt(2)
     }
 
-    // sub_part
-    assert 0 == resultset.getInt(8);
+    assert subPart == resultset.getInt(8);
 
     assert columnName == resultset.getString(5);
 }
