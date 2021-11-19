@@ -34,6 +34,10 @@ def sqlText = sql.text;
 assert sqlText.contains("pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD UNIQUE INDEX emailIdx (email(10))\"")
 assert !sqlText.contains("password=${config_password}")
 
+// Verify that index prefix length works also without liquibase-percona
+// See also https://github.com/liquibase/liquibase/issues/2191
+assert sqlText.contains("CREATE UNIQUE INDEX emailIdx ON person(email(10));")
+
 def con, s;
 try {
     def props = new Properties();
