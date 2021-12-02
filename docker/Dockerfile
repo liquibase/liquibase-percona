@@ -1,4 +1,4 @@
-FROM liquibase/liquibase:4.6.1
+FROM liquibase/liquibase:4.6.2
 
 RUN lpm add mysql --global
 
@@ -12,8 +12,8 @@ RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/
 USER liquibase
 
 # Download liquibase-percona extension
-ARG LB_PERCONA_VERSION=4.6.1.1
-ARG LB_PERCONA_SHA256=cd69211d214a098e4c94f3b56212cef1ccbe6d747990f7fdcf7c574a08fe2138
+ARG LB_PERCONA_VERSION=4.6.2
+ARG LB_PERCONA_SHA256=a019cccae8e3d4614301176376c613b9c74256a751732bed2388be43508001d9
 RUN wget --no-verbose -O /liquibase/lib/liquibase-percona.jar https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar \
 #    && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
 #    && gpg --auto-key-locate keyserver --keyserver ha.pool.sks-keyservers.net --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
