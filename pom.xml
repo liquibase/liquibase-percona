@@ -43,7 +43,7 @@
         <project.build.outputTimestamp>2021-11-19T13:38:02+00:00</project.build.outputTimestamp>
 
         <java.version>1.8</java.version>
-        <liquibase.version>4.6.1</liquibase.version>
+        <liquibase.version>4.6.2</liquibase.version>
         <mysql.version>8.0.27</mysql.version>
         <mariadb.connector.version>2.7.4</mariadb.connector.version>
         <percona.toolkit.version>3.3.1</percona.toolkit.version>
