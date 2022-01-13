@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.6.3-SNAPSHOT</version>
+    <version>4.7.0</version>
     <name>Liquibase Percona Extension</name>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
@@ -40,7 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
-        <project.build.outputTimestamp>2021-12-02T13:26:12+00:00</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-01-13T10:05:21+00:00</project.build.outputTimestamp>
 
         <java.version>1.8</java.version>
         <liquibase.version>4.7.0</liquibase.version>
