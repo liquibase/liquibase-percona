@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>10.0.14</version>
+            <version>10.0.16</version>
             <scope>test</scope>
         </dependency>
         <dependency>
