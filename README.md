@@ -29,6 +29,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [Version NEXT](#version-next)
     *   [Version 4.7.1 (2022-01-27)](#version-471-2022-01-27)
     *   [Version 4.7.0 (2022-01-13)](#version-470-2022-01-13)
     *   [Version 4.6.2 (2021-12-02)](#version-462-2021-12-02)
@@ -464,6 +465,10 @@ integration test.
 
 
 ## Changelog
+
+### Version NEXT
+
+*   Added support for [MariaDB Connector 3.x](https://mariadb.com/kb/en/about-mariadb-connector-j/).
 
 ### Version 4.7.1 (2022-01-27)
 
