@@ -28,10 +28,10 @@ assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran success
 assert buildLogText.contains("ChangeSet test-changelog.xml::4::Alice ran successfully")
 assert buildLogText.contains("ChangeSet test-changelog.xml::5::Alice ran successfully")
 
-assert buildLogText.contains("Rolling Back Changeset:test-changelog.xml::5::Alice")
+assert buildLogText.contains("Rolling Back Changeset: test-changelog.xml::5::Alice")
 assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"DROP FOREIGN KEY _FK_2\"")
 assert buildLogText.contains("Successfully altered `testdb`.`person`.")
-assert buildLogText.contains("Rolling Back Changeset:test-changelog.xml::4::Alice")
+assert buildLogText.contains("Rolling Back Changeset: test-changelog.xml::4::Alice")
 assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"DROP FOREIGN KEY FK_1\"")
 assert buildLogText.contains("Successfully altered `testdb`.`address`.")
 
