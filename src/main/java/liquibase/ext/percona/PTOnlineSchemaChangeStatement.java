@@ -186,6 +186,8 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
             sb.append(" ");
             if (s.startsWith("--password")) {
                 sb.append("--password=***");
+            } else if (s.startsWith("--slave-password")) {
+                sb.append("--slave-password=***");
             } else if (s.contains(" ")) {
                 sb.append(s.substring(0, s.indexOf('=') + 1)).append("\"").append(s.substring(s.indexOf('=') + 1))
                         .append("\"");
