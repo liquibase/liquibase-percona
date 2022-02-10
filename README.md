@@ -29,6 +29,7 @@ This allows to perform a non-locking database upgrade.
     *   [PerconaOptions flag](#perconaoptions-flag)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
+    *   [next](#next)
     *   [Version 4.7.1 (2022-01-27)](#version-471-2022-01-27)
     *   [Version 4.7.0 (2022-01-13)](#version-470-2022-01-13)
     *   [Version 4.6.2 (2021-12-02)](#version-462-2021-12-02)
@@ -464,6 +465,11 @@ integration test.
 
 
 ## Changelog
+
+### next
+
+*   [PR #182](https://github.com/liquibase/liquibase-percona/pull/182): Added masking for slave password - [andreiMambu](https://github.com/andreiMambu)
+*   [#183](https://github.com/liquibase/liquibase-percona/issues/183): The parameter --slave-password is not masked in logs
 
 ### Version 4.7.1 (2022-01-27)
 
