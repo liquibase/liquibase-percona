@@ -88,6 +88,16 @@ public class PTOnlineSchemaChangeStatementTest {
     }
 
     @Test
+    public void testPrintCommandWithAdditionalOptions() {
+        System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--slave-password=password");
+        PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
+                "ADD COLUMN new_column INT NULL", Optional.empty());
+        Assertions.assertEquals(
+                "pt-online-schema-change --slave-password=*** --alter=\"ADD COLUMN new_column INT NULL\" --password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=person",
+                statement.printCommand(database));
+    }
+
+    @Test
     public void testAdditionalOptions() {
         System.setProperty(Configuration.ADDITIONAL_OPTIONS, "--config /tmp/percona.conf");
         PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement("testdb", "person",
