@@ -4,7 +4,7 @@ RUN lpm add mysql --global
 
 USER root
 RUN apt-get update \
-    && apt-get -y install perl libdbd-mysql-perl \
+    && apt-get -y install gpg perl libdbd-mysql-perl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/pt-online-schema-change
@@ -12,11 +12,12 @@ RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/
 USER liquibase
 
 # Download liquibase-percona extension
+# Signed with: support@liquibase.org - http://keyserver.ubuntu.com/pks/lookup?search=0xBAF4CE3CC55E6523CF5881A78AFE608B21FE903C&fingerprint=on&op=index
 ARG LB_PERCONA_VERSION=4.7.1
 ARG LB_PERCONA_SHA256=3c9fd0d4957d43bcb80545e715343cc4973ce1f5954c79b1be52eff71b354cc2
 RUN wget --no-verbose -O /liquibase/lib/liquibase-percona.jar https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar \
-#    && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
-#    && gpg --auto-key-locate keyserver --keyserver ha.pool.sks-keyservers.net --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
+    && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
+    && gpg --auto-key-locate keyserver --keyserver keyserver.ubuntu.com --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
     && echo "$LB_PERCONA_SHA256  /liquibase/lib/liquibase-percona.jar" | sha256sum -c - 
 
 # Download percona toolkit
