@@ -64,7 +64,7 @@
         <mysql_image>mysql:5.7</mysql_image>
         <mariadb_image>mariadb:10</mariadb_image>
 
-        <itPrebuildHookScript>../sharedScripts/setup.groovy</itPrebuildHookScript>
+        <itPrebuildHookScript>../sharedScripts/setup</itPrebuildHookScript>
     </properties>
 
     <dependencies>

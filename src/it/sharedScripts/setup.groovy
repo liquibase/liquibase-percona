@@ -12,10 +12,9 @@
  * limitations under the License.
  */
 
-println "Running ${prebuild_hook_script} in ${basedir} ..."
 
 File setupScript = new File( prebuild_hook_script)
-println "setupScript: ${setupScript}"
+println "Running ${setupScript} in ${basedir} ..."
 
 File testBasedir = basedir
 if ( basedir.path.endsWith( setupScript.parent ) ) {
@@ -28,9 +27,9 @@ if ( testBasedir.name == setupScript.parentFile.name ) {
     return true
 }
 
-def customSetup = new File( testBasedir, setupScript.name )
+def customSetup = new File( testBasedir, setupScript.name + '.groovy' )
 if ( customSetup.exists() ) {
-    println "Custom setup.groovy detected, calling it instead of ${setupScript}"
+    println "Custom preBuildHookScript ${customSetup} detected, calling it instead of ${setupScript}"
     return evaluate( customSetup )
 }
 
