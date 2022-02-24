@@ -12,6 +12,31 @@
  * limitations under the License.
  */
 
+println "Running ${prebuild_hook_script} in ${basedir} ..."
+
+File setupScript = new File( prebuild_hook_script)
+println "setupScript: ${setupScript}"
+
+File testBasedir = basedir
+if ( basedir.path.endsWith( setupScript.parent ) ) {
+    testBasedir = new File( basedir.path.substring(0, basedir.path.length() - setupScript.parent.length() ) )
+}
+println "testBasedir: ${testBasedir}"
+
+if ( testBasedir.name == setupScript.parentFile.name ) {
+    println "Skipping setup of setupScripts"
+    return true
+}
+
+def customSetup = new File( testBasedir, setupScript.name )
+if ( customSetup.exists() ) {
+    println "Custom setup.groovy detected, calling it instead of ${setupScript}"
+    return evaluate( customSetup )
+}
+
+
+println "Running shared setup script ..."
+
 def con, s;
 try {
     def props = new Properties();
@@ -27,5 +52,9 @@ try {
 }
 
 println "Prepared empty database `${config_dbname}`"
+
+// create directories under target to silence out liquibase plugin
+new File( testBasedir, "target/classes" ).mkdirs()
+new File( testBasedir, "target/test-classes" ).mkdirs()
 
 return true
