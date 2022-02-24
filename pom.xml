@@ -65,7 +65,8 @@
         <mariadb_image>mariadb:10</mariadb_image>
 
         <docker.removeVolumes>true</docker.removeVolumes>
-
+        <percona.toolkit.usecache>true</percona.toolkit.usecache>
+        <percona.toolkit.cachedir>${project.basedir}/.cache</percona.toolkit.cachedir>
         <itPrebuildHookScript>../sharedScripts/setup</itPrebuildHookScript>
     </properties>
 
@@ -128,10 +129,6 @@
                   and maven-javadoc-plugin >= 3.2.0 is required.
                   See https://maven.apache.org/guides/mini/guide-reproducible-builds.html
                  -->
-                <plugin>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.9.0</version>
@@ -201,6 +198,11 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
@@ -402,32 +404,26 @@
             <build>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>download-percona-toolkit</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
-                                    <goal>run</goal>
+                                    <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <target>
-                                        <mkdir dir="${project.build.directory}/percona-toolkit" />
-
-                                        <exec executable="${project.basedir}/src/main/scripts/determine-latest-toolkit.sh" dir="${project.build.directory}/percona-toolkit" outputproperty="LATEST" />
-                                        <echo message="Determined latest version of percona toolkit: ${LATEST}" />
-
-                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh" dir="${project.build.directory}/percona-toolkit">
-                                            <arg value="${LATEST}" />
-                                        </exec>
-                                        <move file="${project.build.directory}/percona-toolkit/percona-toolkit-${LATEST}" tofile="${project.build.directory}/percona-toolkit/percona-toolkit-LATEST" />
-                                        <echo message="The latest percona toolkit is available in: ${project.build.directory}/percona-toolkit/percona-toolkit-LATEST/" />
-
-                                        <exec executable="${project.basedir}/src/main/scripts/download-toolkit.sh" dir="${project.build.directory}/percona-toolkit">
-                                            <arg value="${percona.toolkit.version}" />
-                                        </exec>
-                                        <echo message="Downloaded percona toolkit in: ${project.build.directory}/percona-toolkit/percona-toolkit-${percona.toolkit.version}/" />
-                                    </target>
+                                    <executable>${project.basedir}/src/main/scripts/download-toolkit.sh</executable>
+                                    <arguments>
+                                        <argument>LATEST</argument>
+                                        <argument>${percona.toolkit.version}</argument>
+                                    </arguments>
+                                    <environmentVariables>
+                                        <USE_CACHE>${percona.toolkit.usecache}</USE_CACHE>
+                                        <CACHE_DIR>${percona.toolkit.cachedir}</CACHE_DIR>
+                                        <TARGET>${project.build.directory}/percona-toolkit</TARGET>
+                                    </environmentVariables>
                                 </configuration>
                             </execution>
                         </executions>

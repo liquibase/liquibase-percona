@@ -5,3 +5,4 @@ target
 .settings/
 .idea/
 liquibase-percona.iml
+.cache
