@@ -18,4 +18,5 @@
  */
 
 File sharedVerifyScript = new File( basedir, '../sharedScripts/allChanges/verify.groovy' )
+binding.setVariable( 'perconaFullPath', "${project_build_directory}/percona-toolkit/percona-toolkit-LATEST/bin/pt-online-schema-change" )
 evaluate( sharedVerifyScript )
