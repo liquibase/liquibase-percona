@@ -64,6 +64,8 @@
         <mysql_image>mysql:5.7</mysql_image>
         <mariadb_image>mariadb:10</mariadb_image>
 
+        <docker.removeVolumes>true</docker.removeVolumes>
+
         <itPrebuildHookScript>../sharedScripts/setup</itPrebuildHookScript>
     </properties>
 
