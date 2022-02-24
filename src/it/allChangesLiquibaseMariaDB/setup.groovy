@@ -28,4 +28,18 @@ try {
 
 println "Prepared empty database `${config_dbname}`"
 
+// create directories under target to silence out liquibase plugin
+new File( testBasedir, "target/classes" ).mkdirs()
+new File( testBasedir, "target/test-classes" ).mkdirs()
+
+def sourceChangelog = new File( basedir, 'allChanges/test-changelog.xml' )
+def targetChangelog = new File( testBasedir, 'test-changelog.xml' )
+targetChangelog.text = sourceChangelog.text
+println "Copied ${sourceChangelog} to ${targetChangelog}"
+
+def sourceProperties = new File( basedir, 'allChanges/test.properties' )
+def targetProperties = new File( testBasedir, 'test.properties' )
+targetProperties.text = sourceProperties.text
+println "Copied ${sourceProperties} to ${targetProperties}"
+
 return true

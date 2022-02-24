@@ -30,6 +30,7 @@ This allows to perform a non-locking database upgrade.
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
     *   [Version NEXT](#version-next)
+    *   [Version 4.8.0 (2022-02-24)](#version-480-2022-02-24)
     *   [Version 4.7.1 (2022-01-27)](#version-471-2022-01-27)
     *   [Version 4.7.0 (2022-01-13)](#version-470-2022-01-13)
     *   [Version 4.6.2 (2021-12-02)](#version-462-2021-12-02)
@@ -97,7 +98,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1 (liquibase-percona 4.7.1). Percona Toolkit 3.3.1.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1, 4.8.0 (liquibase-percona 4.8.0). Percona Toolkit 3.3.1.
 
 ## Supported Changes and examples
 
@@ -470,6 +471,12 @@ integration test.
 
 *   Added support for [MariaDB Connector 3.x](https://mariadb.com/kb/en/about-mariadb-connector-j/).
 
+### Version 4.8.0 (2022-02-24)
+
+*   Support for Liquibase 4.8.0.
+*   [PR #182](https://github.com/liquibase/liquibase-percona/pull/182): Added masking for slave password - [andreiMambu](https://github.com/andreiMambu)
+*   [#183](https://github.com/liquibase/liquibase-percona/issues/183): The parameter --slave-password is not masked in logs
+
 ### Version 4.7.1 (2022-01-27)
 
 *   Support for Liquibase 4.7.1.
@@ -690,7 +697,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.7.1.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.8.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -701,7 +708,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.7.1</version>
+    <version>4.8.0</version>
 </dependency>
 ```
 
@@ -738,13 +745,13 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.7.2-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.8.1-SNAPSHOT`:
 
 ```xml
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.7.2-SNAPSHOT</version>
+    <version>4.8.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -788,7 +795,7 @@ Please note, that you'll need:
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 
-To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=addColumn*,dropColumn`
+To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=sharedScripts,addColumn*,dropColumn`
 
 ## Common Problems
 
