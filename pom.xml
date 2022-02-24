@@ -64,7 +64,7 @@
         <mysql_image>mysql:5.7</mysql_image>
         <mariadb_image>mariadb:10</mariadb_image>
 
-        <itPrebuildHookScript>../setupScripts/setup.groovy</itPrebuildHookScript>
+        <itPrebuildHookScript>../sharedScripts/setup.groovy</itPrebuildHookScript>
     </properties>
 
     <dependencies>
@@ -517,6 +517,9 @@
                             <pomIncludes>
                                 <pomInclude>*/pom.xml</pomInclude>
                             </pomIncludes>
+                            <setupIncludes>
+                                <setupInclude>sharedScripts/pom.xml</setupInclude>
+                            </setupIncludes>
                             <goals>
                                 <goal>pre-integration-test</goal>
                             </goals>

@@ -789,7 +789,7 @@ Please note, that you'll need:
 
 See the properties *config_...* in `pom.xml` for connection details for the mysql docker instance.
 
-To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=setupScripts,addColumn*,dropColumn`
+To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=sharedScripts,addColumn*,dropColumn`
 
 ## Common Problems
 
