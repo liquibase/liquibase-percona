@@ -16,7 +16,7 @@
 File setupScript = new File( prebuild_hook_script)
 println "Running ${setupScript} in ${basedir} ..."
 
-File testBasedir = basedir
+def testBasedir = basedir
 if ( basedir.path.endsWith( setupScript.parent ) ) {
     testBasedir = new File( basedir.path.substring(0, basedir.path.length() - setupScript.parent.length() ) )
 }
@@ -30,6 +30,7 @@ if ( testBasedir.name == setupScript.parentFile.name ) {
 def customSetup = new File( testBasedir, setupScript.name + '.groovy' )
 if ( customSetup.exists() ) {
     println "Custom preBuildHookScript ${customSetup} detected, calling it instead of ${setupScript}"
+    binding.setVariable( 'testBasedir', testBasedir )
     return evaluate( customSetup )
 }
 
@@ -55,5 +56,17 @@ println "Prepared empty database `${config_dbname}`"
 // create directories under target to silence out liquibase plugin
 new File( testBasedir, "target/classes" ).mkdirs()
 new File( testBasedir, "target/test-classes" ).mkdirs()
+
+if ( testBasedir.name.startsWith( "allChanges" ) ) {
+    def sourceChangelog = new File( basedir, 'allChanges/test-changelog.xml' )
+    def targetChangelog = new File( testBasedir, 'test-changelog.xml' )
+    targetChangelog.text = sourceChangelog.text
+    println "Copied ${sourceChangelog} to ${targetChangelog}"
+
+    def sourceProperties = new File( basedir, 'allChanges/test.properties' )
+    def targetProperties = new File( testBasedir, 'test.properties' )
+    targetProperties.text = sourceProperties.text
+    println "Copied ${sourceProperties} to ${targetProperties}"
+}
 
 return true
