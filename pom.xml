@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.8.1-SNAPSHOT</version>
+    <version>4.9.1-SNAPSHOT</version>
     <name>Liquibase Percona Extension</name>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
@@ -40,10 +40,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
-        <project.build.outputTimestamp>2022-02-24T17:34:41+00:00</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-03-18T18:55:28+00:00</project.build.outputTimestamp>
 
         <java.version>1.8</java.version>
-        <liquibase.version>4.8.0</liquibase.version>
+        <liquibase.version>4.9.0</liquibase.version>
         <mysql.version>8.0.28</mysql.version>
         <mariadb.connector.version>3.0.4</mariadb.connector.version>
         <percona.toolkit.version>3.3.1</percona.toolkit.version>
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>10.0.16</version>
+            <version>10.0.18</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -131,7 +131,7 @@
                  -->
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.0</version>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -184,7 +184,7 @@
                 <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.39.0</version>
+                    <version>0.39.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>

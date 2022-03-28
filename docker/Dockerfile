@@ -1,4 +1,4 @@
-FROM liquibase/liquibase:4.8.0
+FROM liquibase/liquibase:4.9.0
 
 RUN lpm add mysql --global
 
@@ -13,8 +13,8 @@ USER liquibase
 
 # Download liquibase-percona extension
 # Signed with: support@liquibase.org - http://keyserver.ubuntu.com/pks/lookup?search=0xBAF4CE3CC55E6523CF5881A78AFE608B21FE903C&fingerprint=on&op=index
-ARG LB_PERCONA_VERSION=4.8.0
-ARG LB_PERCONA_SHA256=1afd1f2e92a2ca0877b733f0df1bbac99edd4c9619eb906ce3d3b5bf54b77e45
+ARG LB_PERCONA_VERSION=4.9.0
+ARG LB_PERCONA_SHA256=da365609d3c48d6a18e45c9f383abeb7c191d6b4875796ed365895eba738a7f2
 RUN wget --no-verbose -O /liquibase/lib/liquibase-percona.jar https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar \
     && wget --no-verbose -O /liquibase/lib/liquibase-percona.jar.asc https://repo.maven.apache.org/maven2/org/liquibase/ext/liquibase-percona/${LB_PERCONA_VERSION}/liquibase-percona-${LB_PERCONA_VERSION}.jar.asc \
     && gpg --auto-key-locate keyserver --keyserver keyserver.ubuntu.com --keyserver-options auto-key-retrieve --verify /liquibase/lib/liquibase-percona.jar.asc /liquibase/lib/liquibase-percona.jar \
