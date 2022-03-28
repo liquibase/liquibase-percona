@@ -114,16 +114,22 @@ public class DatabaseConnectionUtil {
                         "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 6.0.4: com.mysql.cj.jdbc.ConnectionImpl
                     );
     
-                Class<?> mariadbConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
-                        "org.mariadb.jdbc.MariaDbConnection");
-    
+                Class<?> mariadbConnection2Class = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "org.mariadb.jdbc.MariaDbConnection" // MariaDB Connector 2.x
+                    );
+
+                Class<?> mariadbConnection3Class = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "org.mariadb.jdbc.Connection"         // MariaDB Connector 3.x
+                    );
+
                 boolean isMySQL = false;
                 boolean isMariaDB = false;
     
                 if (connectionImplClass != null && connectionImplClass.isInstance(jdbcCon)) {
                     isMySQL = true;
                 }
-                if (mariadbConnectionClass != null && mariadbConnectionClass.isInstance(jdbcCon)) {
+                if (mariadbConnection2Class != null && mariadbConnection2Class.isInstance(jdbcCon)
+                        || mariadbConnection3Class != null && mariadbConnection3Class.isInstance(jdbcCon)) {
                     isMariaDB = true;
                 }
     
@@ -134,10 +140,18 @@ public class DatabaseConnectionUtil {
                     if (password != null && !password.trim().isEmpty()) {
                         return password;
                     }
-                } else if (isMariaDB) {
-                    Object protocol = ReflectionUtils.readField(mariadbConnectionClass, jdbcCon, "protocol");
+                } else if (isMariaDB && mariadbConnection2Class != null) {
+                    // MariaDB Connector 2.x
+                    Object protocol = ReflectionUtils.readField(mariadbConnection2Class, jdbcCon, "protocol");
                     Object urlParser = ReflectionUtils.invokeMethod(protocol.getClass(), protocol, "getUrlParser");
                     Object password = ReflectionUtils.invokeMethod(urlParser.getClass(), urlParser, "getPassword");
+                    if (password != null && !password.toString().trim().isEmpty()) {
+                        return password.toString();
+                    }
+                } else if (isMariaDB && mariadbConnection3Class != null) {
+                    // MariaDB Connector 3.x
+                    Object configuration = ReflectionUtils.readField(mariadbConnection3Class, jdbcCon, "conf");
+                    Object password = ReflectionUtils.invokeMethod(configuration.getClass(), configuration, "password");
                     if (password != null && !password.toString().trim().isEmpty()) {
                         return password.toString();
                     }

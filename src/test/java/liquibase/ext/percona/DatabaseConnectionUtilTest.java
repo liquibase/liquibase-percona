@@ -16,16 +16,11 @@ package liquibase.ext.percona;
 
 import java.lang.reflect.Field;
 import java.util.Properties;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mariadb.jdbc.MariaDbConnection;
-import org.mariadb.jdbc.UrlParser;
-import org.mariadb.jdbc.internal.protocol.MasterProtocol;
-import org.mariadb.jdbc.internal.protocol.Protocol;
 
 import liquibase.database.jvm.JdbcConnection;
 
@@ -127,10 +122,10 @@ public class DatabaseConnectionUtilTest {
     @Test
     public void testMariaDbJdbcConnectionPasswordInURL() throws Exception {
         String url = "jdbc:mariadb://127.0.0.1/db?user=user&password=xyz1";
-        UrlParser urlParser = UrlParser.parse(url, null);
-        Protocol protocol = new MasterProtocol(urlParser, null, new ReentrantLock(), null);
-        DatabaseConnectionUtil util = new DatabaseConnectionUtil(
-                new JdbcConnection(new MariaDbConnection(protocol)));
+        org.mariadb.jdbc.Configuration mariadbConfig = org.mariadb.jdbc.Configuration.parse(url);
+
+        DatabaseConnectionUtil util = new DatabaseConnectionUtil(new JdbcConnection(
+                MockedMariaDbConnection.create(mariadbConfig)));
         Assertions.assertEquals("xyz1", util.getPassword());
     }
 
@@ -139,10 +134,10 @@ public class DatabaseConnectionUtilTest {
         String url = "jdbc:mariadb://127.0.0.1/db?user=user";
         Properties props = new Properties();
         props.setProperty("password", "xyz2");
-        UrlParser urlParser = UrlParser.parse(url, props);
-        Protocol protocol = new MasterProtocol(urlParser, null, new ReentrantLock(), null);
-        DatabaseConnectionUtil util = new DatabaseConnectionUtil(
-                new JdbcConnection(new MariaDbConnection(protocol)));
+        org.mariadb.jdbc.Configuration mariadbConfig = org.mariadb.jdbc.Configuration.parse(url, props);
+
+        DatabaseConnectionUtil util = new DatabaseConnectionUtil(new JdbcConnection(
+                MockedMariaDbConnection.create(mariadbConfig)));
         Assertions.assertEquals("xyz2", util.getPassword());
     }
 
