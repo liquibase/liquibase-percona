@@ -99,7 +99,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.1 (liquibase-percona 1.7.0). Percona Toolkit 3.2.0.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1, 4.8.0, 4.9.0 (liquibase-percona 4.9.0). Percona Toolkit 3.3.1.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1, 4.8.0, 4.9.1 (liquibase-percona 4.9.1). Percona Toolkit 3.3.1.
 
 ## Supported Changes and examples
 
@@ -468,9 +468,10 @@ integration test.
 
 ## Changelog
 
-### Version NEXT
+### Version 4.9.1 (2022-03-31)
 
-*   Added support for [MariaDB Connector 3.x](https://mariadb.com/kb/en/about-mariadb-connector-j/).
+*   Support for Liquibase 4.9.1.
+*   [PR #180](https://github.com/liquibase/liquibase-percona/pull/180): Added support for [MariaDB Connector 3.x](https://mariadb.com/kb/en/about-mariadb-connector-j/).
 
 ### Version 4.9.0 (2022-03-18)
 
@@ -702,7 +703,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.9.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.9.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -713,7 +714,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.9.0</version>
+    <version>4.9.1</version>
 </dependency>
 ```
 
@@ -750,13 +751,13 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.9.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.9.2-SNAPSHOT`:
 
 ```xml
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.9.1-SNAPSHOT</version>
+    <version>4.9.2-SNAPSHOT</version>
 </dependency>
 ```
 
