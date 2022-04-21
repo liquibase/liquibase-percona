@@ -155,7 +155,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.2</version> <!-- for reproducible builds: >= 3.3.2 -->
+                    <version>3.4.0</version> <!-- for reproducible builds: >= 3.4.0 -->
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
