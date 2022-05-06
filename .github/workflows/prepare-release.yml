@@ -37,7 +37,7 @@ jobs:
           LIQUIBASE_VERSION="$(./mvnw -B -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=liquibase.version -DforceStdout)"
           EXTENSION_VERSION="${INPUT_VERSION:-$LIQUIBASE_VERSION}"
           if [ "$EXTENSION_VERSION" = "$LIQUIBASE_VERSION" ]; then
-              RELEASE_NOTES="Support for Liquibase ${LIQUIBASE_VERSION}."
+              RELEASE_NOTES="- Support for Liquibase ${LIQUIBASE_VERSION}."
           else
               RELEASE_NOTES="TODO"
           fi
@@ -58,7 +58,7 @@ jobs:
           git config user.name "liquibot"
           git config user.email "liquibot@liquibase.org"
           git commit -m "[release] Version Bumped to $VERSION"
-          git tag -a -m "[release] Version Bumped to $VERSION" "liquibase-percona-$VERSION"
+          git tag -a -m "[release] Version Bumped to $VERSION" "v$VERSION"
           ./mvnw -B org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DnextSnapshot=true
           git add pom.xml
           git commit -m "[release] Version Bumped to Snapshot for Development"
@@ -73,7 +73,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
+          ref: v${{ needs.setup.outputs.extensionVersion }}
           persist-credentials: false
 
       - name: Install Perl modules
@@ -115,7 +115,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
+          ref: v${{ needs.setup.outputs.extensionVersion }}
           persist-credentials: false
 
       - name: Install Perl modules
@@ -149,13 +149,22 @@ jobs:
         with:
           name: liquibase-percona
 
+      - name: Extract release notes from CHANGELOG.md
+        shell: bash
+        run: |
+          END_LINE=$(grep -n "^## " CHANGELOG.md|head -2|tail -1|cut -d ":" -f 1)
+          END_LINE=$((END_LINE - 1))
+          RELEASE_CHANGELOG="$(head -$END_LINE CHANGELOG.md | tail +6)"
+          echo "${{ needs.setup.outputs.releaseNotes }}" > release-notes.txt
+          echo "$RELEASE_CHANGELOG" >> release-notes.txt
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           name: v${{ needs.setup.outputs.extensionVersion }}
           tag_name: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
           draft: true
-          body: ${{ needs.setup.outputs.releaseNotes }}
+          body_path: release-notes.txt
           files: liquibase-percona-*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
