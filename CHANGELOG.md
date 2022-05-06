@@ -4,6 +4,8 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/liquibase-percona-4.9.1...HEAD)
 
+* Support for Liquibase 4.10.0
+
 **🚀 Implemented enhancements:**
 
 - Use github\_changelog\_generator [\#205](https://github.com/liquibase/liquibase-percona/pull/205) (@adangel)
@@ -15,10 +17,6 @@
 - Bump nexus-staging-maven-plugin from 1.6.12 to 1.6.13 [\#202](https://github.com/liquibase/liquibase-percona/pull/202) (@dependabot[bot])
 - Bump maven-javadoc-plugin from 3.3.2 to 3.4.0 [\#201](https://github.com/liquibase/liquibase-percona/pull/201) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.0.18 to 10.0.20 [\#200](https://github.com/liquibase/liquibase-percona/pull/200) (@dependabot[bot])
-
-**✔️ Closed issues:**
-
-- Release summary for v4.10.0 [\#206](https://github.com/liquibase/liquibase-percona/issues/206)
 
 ## Version 4.9.1 (2022-03-31)
 
