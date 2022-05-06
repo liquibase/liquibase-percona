@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/liquibase-percona-4.9.1...HEAD)
 
+**🚀 Implemented enhancements:**
+
+- Use github\_changelog\_generator [\#205](https://github.com/liquibase/liquibase-percona/pull/205) (@adangel)
+
 **📦 Dependency updates:**
 
 - Bump nexus-staging-maven-plugin from 1.6.12 to 1.6.13 [\#202](https://github.com/liquibase/liquibase-percona/pull/202) (@dependabot[bot])
