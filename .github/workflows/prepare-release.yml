@@ -17,7 +17,7 @@ jobs:
       liquibaseVersion: ${{ steps.determine_version.outputs.liquibaseVersion }}
       releaseNotes: ${{ steps.determine_version.outputs.releaseNotes }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: main
           persist-credentials: true
@@ -71,7 +71,7 @@ jobs:
     name: "Build and Unit Test"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
           persist-credentials: false
@@ -113,7 +113,7 @@ jobs:
         mysql: [5.7, 8]
         mariadb: [10]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
           persist-credentials: false
