@@ -1,0 +1,15 @@
+user=liquibase
+project=liquibase-percona
+base=HISTORY.md
+#include-tags-regex=liquibase-percona-\d{1,}\.\d{1,}\.\d{1,}
+since-tag=liquibase-percona-4.9.1
+usernames-as-github-logins=true
+add-sections={"dependencies":{"prefix":"**📦 Dependency updates:**","labels":["dependencies"]}}
+bugs-label=**🐛 Fixed bugs:**
+breaking-prefix=**💥 Breaking changes:**
+enhancement-prefix=**🚀 Implemented enhancements:**
+deprecated-prefix=**⚠️ Deprecated:**
+removed-prefix=**🚨 Removed:**
+security-prefix=**🛡️ Security:**
+issues-label=**✔️ Closed issues:**
+pr-label=**🎉 Merged pull requests:**
