@@ -12,7 +12,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>@project.groupId@.it</groupId>
-    <artifactId>liquibase-percona-it-allChangesLiquibase480</artifactId>
+    <artifactId>liquibase-percona-it-allChangesLiquibase491</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>my-app</name>
 
@@ -21,7 +21,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>4.8.0</version>
+                <version>4.9.1</version>
                 <dependencies>
                     <dependency>
                         <groupId>@project.groupId@</groupId>
