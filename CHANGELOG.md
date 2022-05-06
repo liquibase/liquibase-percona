@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.9.1 to 4.10.0 [\#204](https://github.com/liquibase/liquibase-percona/pull/204) (@dependabot[bot])
 - Bump mysql-connector-java from 8.0.28 to 8.0.29 [\#203](https://github.com/liquibase/liquibase-percona/pull/203) (@dependabot[bot])
 - Bump nexus-staging-maven-plugin from 1.6.12 to 1.6.13 [\#202](https://github.com/liquibase/liquibase-percona/pull/202) (@dependabot[bot])
 - Bump maven-javadoc-plugin from 3.3.2 to 3.4.0 [\#201](https://github.com/liquibase/liquibase-percona/pull/201) (@dependabot[bot])
