@@ -236,6 +236,17 @@
             </plugin>
 
             <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <targetJdk>${java.version}</targetJdk>
