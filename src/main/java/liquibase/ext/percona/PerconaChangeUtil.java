@@ -27,6 +27,7 @@ import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.exception.DatabaseException;
+import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.Executor;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
@@ -115,7 +116,7 @@ public class PerconaChangeUtil {
                 }
             } else {
                 if (Configuration.failIfNoPT()) {
-                    throw new RuntimeException("No percona toolkit found!");
+                    throw new UnexpectedLiquibaseException("No percona toolkit found!");
                 }
                 maybeLog("Not using percona toolkit, because it is not available!");
             }

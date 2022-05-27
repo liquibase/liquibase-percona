@@ -247,7 +247,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
                 log.info(outputStream.toString(Charset.defaultCharset().toString()));
 
                 if (exitCode != 0) {
-                    throw new RuntimeException("Percona exited with " + exitCode);
+                    throw new UnexpectedLiquibaseException("Percona exited with " + exitCode);
                 }
             }
         } catch (IOException e) {

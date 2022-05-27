@@ -156,7 +156,7 @@ public class DatabaseConnectionUtil {
                         return password.toString();
                     }
                 } else {
-                    throw new RuntimeException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
+                    throw new UnsupportedOperationException("JdbcConnection is unsupported: " + jdbcCon.getClass().getName());
                 }
             } catch (Exception e) {
                 log.warning("Couldn't determine the password from JdbcConnection", e);
@@ -191,7 +191,7 @@ public class DatabaseConnectionUtil {
                     Connection result = ReflectionUtils.invokeMethod(pooledConnectionClass, pooledConnectionInstance, "getConnection");
                     return result != null ? result : wrappedConnection;
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    throw new UnsupportedOperationException("JDBConnection is not a " + pooledConnectionClass, e);
                 }
             } else {
                 log.warning("Couldn't determine the password from JdbcConnection. "

@@ -14,6 +14,8 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import liquibase.exception.UnexpectedLiquibaseException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -54,7 +56,7 @@ class ReflectionUtils {
             }
             return null;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UnexpectedLiquibaseException(e);
         }
     }
 
