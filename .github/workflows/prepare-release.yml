@@ -167,7 +167,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: v${{ needs.setup.outputs.extensionVersion }}
-          tag_name: liquibase-percona-${{ needs.setup.outputs.extensionVersion }}
+          tag_name: v${{ needs.setup.outputs.extensionVersion }}
           draft: true
           body_path: release-notes.txt
           files: liquibase-percona-*.jar
