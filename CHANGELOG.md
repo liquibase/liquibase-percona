@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.11.0...HEAD)
+
+**🚀 Implemented enhancements:**
+
+- Add version info to manifest [\#212](https://github.com/liquibase/liquibase-percona/pull/212) (@adangel)
+
 ## [v4.11.0](https://github.com/liquibase/liquibase-percona/tree/v4.11.0) (2022-05-27)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.10.0...v4.11.0)
