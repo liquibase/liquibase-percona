@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump docker-maven-plugin from 0.39.1 to 0.40.0 [\#214](https://github.com/liquibase/liquibase-percona/pull/214) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.2.2 to 3.3.0 [\#213](https://github.com/liquibase/liquibase-percona/pull/213) (@dependabot[bot])
 
 ## [v4.11.0](https://github.com/liquibase/liquibase-percona/tree/v4.11.0) (2022-05-27)
