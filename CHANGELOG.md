@@ -8,6 +8,10 @@
 
 - Add version info to manifest [\#212](https://github.com/liquibase/liquibase-percona/pull/212) (@adangel)
 
+**📦 Dependency updates:**
+
+- Bump maven-invoker-plugin from 3.2.2 to 3.3.0 [\#213](https://github.com/liquibase/liquibase-percona/pull/213) (@dependabot[bot])
+
 ## [v4.11.0](https://github.com/liquibase/liquibase-percona/tree/v4.11.0) (2022-05-27)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.10.0...v4.11.0)
