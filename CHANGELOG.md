@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump maven-enforcer-plugin from 3.0.0 to 3.1.0 [\#216](https://github.com/liquibase/liquibase-percona/pull/216) (@dependabot[bot])
 - Bump maven-pmd-plugin from 3.16.0 to 3.17.0 [\#215](https://github.com/liquibase/liquibase-percona/pull/215) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.39.1 to 0.40.0 [\#214](https://github.com/liquibase/liquibase-percona/pull/214) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.2.2 to 3.3.0 [\#213](https://github.com/liquibase/liquibase-percona/pull/213) (@dependabot[bot])
