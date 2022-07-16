@@ -8,6 +8,7 @@
 
 - Bump exec-maven-plugin from 3.0.0 to 3.1.0 [\#224](https://github.com/liquibase/liquibase-percona/pull/224) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 [\#222](https://github.com/liquibase/liquibase-percona/pull/222) (@dependabot[bot])
+- Bump mariadb-java-client from 3.0.5 to 3.0.6 [\#221](https://github.com/liquibase/liquibase-percona/pull/221) (@dependabot[bot])
 
 ## [v4.12.0](https://github.com/liquibase/liquibase-percona/tree/v4.12.0) (2022-06-23)
 
