@@ -1,19 +1,15 @@
 # Changelog
 
-## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+## [v4.13.0](https://github.com/liquibase/liquibase-percona/tree/v4.13.0) (2022-07-16)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.12.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.12.0...v4.13.0)
 
-**📦 Dependency updates:**
+* Support for Liquibase 4.13.0.
 
-- Bump exec-maven-plugin from 3.0.0 to 3.1.0 [\#224](https://github.com/liquibase/liquibase-percona/pull/224) (@dependabot[bot])
-- Bump liquibase-core from 4.12.0 to 4.13.0 [\#223](https://github.com/liquibase/liquibase-percona/pull/223) (@dependabot[bot])
-- Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 [\#222](https://github.com/liquibase/liquibase-percona/pull/222) (@dependabot[bot])
-- Bump mariadb-java-client from 3.0.5 to 3.0.6 [\#221](https://github.com/liquibase/liquibase-percona/pull/221) (@dependabot[bot])
+**:package: Dependency updates:**
 
-## [v4.12.0](https://github.com/liquibase/liquibase-percona/tree/v4.12.0) (2022-06-23)
-
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.11.0...v4.12.0)
+* Bump Percona Toolkit from 3.3.1 to 3.4.0 (4256c16f9b536d8d878f29b5509add0e9519cc85)
+* Bump mariadb-java-client from 2.7.5 to 2.7.6 (aae68925eb6dfa8f3c550129e1a75730a2396cbe)
 
 **🚀 Implemented enhancements:**
 
@@ -21,6 +17,10 @@
 
 **📦 Dependency updates:**
 
+- Bump exec-maven-plugin from 3.0.0 to 3.1.0 [\#224](https://github.com/liquibase/liquibase-percona/pull/224) (@dependabot[bot])
+- Bump liquibase-core from 4.12.0 to 4.13.0 [\#223](https://github.com/liquibase/liquibase-percona/pull/223) (@dependabot[bot])
+- Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 [\#222](https://github.com/liquibase/liquibase-percona/pull/222) (@dependabot[bot])
+- Bump mariadb-java-client from 3.0.5 to 3.0.6 [\#221](https://github.com/liquibase/liquibase-percona/pull/221) (@dependabot[bot])
 - Bump maven from 3.8.5 to 3.8.6 [\#220](https://github.com/liquibase/liquibase-percona/pull/220) (@adangel)
 - Bump liquibase-core from 4.11.0 to 4.12.0 [\#219](https://github.com/liquibase/liquibase-percona/pull/219) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.0.21 to 10.0.22 [\#218](https://github.com/liquibase/liquibase-percona/pull/218) (@dependabot[bot])
@@ -29,6 +29,10 @@
 - Bump maven-pmd-plugin from 3.16.0 to 3.17.0 [\#215](https://github.com/liquibase/liquibase-percona/pull/215) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.39.1 to 0.40.0 [\#214](https://github.com/liquibase/liquibase-percona/pull/214) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.2.2 to 3.3.0 [\#213](https://github.com/liquibase/liquibase-percona/pull/213) (@dependabot[bot])
+
+## [v4.12.0](https://github.com/liquibase/liquibase-percona/tree/v4.12.0) (2022-06-23)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.11.0...v4.12.0)
 
 ## [v4.11.0](https://github.com/liquibase/liquibase-percona/tree/v4.11.0) (2022-05-27)
 
