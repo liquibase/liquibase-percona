@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.12.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump exec-maven-plugin from 3.0.0 to 3.1.0 [\#224](https://github.com/liquibase/liquibase-percona/pull/224) (@dependabot[bot])
+- Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 [\#222](https://github.com/liquibase/liquibase-percona/pull/222) (@dependabot[bot])
+
 ## [v4.12.0](https://github.com/liquibase/liquibase-percona/tree/v4.12.0) (2022-06-23)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.11.0...v4.12.0)
