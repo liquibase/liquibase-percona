@@ -91,8 +91,13 @@ function determine_latest_toolkit()
     then
         if [ -e "${cached_version}" ]
         then
-            cat "${cached_version}"
-            return
+            one_day_ago=$(date -d 'now - 1 day' +%s)
+            file_time=$(date -r "${cached_version}" +%s)
+            if (( file_time > one_day_ago ))
+            then
+                cat "${cached_version}"
+                return
+            fi
         fi
     fi
 
