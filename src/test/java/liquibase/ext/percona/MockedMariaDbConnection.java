@@ -207,13 +207,18 @@ public class MockedMariaDbConnection {
         }
 
         @Override
-        public long getServerCapabilities() {
-            return 0;
+        public byte[] getSeed() {
+            return null;
         }
 
         @Override
-        public byte[] getSeed() {
-            return null;
+        public boolean hasServerCapability(long l) {
+            return false;
+        }
+
+        @Override
+        public boolean hasClientCapability(long l) {
+            return false;
         }
 
         @Override
