@@ -7,6 +7,7 @@
 **📦 Dependency updates:**
 
 - Bump exec-maven-plugin from 3.0.0 to 3.1.0 [\#224](https://github.com/liquibase/liquibase-percona/pull/224) (@dependabot[bot])
+- Bump liquibase-core from 4.12.0 to 4.13.0 [\#223](https://github.com/liquibase/liquibase-percona/pull/223) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 [\#222](https://github.com/liquibase/liquibase-percona/pull/222) (@dependabot[bot])
 - Bump mariadb-java-client from 3.0.5 to 3.0.6 [\#221](https://github.com/liquibase/liquibase-percona/pull/221) (@dependabot[bot])
 
