@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.13.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump maven-deploy-plugin from 3.0.0-M2 to 3.0.0 [\#227](https://github.com/liquibase/liquibase-percona/pull/227) (@dependabot[bot])
+
 ## [v4.13.0](https://github.com/liquibase/liquibase-percona/tree/v4.13.0) (2022-07-16)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.12.0...v4.13.0)
