@@ -44,7 +44,7 @@
 
         <java.version>1.8</java.version>
         <liquibase.version>4.13.0</liquibase.version>
-        <mysql.version>8.0.29</mysql.version>
+        <mysql.version>8.0.30</mysql.version>
         <mariadb.connector.version>3.0.6</mariadb.connector.version>
         <percona.toolkit.version>3.4.0</percona.toolkit.version>
 
