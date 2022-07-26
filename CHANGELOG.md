@@ -8,6 +8,7 @@
 
 - Bump maven-resources-plugin from 3.2.0 to 3.3.0 [\#232](https://github.com/liquibase/liquibase-percona/pull/232) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.0.22 to 10.0.23 [\#231](https://github.com/liquibase/liquibase-percona/pull/231) (@dependabot[bot])
+- Bump liquibase-core from 4.13.0 to 4.14.0 [\#230](https://github.com/liquibase/liquibase-percona/pull/230) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.1.0 to 4.7.1.1 [\#229](https://github.com/liquibase/liquibase-percona/pull/229) (@dependabot[bot])
 - Bump mysql-connector-java from 8.0.29 to 8.0.30 [\#228](https://github.com/liquibase/liquibase-percona/pull/228) (@dependabot[bot])
 - Bump maven-deploy-plugin from 3.0.0-M2 to 3.0.0 [\#227](https://github.com/liquibase/liquibase-percona/pull/227) (@dependabot[bot])
