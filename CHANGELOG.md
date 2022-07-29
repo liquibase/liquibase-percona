@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.13.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.14.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump junit-jupiter from 5.8.2 to 5.9.0 [\#233](https://github.com/liquibase/liquibase-percona/pull/233) (@dependabot[bot])
+
+## [v4.14.0](https://github.com/liquibase/liquibase-percona/tree/v4.14.0) (2022-07-26)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.13.0...v4.14.0)
 
 **📦 Dependency updates:**
 
