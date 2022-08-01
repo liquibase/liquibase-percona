@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump docker-maven-plugin from 0.40.1 to 0.40.2 [\#234](https://github.com/liquibase/liquibase-percona/pull/234) (@dependabot[bot])
 - Bump junit-jupiter from 5.8.2 to 5.9.0 [\#233](https://github.com/liquibase/liquibase-percona/pull/233) (@dependabot[bot])
 
 ## [v4.14.0](https://github.com/liquibase/liquibase-percona/tree/v4.14.0) (2022-07-26)
