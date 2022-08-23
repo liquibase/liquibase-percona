@@ -66,7 +66,7 @@ changes provided by liquibase-core.
 * Liquibase 3.5.5, 3.6.3, 3.7.0, 3.8.9, 3.9.0, and 3.10.3 (liquibase-percona 1.7.1). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2 (liquibase-percona 2.0.0). Percona Toolkit 3.3.0.
 * Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1, 4.8.0, 4.9.1, 4.10.0, 4.11.0, 4.12.0 (liquibase-percona 4.12.0). Percona Toolkit 3.3.1.
-* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1, 4.8.0, 4.9.1, 4.10.0, 4.11.0, 4.12.0, 4.13.0, 4.14.0 (liquibase-percona 4.14.0). Percona Toolkit 3.4.0.
+* Liquibase 4.0.0, 4.1.1, 4.2.2, 4.3.5, 4.4.3, 4.5.0, 4.6.2, 4.7.1, 4.8.0, 4.9.1, 4.10.0, 4.11.0, 4.12.0, 4.13.0, 4.14.0, 4.15.0 (liquibase-percona 4.15.0). Percona Toolkit 3.4.0.
 
 ## Supported Changes and examples
 
@@ -448,7 +448,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.14.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.15.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -459,7 +459,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.14.0</version>
+    <version>4.15.0</version>
 </dependency>
 ```
 
@@ -496,13 +496,13 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.14.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.15.1-SNAPSHOT`:
 
 ```xml
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.14.1-SNAPSHOT</version>
+    <version>4.15.1-SNAPSHOT</version>
 </dependency>
 ```
 
