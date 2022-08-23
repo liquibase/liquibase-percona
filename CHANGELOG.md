@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump mariadb-java-client from 3.0.6 to 3.0.7 [\#235](https://github.com/liquibase/liquibase-percona/pull/235) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.40.1 to 0.40.2 [\#234](https://github.com/liquibase/liquibase-percona/pull/234) (@dependabot[bot])
 - Bump junit-jupiter from 5.8.2 to 5.9.0 [\#233](https://github.com/liquibase/liquibase-percona/pull/233) (@dependabot[bot])
 
