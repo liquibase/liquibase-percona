@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.15.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump maven-pmd-plugin from 3.17.0 to 3.18.0 [\#238](https://github.com/liquibase/liquibase-percona/pull/238) (@dependabot[bot])
+
 ## [v4.15.0](https://github.com/liquibase/liquibase-percona/tree/v4.15.0) (2022-08-23)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.14.0...v4.15.0)
