@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump snakeyaml from 1.30 to 1.31 [\#239](https://github.com/liquibase/liquibase-percona/pull/239) (@dependabot[bot])
 - Bump maven-pmd-plugin from 3.17.0 to 3.18.0 [\#238](https://github.com/liquibase/liquibase-percona/pull/238) (@dependabot[bot])
 
 ## [v4.15.0](https://github.com/liquibase/liquibase-percona/tree/v4.15.0) (2022-08-23)
