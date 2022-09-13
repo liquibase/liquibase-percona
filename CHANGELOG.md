@@ -12,6 +12,10 @@
 - Bump snakeyaml from 1.30 to 1.31 [\#239](https://github.com/liquibase/liquibase-percona/pull/239) (@dependabot[bot])
 - Bump maven-pmd-plugin from 3.17.0 to 3.18.0 [\#238](https://github.com/liquibase/liquibase-percona/pull/238) (@dependabot[bot])
 
+**🎉 Merged pull requests:**
+
+- Remove integration tests for older liquibase versions [\#244](https://github.com/liquibase/liquibase-percona/pull/244) (@adangel)
+
 ## [v4.15.0](https://github.com/liquibase/liquibase-percona/tree/v4.15.0) (2022-08-23)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.14.0...v4.15.0)
