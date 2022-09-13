@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump snakeyaml from 1.31 to 1.32 [\#243](https://github.com/liquibase/liquibase-percona/pull/243) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.1.1 to 4.7.2.0 [\#241](https://github.com/liquibase/liquibase-percona/pull/241) (@dependabot[bot])
 - Bump maven-pmd-plugin from 3.18.0 to 3.19.0 [\#240](https://github.com/liquibase/liquibase-percona/pull/240) (@dependabot[bot])
 - Bump snakeyaml from 1.30 to 1.31 [\#239](https://github.com/liquibase/liquibase-percona/pull/239) (@dependabot[bot])
