@@ -30,7 +30,7 @@ The liquibase-percona extension and pt-online-schema-change
 will automatically be picked up:
 
 ```
-docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog andreasdangel/liquibase-percona \
+docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog liquibase/liquibase-percona \
     --url="jdbc:mysql://<IP OR HOSTNAME>:3306/<DATABASE>" \
     --changeLogFile=com/example/changelog.xml \
     --username=<USERNAME> --password=<PASSWORD> \
@@ -41,7 +41,7 @@ docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog andreasdangel/li
 You can also run pt-online-schema-change directly, e.g.:
 
 ```
-docker run --rm andreasdangel/liquibase-percona /usr/local/bin/pt-online-schema-change \
+docker run --rm liquibase/liquibase-percona /usr/local/bin/pt-online-schema-change \
     --alter-foreign-keys-method=auto --nocheck-unique-key-change \
     --alter="ADD COLUMN name VARCHAR(50) NOT NULL" \
     --password=<PASSWORD> \
