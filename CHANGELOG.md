@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump junit-jupiter from 5.9.0 to 5.9.1 [\#248](https://github.com/liquibase/liquibase-percona/pull/248) (@dependabot[bot])
 - Bump maven-jar-plugin from 3.2.2 to 3.3.0 [\#246](https://github.com/liquibase/liquibase-percona/pull/246) (@dependabot[bot])
 
 ## [v4.16.0](https://github.com/liquibase/liquibase-percona/tree/v4.16.0) (2022-09-13)
