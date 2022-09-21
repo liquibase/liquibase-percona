@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.16.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump maven-jar-plugin from 3.2.2 to 3.3.0 [\#246](https://github.com/liquibase/liquibase-percona/pull/246) (@dependabot[bot])
+
 ## [v4.16.0](https://github.com/liquibase/liquibase-percona/tree/v4.16.0) (2022-09-13)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.15.0...v4.16.0)
