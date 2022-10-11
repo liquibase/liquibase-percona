@@ -20,6 +20,8 @@ import java.util.Properties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.database.jvm.JdbcConnection;
@@ -85,34 +87,22 @@ public class DatabaseConnectionUtilTest {
         // with MySQL Connector 5.1.38, we use JDBC4Connection and its superclass ConnectionImpl
         // to get hold of the password.
         Class<?> connectionImpl = loadClass("com.mysql.jdbc.ConnectionImpl");
-        Assumptions.assumeFalse(connectionImpl == null);
+        Assumptions.assumeFalse(connectionImpl == null, "The class com.mysql.jdbc.ConnectionImpl wasn't on the test classpath.");
         Field propsField = connectionImpl.getDeclaredField("props");
         Assertions.assertNotNull(propsField, "The field props is not existing");
     }
 
     @Test
     public void testGetPasswordMySQL_6() throws Exception {
-        assumeJava8();
         // with MySQL Connector 6.0.4, the packages changed.
         Class<?> connectionImpl = loadClass("com.mysql.cj.jdbc.ConnectionImpl");
-        Assumptions.assumeFalse(connectionImpl == null);
+        Assumptions.assumeFalse(connectionImpl == null, "The class com.mysql.cj.jdbc.ConnectionImpl wasn't on the test classpath.");
         Field propsField2 = connectionImpl.getDeclaredField("props");
         Assertions.assertNotNull(propsField2, "The field props is not existing");
     }
 
-    private static void assumeJava8() {
-        String javaVersion = System.getProperty("java.version");
-        String[] versionComponents = javaVersion.split("\\.");
-        int majorJava = 0;
-        if ("1".equals(versionComponents[0])) {
-            majorJava = Integer.parseInt(versionComponents[1]);
-        } else {
-            majorJava = Integer.parseInt(versionComponents[0]);
-        }
-        Assumptions.assumeTrue(majorJava >= 8, "Java Runtime too old - for this test at least java8 is required");
-    }
-
     @Test
+    @EnabledForJreRange(min = JRE.JAVA_11, disabledReason = "Tomcat JDBC 10.1.0 requires at least Java 11")
     public void testTomcatJdbcConnection() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(
                 new JdbcConnection(MockedTomcatJdbcConnection.create("user", "xyz")));
