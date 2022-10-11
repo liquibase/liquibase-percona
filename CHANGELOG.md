@@ -7,6 +7,7 @@
 **📦 Dependency updates:**
 
 - Bump spotbugs-maven-plugin from 4.7.2.0 to 4.7.2.1 [\#252](https://github.com/liquibase/liquibase-percona/pull/252) (@dependabot[bot])
+- Bump tomcat-jdbc from 10.0.23 to 10.1.0 [\#251](https://github.com/liquibase/liquibase-percona/pull/251) (@dependabot[bot])
 - Bump snakeyaml from 1.32 to 1.33 [\#250](https://github.com/liquibase/liquibase-percona/pull/250) (@dependabot[bot])
 - Bump mariadb-java-client from 3.0.7 to 3.0.8 [\#249](https://github.com/liquibase/liquibase-percona/pull/249) (@dependabot[bot])
 - Bump junit-jupiter from 5.9.0 to 5.9.1 [\#248](https://github.com/liquibase/liquibase-percona/pull/248) (@dependabot[bot])
