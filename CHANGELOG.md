@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.16.0 to 4.17.0 [\#253](https://github.com/liquibase/liquibase-percona/pull/253) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.2.0 to 4.7.2.1 [\#252](https://github.com/liquibase/liquibase-percona/pull/252) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.0.23 to 10.1.0 [\#251](https://github.com/liquibase/liquibase-percona/pull/251) (@dependabot[bot])
 - Bump snakeyaml from 1.32 to 1.33 [\#250](https://github.com/liquibase/liquibase-percona/pull/250) (@dependabot[bot])
