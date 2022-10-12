@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.17.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump actions/upload-artifact from 2 to 3 [\#255](https://github.com/liquibase/liquibase-percona/pull/255) (@dependabot[bot])
+- Bump tomcat-jdbc from 10.1.0 to 10.1.1 [\#254](https://github.com/liquibase/liquibase-percona/pull/254) (@dependabot[bot])
+
 ## [v4.17.0](https://github.com/liquibase/liquibase-percona/tree/v4.17.0) (2022-10-11)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.16.0...v4.17.0)
