@@ -11,6 +11,10 @@
 - Bump actions/upload-artifact from 2 to 3 [\#255](https://github.com/liquibase/liquibase-percona/pull/255) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.0 to 10.1.1 [\#254](https://github.com/liquibase/liquibase-percona/pull/254) (@dependabot[bot])
 
+**🎉 Merged pull requests:**
+
+- Install libdbd-mysql-perl with apt [\#258](https://github.com/liquibase/liquibase-percona/pull/258) (@adangel)
+
 ## [v4.17.0](https://github.com/liquibase/liquibase-percona/tree/v4.17.0) (2022-10-11)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.16.0...v4.17.0)
