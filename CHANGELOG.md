@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump actions/download-artifact from 2 to 3 [\#256](https://github.com/liquibase/liquibase-percona/pull/256) (@dependabot[bot])
 - Bump actions/upload-artifact from 2 to 3 [\#255](https://github.com/liquibase/liquibase-percona/pull/255) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.0 to 10.1.1 [\#254](https://github.com/liquibase/liquibase-percona/pull/254) (@dependabot[bot])
 
