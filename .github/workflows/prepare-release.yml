@@ -96,7 +96,7 @@ jobs:
                 clean verify
 
       - name: Save Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: liquibase-percona
           path: |
