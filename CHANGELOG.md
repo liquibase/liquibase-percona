@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.17.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.17.1...HEAD)
+
+**🎉 Merged pull requests:**
+
+- \[ci\] Fix deprecated set-output GitHub Action command [\#262](https://github.com/liquibase/liquibase-percona/pull/262) (@adangel)
+
+## [v4.17.1](https://github.com/liquibase/liquibase-percona/tree/v4.17.1) (2022-10-27)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.17.0...v4.17.1)
 
 **📦 Dependency updates:**
 
