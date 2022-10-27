@@ -41,9 +41,9 @@ jobs:
           else
               RELEASE_NOTES="TODO"
           fi
-          echo "::set-output name=extensionVersion::${EXTENSION_VERSION}"
-          echo "::set-output name=liquibaseVersion::${LIQUIBASE_VERSION}"
-          echo "::set-output name=releaseNotes::${RELEASE_NOTES}"
+          echo "extensionVersion=${EXTENSION_VERSION}" >> $GITHUB_OUTPUT
+          echo "liquibaseVersion=${LIQUIBASE_VERSION}" >> $GITHUB_OUTPUT
+          echo "releaseNotes=${RELEASE_NOTES}" >> $GITHUB_OUTPUT
           
           echo "extensionVersion=${EXTENSION_VERSION}"
           echo "liquibaseVersion=${LIQUIBASE_VERSION}"
