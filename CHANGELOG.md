@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.17.0 to 4.17.1 [\#259](https://github.com/liquibase/liquibase-percona/pull/259) (@dependabot[bot])
 - Bump actions/setup-java from 2 to 3 [\#257](https://github.com/liquibase/liquibase-percona/pull/257) (@dependabot[bot])
 - Bump actions/download-artifact from 2 to 3 [\#256](https://github.com/liquibase/liquibase-percona/pull/256) (@dependabot[bot])
 - Bump actions/upload-artifact from 2 to 3 [\#255](https://github.com/liquibase/liquibase-percona/pull/255) (@dependabot[bot])
