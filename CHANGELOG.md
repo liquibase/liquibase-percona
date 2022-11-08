@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.17.1...HEAD)
 
+**📦 Dependency updates:**
+
+- Bump spotbugs-maven-plugin from 4.7.2.1 to 4.7.3.0 [\#264](https://github.com/liquibase/liquibase-percona/pull/264) (@dependabot[bot])
+
 **🎉 Merged pull requests:**
 
 - \[ci\] Fix deprecated set-output GitHub Action command [\#262](https://github.com/liquibase/liquibase-percona/pull/262) (@adangel)
