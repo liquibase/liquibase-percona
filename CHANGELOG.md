@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump tomcat-jdbc from 10.1.1 to 10.1.2 [\#266](https://github.com/liquibase/liquibase-percona/pull/266) (@dependabot[bot])
 - Bump mariadb-java-client from 3.0.8 to 3.0.9 [\#265](https://github.com/liquibase/liquibase-percona/pull/265) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.2.1 to 4.7.3.0 [\#264](https://github.com/liquibase/liquibase-percona/pull/264) (@dependabot[bot])
 
