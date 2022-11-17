@@ -244,5 +244,10 @@ public class MockedMariaDbConnection {
         @Override
         public void addStateFlag(int state) {
         }
+
+        @Override
+        public boolean permitPipeline() {
+            return false;
+        }
     }
 }
