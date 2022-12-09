@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.17.1...HEAD)
 
+**🐛 Fixed bugs:**
+
+- Fix percona toolkit download script [\#269](https://github.com/liquibase/liquibase-percona/pull/269) (@adangel)
+
 **📦 Dependency updates:**
 
 - Bump mariadb-java-client from 3.0.9 to 3.1.0 [\#267](https://github.com/liquibase/liquibase-percona/pull/267) (@dependabot[bot])
