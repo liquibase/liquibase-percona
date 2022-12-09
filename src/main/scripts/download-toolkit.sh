@@ -106,7 +106,12 @@ function determine_latest_toolkit()
     latest=$(curl --silent https://www.percona.com/downloads/percona-toolkit/LATEST/)
 
     local version
-    version=$(echo "$latest"|grep 'selected="selected">Percona' | sed 's/.*\([0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*\).*/\1/')
+    version=$(echo "$latest"|grep -i 'selected="selected">Percona' | sed 's/.*\([0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*\).*/\1/')
+
+    if [ "$version" = "" ]; then
+      echo "Couldn't determine latest toolkit version!" >&2
+      exit 1
+    fi
 
     # github way:
     # ask github for the tags, use the first tag - hope, it is the latest
