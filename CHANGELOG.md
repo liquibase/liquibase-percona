@@ -11,6 +11,7 @@
 **📦 Dependency updates:**
 
 - Bump Percona Toolkit from 3.4.0 to 3.5.0 [\#270](https://github.com/liquibase/liquibase-percona/pull/270) (@adangel)
+- Bump liquibase-core from 4.17.1 to 4.18.0 [\#268](https://github.com/liquibase/liquibase-percona/pull/268) (@dependabot[bot])
 - Bump mariadb-java-client from 3.0.9 to 3.1.0 [\#267](https://github.com/liquibase/liquibase-percona/pull/267) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.1 to 10.1.2 [\#266](https://github.com/liquibase/liquibase-percona/pull/266) (@dependabot[bot])
 - Bump mariadb-java-client from 3.0.8 to 3.0.9 [\#265](https://github.com/liquibase/liquibase-percona/pull/265) (@dependabot[bot])
