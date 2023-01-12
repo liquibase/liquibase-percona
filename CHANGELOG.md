@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump maven-invoker-plugin from 3.3.0 to 3.4.0 [\#272](https://github.com/liquibase/liquibase-percona/pull/272) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.2 to 10.1.4 [\#271](https://github.com/liquibase/liquibase-percona/pull/271) (@dependabot[bot])
 
 ## [v4.18.0](https://github.com/liquibase/liquibase-percona/tree/v4.18.0) (2022-12-09)
