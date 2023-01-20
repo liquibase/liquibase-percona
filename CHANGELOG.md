@@ -6,10 +6,16 @@
 
 **📦 Dependency updates:**
 
+- Bump tomcat-jdbc from 10.1.4 to 10.1.5 [\#278](https://github.com/liquibase/liquibase-percona/pull/278) (@dependabot[bot])
+- Bump maven-pmd-plugin from 3.19.0 to 3.20.0 [\#276](https://github.com/liquibase/liquibase-percona/pull/276) (@dependabot[bot])
 - Bump junit-jupiter from 5.9.1 to 5.9.2 [\#274](https://github.com/liquibase/liquibase-percona/pull/274) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.40.2 to 0.40.3 [\#273](https://github.com/liquibase/liquibase-percona/pull/273) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.3.0 to 3.4.0 [\#272](https://github.com/liquibase/liquibase-percona/pull/272) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.2 to 10.1.4 [\#271](https://github.com/liquibase/liquibase-percona/pull/271) (@dependabot[bot])
+
+**✔️ Closed issues:**
+
+- Liquibase percona extension \(URL\) no longer available [\#275](https://github.com/liquibase/liquibase-percona/issues/275)
 
 ## [v4.18.0](https://github.com/liquibase/liquibase-percona/tree/v4.18.0) (2022-12-09)
 
