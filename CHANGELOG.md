@@ -7,6 +7,7 @@
 **📦 Dependency updates:**
 
 - Bump activesupport from 7.0.2.2 to 7.0.4.1 [\#280](https://github.com/liquibase/liquibase-percona/pull/280) (@dependabot[bot])
+- Bump liquibase-core from 4.18.0 to 4.19.0 [\#279](https://github.com/liquibase/liquibase-percona/pull/279) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.4 to 10.1.5 [\#278](https://github.com/liquibase/liquibase-percona/pull/278) (@dependabot[bot])
 - Bump maven-pmd-plugin from 3.19.0 to 3.20.0 [\#276](https://github.com/liquibase/liquibase-percona/pull/276) (@dependabot[bot])
 - Bump junit-jupiter from 5.9.1 to 5.9.2 [\#274](https://github.com/liquibase/liquibase-percona/pull/274) (@dependabot[bot])
