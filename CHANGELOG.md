@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.18.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump mariadb-java-client from 3.1.0 to 3.1.2 [\#281](https://github.com/liquibase/liquibase-percona/pull/281) (@dependabot[bot])
+
+## [v4.19.0](https://github.com/liquibase/liquibase-percona/tree/v4.19.0) (2023-01-20)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.18.0...v4.19.0)
 
 **📦 Dependency updates:**
 
