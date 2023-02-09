@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump percona toolkit from 3.5.0 to 3.5.1 [\#286](https://github.com/liquibase/liquibase-percona/pull/286) (@adangel)
 - Bump maven-deploy-plugin from 3.0.0 to 3.1.0 [\#284](https://github.com/liquibase/liquibase-percona/pull/284) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.40.3 to 0.41.0 [\#283](https://github.com/liquibase/liquibase-percona/pull/283) (@dependabot[bot])
 - Bump maven-enforcer-plugin from 3.1.0 to 3.2.1 [\#282](https://github.com/liquibase/liquibase-percona/pull/282) (@dependabot[bot])
