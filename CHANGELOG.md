@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump maven-deploy-plugin from 3.0.0 to 3.1.0 [\#284](https://github.com/liquibase/liquibase-percona/pull/284) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.40.3 to 0.41.0 [\#283](https://github.com/liquibase/liquibase-percona/pull/283) (@dependabot[bot])
 - Bump maven-enforcer-plugin from 3.1.0 to 3.2.1 [\#282](https://github.com/liquibase/liquibase-percona/pull/282) (@dependabot[bot])
 - Bump mariadb-java-client from 3.1.0 to 3.1.2 [\#281](https://github.com/liquibase/liquibase-percona/pull/281) (@dependabot[bot])
