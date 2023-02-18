@@ -22,3 +22,4 @@ liquibase.ext.percona.PerconaDropForeignKeyConstraintChange
 liquibase.ext.percona.PerconaDropIndexChange
 liquibase.ext.percona.PerconaDropUniqueConstraintChange
 liquibase.ext.percona.PerconaModifyDataTypeChange
+liquibase.ext.percona.PerconaRawSQLChange
