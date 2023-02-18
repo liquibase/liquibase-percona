@@ -26,6 +26,7 @@ import liquibase.change.core.RawSQLChange;
 import liquibase.database.Database;
 import liquibase.logging.Logger;
 import liquibase.statement.SqlStatement;
+import liquibase.util.StringUtil;
 
 @DatabaseChange(
         name = PerconaRawSQLChange.NAME,
@@ -65,7 +66,11 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
             return null;
         }
 
-        String alterOptions = sql.substring(sql.indexOf(tableName) + tableName.length() + 1);
+        String[] multiLineSQL = StringUtil.processMultiLineSQL(sql, true, true, getEndDelimiter());
+        assert multiLineSQL.length == 1;
+
+        String alterOptions = multiLineSQL[0].trim();
+        alterOptions = alterOptions.substring(alterOptions.indexOf(tableName) + tableName.length() + 1);
         return alterOptions.trim();
     }
 
@@ -90,9 +95,15 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
             return null;
         }
 
+        String[] multiLineSQL = StringUtil.processMultiLineSQL(sql, true, true, getEndDelimiter());
+        if (multiLineSQL.length != 1) {
+            log.warning("Not using percona toolkit, because multiple statements are not supported: " + sql);
+            return null;
+        }
+
         // warning: this is a very crude way of parsing the SQL statements
         // e.g. a table name containing spaces will be determined wrongly: alter table `my table` add foo int null
-        String[] tokens = sql.split("\\s+");
+        String[] tokens = multiLineSQL[0].trim().split("\\s+");
         if (tokens.length >= 3
                 && "alter".equalsIgnoreCase(tokens[0])
                 && "table".equalsIgnoreCase(tokens[1])) {

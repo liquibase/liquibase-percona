@@ -84,6 +84,23 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    public void testTargetTableNameAndAlterStatementForMultipleStatements() {
+        PerconaRawSQLChange change = getChange();
+        change.setSplitStatements(true);
+        change.setSql("alter table person " + alterText + "; alter table person " + alterText + ";");
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
+    public void testTargetTableNameAndAlterStatementWithComment() {
+        PerconaRawSQLChange change = getChange();
+        change.setSql("-- multiline\nalter table person " + alterText + ";\n/* other\ncomment */");
+        Assertions.assertEquals("person", change.getTargetTableName());
+        Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
     public void testGetTargetDatabaseName() {
         PerconaRawSQLChange change = getChange();
         Assertions.assertNull(change.getTargetDatabaseName());
