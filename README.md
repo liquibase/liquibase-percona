@@ -295,7 +295,36 @@ Corresponding command:
 
     pt-online-schema-change --alter="MODIFY email VARCHAR(400)" ...
 
+### Sql
 
+Since: liquibase-percona 4.20.0
+
+Automatic rollback supported? no
+
+Example:
+
+```xml
+<changeSet id="2" author="Alice">
+    <sql>ALTER TABLE person ADD COLUMN address VARCHAR(255) NULL</sql>
+</changeSet>
+```
+
+Corresponding command:
+
+    pt-online-schema-change --alter="ADD COLUMN address VARCHAR(255) NULL" ...
+
+Note that there are several limitations:
+
+* Percona toolkit won't be used, when the sql statements consists of multiple statements (e.g. separated by `;`).
+  In that case a warning will be logged and the sql change will be executed as usual
+  without the percona toolkit.
+* If the sql change is not an alter table statement, then a warning will be logged
+  and the sql change will be executed as usual without the percona toolkit.
+* Liquibase-percona tries to determine the table name. If that doesn't work, then a warning will be logged
+  and the sql change will be executed as usual without the percona toolkit.
+* This change type is active by default and percona toolkit will be used when possible.
+  It can be disabled as usual via system property `liquibase.percona.skipChanges`.
+* Be sure to test the changelog thoroughly.
 
 ## Configuration
 
