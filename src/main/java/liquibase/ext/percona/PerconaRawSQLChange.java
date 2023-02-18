@@ -41,6 +41,12 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
+        String table = getTargetTableName();
+        if (table == null) {
+            // can't use percona toolkit for whatever reason
+            return super.generateStatements(database);
+        }
+
         return PerconaChangeUtil.generateStatements(this,
                 database,
                 super.generateStatements(database));

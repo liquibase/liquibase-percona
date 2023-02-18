@@ -27,7 +27,7 @@
         -->
         <sql splitStatements="true">
                 ALTER TABLE person ADD COLUMN email2 VARCHAR(255) NULL;
-                CREATE TABLE other_person;
+                CREATE TABLE other_person (name VARCHAR(255) NOT NULL);
                 ALTER TABLE other_person ADD COLUMN age INT NULL;
         </sql>
     </changeSet>

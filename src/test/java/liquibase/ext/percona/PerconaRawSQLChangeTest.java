@@ -52,35 +52,41 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         change.setSql("altEr tAble pErSoN " + alterText);
         Assertions.assertEquals("pErSoN", change.getTargetTableName());
         Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+        SqlStatement[] statements = change.generateStatements(getDatabase());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+        PTOnlineSchemaChangeStatement statement = (PTOnlineSchemaChangeStatement) statements[0];
+        Assertions.assertEquals("pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN address VARCHAR(255) NULL\" --password=*** --execute h=localhost,P=3306,u=user,D=testdb,t=pErSoN",
+                statement.printCommand(getDatabase()));
     }
 
     @Test
     public void testTargetTableNameAndAlterStatementWithSpaces() {
         PerconaRawSQLChange change = getChange();
-        change.setSql("  altEr   tAble   pErSoN   " + alterText + "  ");
-        Assertions.assertEquals("pErSoN", change.getTargetTableName());
+        change.setSql("  altEr   tAble   person   " + alterText + "  ");
+        Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+        assertPerconaChange(alterText);
     }
 
     @Test
     public void testTargetTableNameAndAlterStatementWithEscapes() {
         PerconaRawSQLChange change = getChange();
         String alterTextEscaped = "ADD COLUMN `address` VARCHAR(255) NULL";
-        change.setSql("altEr tAble `pErSoN` " + alterTextEscaped);
-        Assertions.assertEquals("pErSoN", change.getTargetTableName());
+        change.setSql("altEr tAble `person` " + alterTextEscaped);
+        Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals(alterTextEscaped, change.generateAlterStatement(getDatabase()));
+        assertPerconaChange(alterTextEscaped);
 
         change.setSql("altEr tAble `my pErSoN table` " + alterTextEscaped);
-        Assertions.assertNull(change.getTargetTableName());
-        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        assertNoPerconaToolkit();
     }
 
     @Test
     public void testTargetTableNameAndAlterStatementForInsert() {
         PerconaRawSQLChange change = getChange();
         change.setSql("insert into person (name) values ('Bob')");
-        Assertions.assertNull(change.getTargetTableName());
-        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        assertNoPerconaToolkit();
     }
 
     @Test
@@ -90,6 +96,10 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         change.setSql("alter table person " + alterText + "; alter table person " + alterText + ";");
         Assertions.assertNull(change.getTargetTableName());
         Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        SqlStatement[] sqlStatements = change.generateStatements(getDatabase());
+        Assertions.assertEquals(2, sqlStatements.length);
+        Assertions.assertEquals(RawSqlStatement.class, sqlStatements[0].getClass());
+        Assertions.assertEquals(RawSqlStatement.class, sqlStatements[1].getClass());
     }
 
     @Test
@@ -98,6 +108,7 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         change.setSql("-- multiline\nalter table person " + alterText + ";\n/* other\ncomment */");
         Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+        assertPerconaChange(alterText);
     }
 
     @Test
@@ -107,30 +118,40 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         change.setSql("alter table person " + alterMultipleOptions);
         Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals(alterMultipleOptions, change.generateAlterStatement(getDatabase()));
+        assertPerconaChange(alterMultipleOptions);
     }
 
     @Test
     public void testTargetTableNameAndAlterStatementForRename() {
         PerconaRawSQLChange change = getChange();
         change.setSql("alter table person rename new_person");
-        Assertions.assertNull(change.getTargetTableName());
-        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        assertNoPerconaToolkit();
         change.setSql("alter table person rename to new_person");
-        Assertions.assertNull(change.getTargetTableName());
-        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        assertNoPerconaToolkit();
         change.setSql("alter table person rename as new_person");
-        Assertions.assertNull(change.getTargetTableName());
-        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        assertNoPerconaToolkit();
 
         change.setSql("alter table person rename column name to new_name");
         Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals("rename column name to new_name", change.generateAlterStatement(getDatabase()));
+        assertPerconaChange("rename column name to new_name");
         change.setSql("alter table person rename index name to new_name");
         Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals("rename index name to new_name", change.generateAlterStatement(getDatabase()));
+        assertPerconaChange("rename index name to new_name");
         change.setSql("alter table person rename key name to new_name");
         Assertions.assertEquals("person", change.getTargetTableName());
         Assertions.assertEquals("rename key name to new_name", change.generateAlterStatement(getDatabase()));
+        assertPerconaChange("rename key name to new_name");
+    }
+
+    private void assertNoPerconaToolkit() {
+        PerconaRawSQLChange change = getChange();
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        SqlStatement[] statements = generateStatements();
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals(RawSqlStatement.class, statements[0].getClass());
     }
 
     @Test

@@ -32,6 +32,10 @@ assert buildLogText.contains("Successfully altered `testdb`.`person`.")
 assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN `age` INT NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully")
 
+ // this message should be logged only twice: for updateSQL and update
+assert buildLogText.count("[WARNING] Not using percona toolkit, because multiple statements are not supported: ALTER TABLE person ADD COLUMN email2 VARCHAR(255) NULL;\n" +
+        "                CREATE TABLE other_person (name VARCHAR(255) NOT NULL);\n" +
+        "                ALTER TABLE other_person ADD COLUMN age INT NULL;\n") == 2
 assert !buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN email2 VARCHAR(255) NULL\"")
 assert buildLogText.contains("Not using percona toolkit, because multiple statements are not supported:")
 
