@@ -20,4 +20,22 @@
     <changeSet id="3" author="Alice">
         <sql>ALTER TABLE `person` ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN `age` INT NULL</sql>
     </changeSet>
+
+    <changeSet id="4" author="Alice">
+        <!-- percona toolkit is not used for this, because these are multiple statements
+             and could potentially change different tables. Or do something completely different.
+        -->
+        <sql splitStatements="true">
+                ALTER TABLE person ADD COLUMN email2 VARCHAR(255) NULL;
+                CREATE TABLE other_person;
+                ALTER TABLE other_person ADD COLUMN age INT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="5" author="Alice">
+        <sql>
+            -- comments are also supported
+            ALTER TABLE person ADD COLUMN secondary_address VARCHAR(255) NULL</sql>
+    </changeSet>
+
 </databaseChangeLog>

@@ -32,6 +32,12 @@ assert buildLogText.contains("Successfully altered `testdb`.`person`.")
 assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN `age` INT NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully")
 
+assert !buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN email2 VARCHAR(255) NULL\"")
+assert buildLogText.contains("Not using percona toolkit, because multiple statements are not supported:")
+
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN secondary_address VARCHAR(255) NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
+assert buildLogText.contains("ChangeSet test-changelog.xml::5::Alice ran successfully")
+
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
 def sqlText = sql.text
