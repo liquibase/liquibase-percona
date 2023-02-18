@@ -76,6 +76,14 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    public void testTargetTableNameAndAlterStatementForInsert() {
+        PerconaRawSQLChange change = getChange();
+        change.setSql("insert into person (name) values ('Bob')");
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
     public void testGetTargetDatabaseName() {
         PerconaRawSQLChange change = getChange();
         Assertions.assertNull(change.getTargetDatabaseName());

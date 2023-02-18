@@ -105,12 +105,13 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
                 table = table.substring(1, table.length() - 1);
             } else if (firstChar == '`') {
                 // only beginning escape, no closing. See warning above.
-                log.warning("Can't parse sql statement: too complicated: " + sql);
+                log.warning("Not using percona toolkit, because can't parse sql statement: " + sql);
                 return null;
             }
 
             return table;
         }
+        log.warning("Not using percona toolkit, because this sql statement is not an alter table: " + sql);
         return null;
     }
 
