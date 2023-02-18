@@ -71,4 +71,8 @@
     <changeSet id="11" author="Alice">
         <addPrimaryKey tableName="other_person" columnNames="id, name"/>
     </changeSet>
+
+    <changeSet id="12" author="Alice">
+        <sql>alter table other_person add column nickname varchar(255) null</sql>
+    </changeSet>
 </databaseChangeLog>
