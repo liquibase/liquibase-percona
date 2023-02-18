@@ -121,13 +121,12 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
             }
 
             // rename table?
-            if (tokens.length >= 4 && tokens[3].equalsIgnoreCase("rename")) {
-                if (tokens.length >= 5 && !tokens[4].equalsIgnoreCase("column")
-                        && !tokens[4].equalsIgnoreCase("index")
-                        && !tokens[4].equalsIgnoreCase("key")) {
-                    log.warning("Not using percona toolkit, because can't rename table: " + sql);
-                    return null;
-                }
+            if (tokens.length >= 5 && tokens[3].equalsIgnoreCase("rename")
+                    && !tokens[4].equalsIgnoreCase("column")
+                    && !tokens[4].equalsIgnoreCase("index")
+                    && !tokens[4].equalsIgnoreCase("key")) {
+                log.warning("Not using percona toolkit, because can't rename table: " + sql);
+                return null;
             }
 
             return table;
