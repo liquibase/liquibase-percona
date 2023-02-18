@@ -41,10 +41,17 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
-    public void testGetTargetTableNameKeepCase() {
+    public void testTargetTableNameAndAlterStatementKeepCase() {
         PerconaRawSQLChange change = getChange();
-        change.setSql("alter table pErSoN " + alterText);
+        change.setSql("altEr tAble pErSoN " + alterText);
         Assertions.assertEquals("pErSoN", change.getTargetTableName());
+        Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
+    public void testGenerateAlterStatement() {
+        PerconaRawSQLChange change = getChange();
+        Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
     }
 
     @Test

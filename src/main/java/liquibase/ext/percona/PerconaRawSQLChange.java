@@ -70,7 +70,7 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
         String lowerCaseSql = sql.toLowerCase(Locale.ROOT);
         if (lowerCaseSql.trim().startsWith(ALTER_TABLE_PREFIX)) {
-            String table = sql.substring(sql.indexOf(ALTER_TABLE_PREFIX) + ALTER_TABLE_PREFIX.length());
+            String table = sql.substring(sql.toLowerCase(Locale.ROOT).indexOf(ALTER_TABLE_PREFIX) + ALTER_TABLE_PREFIX.length());
             table = table.substring(0, table.indexOf(' '));
             return table;
         }
