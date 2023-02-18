@@ -18,6 +18,6 @@
     </changeSet>
 
     <changeSet id="3" author="Alice">
-        <sql>ALTER TABLE person ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN age INT NULL</sql>
+        <sql>ALTER TABLE `person` ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN `age` INT NULL</sql>
     </changeSet>
 </databaseChangeLog>

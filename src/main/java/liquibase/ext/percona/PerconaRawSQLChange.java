@@ -16,14 +16,15 @@ package liquibase.ext.percona;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
+import liquibase.Scope;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.RawSQLChange;
 import liquibase.database.Database;
+import liquibase.logging.Logger;
 import liquibase.statement.SqlStatement;
 
 @DatabaseChange(
@@ -35,7 +36,7 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
     public static final String NAME = "sql";
     public static final int PRIORITY = ChangeMetaData.PRIORITY_DEFAULT + 50;
 
-    private static final String ALTER_TABLE_PREFIX = "alter table ";
+    private static Logger log = Scope.getCurrentScope().getLog(PerconaRawSQLChange.class);
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
@@ -44,6 +45,14 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
                 super.generateStatements(database));
     }
 
+    /**
+     * Extracts the alter options from the sql statement. If the sql statement is not an
+     * alter table statement, then there are no alter options to execute and this method returns
+     * {@code null}.
+     *
+     * @param database the database connection
+     * @return the alter options to be passed to pt-osc or {@code null} if pt-osc can't be used.
+     */
     @Override
     public String generateAlterStatement(Database database) {
         String sql = getSql();
@@ -52,7 +61,12 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
         }
 
         String tableName = getTargetTableName();
-        return sql.substring(sql.indexOf(tableName) + tableName.length() + 1);
+        if (tableName == null) {
+            return null;
+        }
+
+        String alterOptions = sql.substring(sql.indexOf(tableName) + tableName.length() + 1);
+        return alterOptions.trim();
     }
 
     @Override
@@ -61,6 +75,14 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
         return null;
     }
 
+    /**
+     * Tries to determine the table name from the sql statements. This is only possible, if the statement
+     * begins with "alter table".
+     * <p>In case, the table name could not be determined, this method will return {@code null}. That means,
+     * that we can't use pt-osc.</p>
+     *
+     * @return the table name or {@code null} if the sql statement could be parsed.
+     */
     @Override
     public String getTargetTableName() {
         String sql = getSql();
@@ -68,10 +90,25 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
             return null;
         }
 
-        String lowerCaseSql = sql.toLowerCase(Locale.ROOT);
-        if (lowerCaseSql.trim().startsWith(ALTER_TABLE_PREFIX)) {
-            String table = sql.substring(sql.toLowerCase(Locale.ROOT).indexOf(ALTER_TABLE_PREFIX) + ALTER_TABLE_PREFIX.length());
-            table = table.substring(0, table.indexOf(' '));
+        // warning: this is a very crude way of parsing the SQL statements
+        // e.g. a table name containing spaces will be determined wrongly: alter table `my table` add foo int null
+        String[] tokens = sql.split("\\s+");
+        if (tokens.length >= 3
+                && "alter".equalsIgnoreCase(tokens[0])
+                && "table".equalsIgnoreCase(tokens[1])) {
+            String table = tokens[2];
+
+            // escaped?
+            char firstChar = table.charAt(0);
+            char lastChar = table.charAt(table.length() - 1);
+            if (firstChar == '`' && lastChar == '`') {
+                table = table.substring(1, table.length() - 1);
+            } else if (firstChar == '`') {
+                // only beginning escape, no closing. See warning above.
+                log.warning("Can't parse sql statement: too complicated: " + sql);
+                return null;
+            }
+
             return table;
         }
         return null;

@@ -1,4 +1,6 @@
-import java.sql.ResultSet;
+import java.sql.ResultSet
+import java.sql.Statement
+import com.mysql.cj.jdbc.Driver
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,29 +23,30 @@ import java.sql.ResultSet;
 
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
-def buildLogText = buildLog.text;
-assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN address VARCHAR(255) NULL\"")
+def buildLogText = buildLog.text
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN address VARCHAR(255) NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("ChangeSet test-changelog.xml::2::Alice ran successfully")
 assert buildLogText.contains("Custom SQL executed")
 assert buildLogText.contains("Altering `testdb`.`person`...")
 assert buildLogText.contains("Successfully altered `testdb`.`person`.")
-assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN age INT NULL\"")
+assert buildLogText.contains("Executing: pt-online-schema-change --alter-foreign-keys-method=auto --nocheck-unique-key-change --alter=\"ADD COLUMN email VARCHAR(255) NULL, ADD COLUMN `age` INT NULL\" --password=*** --execute h=${config_host},P=${config_port},u=${config_user},D=testdb,t=person")
 assert buildLogText.contains("ChangeSet test-changelog.xml::3::Alice ran successfully")
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
 assert sql.exists()
-def sqlText = sql.text;
+def sqlText = sql.text
 assert sqlText.contains("pt-online-schema-change")
 assert !sqlText.contains("password=${config_password}")
 
-def con, s;
+def con = null
+Statement s = null
 try {
-    def props = new Properties();
+    def props = new Properties()
     props.setProperty("user", config_user)
     props.setProperty("password", config_password)
-    con = new com.mysql.cj.jdbc.Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false&allowPublicKeyRetrieval=true", props)
-    s = con.createStatement();
-    r = s.executeQuery("DESCRIBE person")
+    con = new Driver().connect("jdbc:mysql://${config_host}:${config_port}/${config_dbname}?useSSL=false&allowPublicKeyRetrieval=true", props)
+    s = con.createStatement()
+    ResultSet r = s.executeQuery("DESCRIBE person")
     assert r.next()
     assertColumn(r, "name", "varchar(255)", "NO", null)
     assert r.next()
@@ -55,11 +58,11 @@ try {
     assertColumn(r, "age", "int", "YES", null)
     r.close()
 } finally {
-    s?.close();
-    con?.close();
+    s?.close()
+    con?.close()
 }
 
-def assertColumn(resultset, name, type, nullable, defaultValue) {
+static def assertColumn(resultset, name, type, nullable, defaultValue) {
     assert name == resultset.getString(1)
     assert resultset.getString(2).contains(type)
     assert nullable == resultset.getString(3)

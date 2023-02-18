@@ -41,6 +41,12 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    public void testGenerateAlterStatement() {
+        PerconaRawSQLChange change = getChange();
+        Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
     public void testTargetTableNameAndAlterStatementKeepCase() {
         PerconaRawSQLChange change = getChange();
         change.setSql("altEr tAble pErSoN " + alterText);
@@ -49,9 +55,24 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
-    public void testGenerateAlterStatement() {
+    public void testTargetTableNameAndAlterStatementWithSpaces() {
         PerconaRawSQLChange change = getChange();
+        change.setSql("  altEr   tAble   pErSoN   " + alterText + "  ");
+        Assertions.assertEquals("pErSoN", change.getTargetTableName());
         Assertions.assertEquals(alterText, change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
+    public void testTargetTableNameAndAlterStatementWithEscapes() {
+        PerconaRawSQLChange change = getChange();
+        String alterTextEscaped = "ADD COLUMN `address` VARCHAR(255) NULL";
+        change.setSql("altEr tAble `pErSoN` " + alterTextEscaped);
+        Assertions.assertEquals("pErSoN", change.getTargetTableName());
+        Assertions.assertEquals(alterTextEscaped, change.generateAlterStatement(getDatabase()));
+
+        change.setSql("altEr tAble `my pErSoN table` " + alterTextEscaped);
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
     }
 
     @Test
