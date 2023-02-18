@@ -101,6 +101,15 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    public void testTargetTableNameAndAlterStatementForMultipleAlterOptionsSameTable() {
+        PerconaRawSQLChange change = getChange();
+        String alterMultipleOptions = "add address varchar(255) null, add age int null";
+        change.setSql("alter table person " + alterMultipleOptions);
+        Assertions.assertEquals("person", change.getTargetTableName());
+        Assertions.assertEquals(alterMultipleOptions, change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
     public void testGetTargetDatabaseName() {
         PerconaRawSQLChange change = getChange();
         Assertions.assertNull(change.getTargetDatabaseName());
