@@ -110,6 +110,30 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    public void testTargetTableNameAndAlterStatementForRename() {
+        PerconaRawSQLChange change = getChange();
+        change.setSql("alter table person rename new_person");
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        change.setSql("alter table person rename to new_person");
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+        change.setSql("alter table person rename as new_person");
+        Assertions.assertNull(change.getTargetTableName());
+        Assertions.assertNull(change.generateAlterStatement(getDatabase()));
+
+        change.setSql("alter table person rename column name to new_name");
+        Assertions.assertEquals("person", change.getTargetTableName());
+        Assertions.assertEquals("rename column name to new_name", change.generateAlterStatement(getDatabase()));
+        change.setSql("alter table person rename index name to new_name");
+        Assertions.assertEquals("person", change.getTargetTableName());
+        Assertions.assertEquals("rename index name to new_name", change.generateAlterStatement(getDatabase()));
+        change.setSql("alter table person rename key name to new_name");
+        Assertions.assertEquals("person", change.getTargetTableName());
+        Assertions.assertEquals("rename key name to new_name", change.generateAlterStatement(getDatabase()));
+    }
+
+    @Test
     public void testGetTargetDatabaseName() {
         PerconaRawSQLChange change = getChange();
         Assertions.assertNull(change.getTargetDatabaseName());
