@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump maven from 3.8.6 to 3.9.0 [\#290](https://github.com/liquibase/liquibase-percona/pull/290) (@adangel)
 - Bump maven-javadoc-plugin from 3.4.1 to 3.5.0 [\#289](https://github.com/liquibase/liquibase-percona/pull/289) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.4.0 to 3.5.0 [\#288](https://github.com/liquibase/liquibase-percona/pull/288) (@dependabot[bot])
 - Bump percona toolkit from 3.5.0 to 3.5.1 [\#286](https://github.com/liquibase/liquibase-percona/pull/286) (@adangel)
