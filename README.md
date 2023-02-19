@@ -13,6 +13,7 @@ This allows to perform a non-locking database upgrade.
 ## Table Of Contents
 
 *   [Supported Databases](#supported-databases)
+*   [Supported Changeset Formats](#supported-changeset-formats)
 *   [Liquibase version(s) tested against](#liquibase-versions-tested-against)
 *   [Supported Changes and examples](#supported-changes-and-examples)
     *   [AddColumn](#addcolumn)
@@ -52,6 +53,13 @@ MySQL and MariaDB (since 4.3.2) are the only supported databases.
 The extension checks whether it is being run against a MySQL/MariaDB database. If not, it falls back to the default
 changes provided by liquibase-core.
 
+## Supported Changeset Formats
+
+This liquibase extension supports the following changeset formats:
+
+* [XML](https://docs.liquibase.com/concepts/changelogs/xml-format.html)
+* [YAML](https://docs.liquibase.com/concepts/changelogs/yaml-format.html)
+* [Formatted SQL](https://docs.liquibase.com/concepts/changelogs/sql-format.html) (since liquibase-percona 4.20.0)
 
 ## Liquibase version(s) tested against
 
@@ -362,6 +370,14 @@ It is supported by using the YAML format and since liquibase 3.6.0, you can use 
 </addColumn>
 ```
 
+Since liquibase-percona 4.20.0, you can use it in SQL changeset as follows:
+
+```sql
+--changeset Alice:2
+--liquibasePercona:usePercona="false"
+ALTER TABLE person ADD address VARCHAR(255) NULL;
+```
+
 ### PerconaOptions flag
 
 Each change allows to specify options that are used when executing pt-osc. If specified, this option
@@ -394,6 +410,14 @@ It is supported by using the YAML format and in XML changesets:
         liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto">
     <column name="address" type="varchar(255)"/>
 </addColumn>
+```
+
+Since liquibase-percona 4.20.0 this is also supported in SQL changesets:
+
+```sql
+--changeset Alice:2
+--liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto"
+ALTER TABLE person ADD email VARCHAR(255) NULL;
 ```
 
 ### System Properties
