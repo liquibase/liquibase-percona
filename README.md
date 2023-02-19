@@ -24,6 +24,7 @@ This allows to perform a non-locking database upgrade.
     *   [DropIndex](#dropindex)
     *   [DropUniqueConstraint](#dropuniqueconstraint)
     *   [ModifyDataType](#modifydatatype)
+    *   [Sql](#sql)
 *   [Configuration](#configuration)
     *   [UsePercona flag](#usepercona-flag)
     *   [PerconaOptions flag](#perconaoptions-flag)
