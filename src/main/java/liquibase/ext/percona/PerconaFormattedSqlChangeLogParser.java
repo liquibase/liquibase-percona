@@ -36,8 +36,8 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
-        Pattern usePerconaPattern = Pattern.compile("(?im)^\\s*--liquibasePercona:usePercona=\"(false|true)\"\\s*$");
-        Pattern perconaOptionsPattern = Pattern.compile("(?im)^\\s*--liquibasePercona:perconaOptions=\"(.*)\"\\s*$");
+        Pattern usePerconaPattern = Pattern.compile("(?im)^\\s*\\-\\-\\s*liquibasePercona:usePercona=\"(false|true)\"\\s*$");
+        Pattern perconaOptionsPattern = Pattern.compile("(?im)^\\s*\\-\\-\\s*liquibasePercona:perconaOptions=\"(.*)\"\\s*$");
 
         DatabaseChangeLog changeLog = super.parse(physicalChangeLogLocation, changeLogParameters, resourceAccessor);
 

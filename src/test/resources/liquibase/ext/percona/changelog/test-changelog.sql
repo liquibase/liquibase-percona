@@ -8,5 +8,5 @@ CREATE TABLE person (name VARCHAR(255) NOT NULL, CONSTRAINT PK_PERSON PRIMARY KE
 ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 --changeset Alice:3
---liquibasePercona:perconaOptions="--foo"
+-- liquibasePercona:perconaOptions="--foo"
 ALTER TABLE person ADD email VARCHAR(255) NULL;
