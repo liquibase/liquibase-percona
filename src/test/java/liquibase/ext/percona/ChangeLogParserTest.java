@@ -44,16 +44,18 @@ public class ChangeLogParserTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
 
         data.put("test-changelog.xml",
                 FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/test-changelog.xml")));
         data.put("test-changelog.yaml",
                 FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/test-changelog.yaml")));
+        data.put("test-changelog.sql",
+                FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/test-changelog.sql")));
         data.put("raw.githubusercontent.com/liquibase/liquibase-percona/liquibase-percona-2.0.0/src/main/resources/dbchangelog-ext-liquibase-percona.xsd",
                 FileUtil.getContents(new File("src/main/resources/dbchangelog-ext-liquibase-percona.xsd")));
-        data.put("www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd",
-                readLiquibaseSchema("www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd"));
+        data.put("www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd",
+                readLiquibaseSchema("www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"));
 
         resourceAccessor = new MockResourceAccessor(data);
     }
@@ -109,5 +111,17 @@ public class ChangeLogParserTest {
     public void testReadLiquibaseUsePerconaFlagXML() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.xml");
         assertChangeLog(changelog);
+    }
+
+    @Test
+    public void testReadLiquibaseUsePerconaFlagSQL() throws Exception {
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
+        Assertions.assertEquals(3, changelog.getChangeSets().size());
+        Change change = changelog.getChangeSets().get(0).getChanges().get(0);
+        assertChange(change, PerconaRawSQLChange.class, null, null);
+        change = changelog.getChangeSets().get(1).getChanges().get(0);
+        assertChange(change, PerconaRawSQLChange.class, Boolean.FALSE, null);
+        change = changelog.getChangeSets().get(2).getChanges().get(0);
+        assertChange(change, PerconaRawSQLChange.class, null, "--foo");
     }
 }

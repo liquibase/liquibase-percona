@@ -100,6 +100,10 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
         if (sql == null) {
             return null;
         }
+        if (Boolean.FALSE.equals(getUsePercona())) {
+            // avoids unnecessary warnings
+            return null;
+        }
 
         String[] multiLineSQL = StringUtil.processMultiLineSQL(sql, true, true, getEndDelimiter());
         if (multiLineSQL.length != 1) {
