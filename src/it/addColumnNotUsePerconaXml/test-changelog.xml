@@ -5,7 +5,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
         xsi:schemaLocation="
-            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+            http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona https://raw.githubusercontent.com/liquibase/liquibase-percona/main/src/main/resources/dbchangelog-ext-liquibase-percona.xsd">
 
     <changeSet id="1" author="Alice">
         <createTable tableName="person">

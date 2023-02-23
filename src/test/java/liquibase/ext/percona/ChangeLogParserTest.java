@@ -16,27 +16,18 @@ package liquibase.ext.percona;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import liquibase.Scope;
-import liquibase.Scope.ScopedRunnerWithReturn;
 import liquibase.change.Change;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
-import liquibase.exception.LiquibaseException;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
+import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
-import liquibase.sdk.resource.MockResourceAccessor;
-import liquibase.util.FileUtil;
 
 public class ChangeLogParserTest {
 
@@ -44,46 +35,16 @@ public class ChangeLogParserTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        Map<String, String> data = new HashMap<>();
-
-        data.put("test-changelog.xml",
-                FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/test-changelog.xml")));
-        data.put("test-changelog.yaml",
-                FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/test-changelog.yaml")));
-        data.put("test-changelog.sql",
-                FileUtil.getContents(new File("src/test/resources/liquibase/ext/percona/changelog/test-changelog.sql")));
-        data.put("raw.githubusercontent.com/liquibase/liquibase-percona/liquibase-percona-2.0.0/src/main/resources/dbchangelog-ext-liquibase-percona.xsd",
-                FileUtil.getContents(new File("src/main/resources/dbchangelog-ext-liquibase-percona.xsd")));
-        data.put("www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd",
-                readLiquibaseSchema("www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"));
-
-        resourceAccessor = new MockResourceAccessor(data);
-    }
-
-    private static String readLiquibaseSchema(String path) throws IOException {
-        char[] buffer = new char[8192];
-        StringBuilder sb = new StringBuilder(66000);
-        try (Reader in = new InputStreamReader(ChangeLogParserTest.class.getResourceAsStream("/" + path), StandardCharsets.UTF_8)) {
-            int count = in.read(buffer);
-            while (count > 0) {
-                sb.append(buffer, 0, count);
-                count = in.read(buffer);
-            }
-        }
-        return sb.toString();
+        String packagePath = ChangeLogParserTest.class.getPackage().getName().replaceAll("\\.", "/");
+        resourceAccessor = new DirectoryResourceAccessor(
+                new File("target/test-classes/" + packagePath + "/changelog/")
+                        .getCanonicalFile());
     }
 
     private DatabaseChangeLog loadChangeLog(String filename) throws Exception {
-        Map<String, Object> objects = new HashMap<>();
-        objects.put(Scope.Attr.resourceAccessor.name(), resourceAccessor);
-        return Scope.child(objects,
-                new ScopedRunnerWithReturn<DatabaseChangeLog>() {
-                public DatabaseChangeLog run() throws LiquibaseException {
-                    ChangeLogParserFactory parserFactory = ChangeLogParserFactory.getInstance();
-                    ChangeLogParser parser = parserFactory.getParser(filename, resourceAccessor);
-                    return parser.parse(filename, new ChangeLogParameters(), resourceAccessor);
-            }
-        });
+        ChangeLogParserFactory parserFactory = ChangeLogParserFactory.getInstance();
+        ChangeLogParser parser = parserFactory.getParser(filename, resourceAccessor);
+        return parser.parse(filename, new ChangeLogParameters(), resourceAccessor);
     }
 
     private static void assertChange(Change change, Class<? extends PerconaChange> type, Boolean usePercona,
