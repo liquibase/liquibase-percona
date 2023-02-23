@@ -4,11 +4,11 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...HEAD)
 
-## 🎉 New Features
+### 🎉 New Features
 
 This release of Liquibase Percona extension ships two new features.
 
-### Support for Custom SQL changes
+#### Support for Custom SQL changes
 
 You can now use [Custom SQL changes](https://docs.liquibase.com/change-types/sql.html). The Liquibase Percona extension will automatically detect if it is a `ALTER TABLE` statement and will execute it using Percona Toolkit's `pt-online-schema-change` command.
 
@@ -58,7 +58,7 @@ databaseChangeLog:
 ```
 
 
-### Support for Formatted SQL Changelogs
+#### Support for Formatted SQL Changelogs
 
 You can now use [Formatted SQL Changelogs](https://docs.liquibase.com/concepts/changelogs/sql-format.html). It also supports the `usePercona` flag.
 
@@ -100,6 +100,14 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 - Bump docker-maven-plugin from 0.40.3 to 0.41.0 [\#283](https://github.com/liquibase/liquibase-percona/pull/283) (@dependabot[bot])
 - Bump maven-enforcer-plugin from 3.1.0 to 3.2.1 [\#282](https://github.com/liquibase/liquibase-percona/pull/282) (@dependabot[bot])
 - Bump mariadb-java-client from 3.1.0 to 3.1.2 [\#281](https://github.com/liquibase/liquibase-percona/pull/281) (@dependabot[bot])
+
+**✔️ Closed issues:**
+
+- Liquibase percona extension \(URL\) no longer available [\#275](https://github.com/liquibase/liquibase-percona/issues/275)
+
+**🎉 Merged pull requests:**
+
+- Include extension schema properly [\#294](https://github.com/liquibase/liquibase-percona/pull/294) (@adangel)
 
 ## [v4.19.0](https://github.com/liquibase/liquibase-percona/tree/v4.19.0) (2023-01-20)
 
