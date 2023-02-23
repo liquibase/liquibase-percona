@@ -66,7 +66,7 @@ jobs:
       shell: bash
       run: |
         VERSION="$(./mvnw -B -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout)"
-        echo "::set-output name=version::${VERSION}"
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
     - name: Deploy Snapshot with Maven
       if: ${{ contains(steps.version.outputs.version, 'SNAPSHOT') }}
