@@ -122,6 +122,18 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>dbchangelog-ext-liquibase-percona.xsd</include>
+                </includes>
+                <targetPath>raw.githubusercontent.com/liquibase/liquibase-percona/main/src/main/resources</targetPath>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <!--

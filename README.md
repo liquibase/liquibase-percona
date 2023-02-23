@@ -29,6 +29,7 @@ This allows to perform a non-locking database upgrade.
 *   [Configuration](#configuration)
     *   [UsePercona flag](#usepercona-flag)
     *   [PerconaOptions flag](#perconaoptions-flag)
+    *   [Liquibase Percona extension XSD](#liquibase-percona-extension-xsd)
     *   [System Properties](#system-properties)
 *   [Changelog](#changelog)
 *   [Using / Installing the extension](#using--installing-the-extension)
@@ -419,6 +420,42 @@ Since liquibase-percona 4.20.0 this is also supported in SQL changesets:
 --liquibasePercona:perconaOptions="--alter-foreign-keys-method=auto"
 ALTER TABLE person ADD email VARCHAR(255) NULL;
 ```
+
+### Liquibase Percona extension XSD
+
+According to the Liquibase Documentation for [XML Changelogs](https://docs.liquibase.com/concepts/changelogs/xml-format.html)
+an extra XSD for the extension is not mandatory as there an "allow all" default schema ([dbchangelog-ext.xsd](https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd)).
+But having an explicit schema helps in IDE support (e.g. autocomplete, validation).
+Therefore, this extension provides an official XSD for the attributes it supports on the changes (`usePercona` and `perconaFlags`).
+
+Example usage:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>	
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona https://raw.githubusercontent.com/liquibase/liquibase-percona/main/src/main/resources/dbchangelog-ext-liquibase-percona.xsd">
+
+    <changeSet  id="1" author="alice">
+        <addColumn tableName="person" liquibasePercona:usePercona="false">
+            <column name="address" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
+```
+
+If you use as the URL exactly `https://raw.githubusercontent.com/liquibase/liquibase-percona/main/src/main/resources/dbchangelog-ext-liquibase-percona.xsd`,
+then liquibase doesn't retrieve the XSD file from the internet but uses the locally provided file inside
+`liquibase-percona.jar` instead.
+
+Otherwise, you need to set the system property `liquibase.secureParsing` to false, so that liquibase
+downloads the extension schema from the internet in order to validate the XML changelog file.
+
+The extension schema is available in the repository: [dbchangelog-ext-liquibase-percona.xsd](https://github.com/liquibase/liquibase-percona/blob/main/src/main/resources/dbchangelog-ext-liquibase-percona.xsd).
 
 ### System Properties
 
