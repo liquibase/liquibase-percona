@@ -4,9 +4,86 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...HEAD)
 
+## 🎉 New Features
+
+This release of Liquibase Percona extension ships two new features.
+
+### Support for Custom SQL changes
+
+You can now use [Custom SQL changes](https://docs.liquibase.com/change-types/sql.html). The Liquibase Percona extension will automatically detect if it is a `ALTER TABLE` statement and will execute it using Percona Toolkit's `pt-online-schema-change` command.
+
+There are some limitations: Only a single statement is supported. When multiple statements (e.g. separated by `;`) are used, then the change is executed as usual. Also, if it is
+not an `ALTER TABLE` statement, the change is executed as usual without Percona Toolkit. If the statement can't be executed, a warning is logged
+
+| :warning:     Support for Custom SQL changes is enabled by default. <br> The Liquibase Percona extension will automatically try to execute Custom SQL changes via the Percona Toolkit. If this is not what you want, either disable the extension for this change globally (e.g. via the system property `liquibase.percona.skipChanges=sql`) or individually per change via the [UsePercona flag](https://github.com/liquibase/liquibase-percona#usepercona-flag). You can also globally disable Percona Toolkit usage with the system property `liquibase.percona.defaultOn` and enable it for specific changes only. See [System Properties](https://github.com/liquibase/liquibase-percona#system-properties). |
+|-----|
+
+Example usage in XML:
+
+```xml
+<databaseChangeLog>
+  <changeSet id="2" author="Alice">
+    <sql>ALTER TABLE person ADD COLUMN address VARCHAR(255) NULL</sql>
+  </changeSet>
+  <changeSet id="3" author="Alice">
+    <sql xmlns:liquibasePercona="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-percona"
+         liquibasePercona:usePercona="false">
+        ALTER TABLE person ADD COLUMN address VARCHAR(255) NULL
+    </sql>
+  </changeSet>
+</databaseChangeLog>
+```
+
+Example usage in YAML:
+
+```yaml
+databaseChangeLog:
+- changeSet:
+    id: 2
+    author: Alice
+    changes:
+    - sql:
+        splitStatements: true
+        sql: |
+            ALTER TABLE person ADD COLUMN address VARCHAR(255) NULL;
+- changeSet:
+    id: 3
+    author: Alice
+    changes:
+    - sql:
+        usePercona: false
+        splitStatements: true
+        sql: |
+            ALTER TABLE person ADD COLUMN address VARCHAR(255) NULL;
+```
+
+
+### Support for Formatted SQL Changelogs
+
+You can now use [Formatted SQL Changelogs](https://docs.liquibase.com/concepts/changelogs/sql-format.html). It also supports the `usePercona` flag.
+
+The implementation reuses the support for Custom SQL changes. This means, that the same limitations apply to SQL Changelogs: Multiple statements are not supported. Only `ALTER TABLE` statements are executed with Percona Toolkit's `pt-online-schema-change`.
+
+| :warning:   Support for SQL Changelogs is enabled by default. <br> If you apply a SQL changelog with Liquibase Percona extension, then it will try to execute all changeset with Percona Toolkit if possible. If this is not what you want, you need to make use of the [UsePercona flag](https://github.com/liquibase/liquibase-percona#usepercona-flag). You can also globally disable Percona Toolkit usage with the system property `liquibase.percona.defaultOn` and enable it for specific changes only. See [System Properties](https://github.com/liquibase/liquibase-percona#system-properties). |
+|-----|
+
+Example usage:
+
+```sql
+--changeset Alice:2
+ALTER TABLE person ADD address VARCHAR(255) NULL;
+
+--changeset Alice:3
+--liquibasePercona:usePercona="false"
+ALTER TABLE person ADD address VARCHAR(255) NULL;
+```
+
+
 **🚀 Implemented enhancements:**
 
+- Support formatted SQL changelogs [\#287](https://github.com/liquibase/liquibase-percona/issues/287)
 - Support usePercona on SQL change type [\#80](https://github.com/liquibase/liquibase-percona/issues/80)
+- Add support for Formatted SQL changelogs [\#292](https://github.com/liquibase/liquibase-percona/pull/292) (@adangel)
 - Add support for SQL change type [\#291](https://github.com/liquibase/liquibase-percona/pull/291) (@adangel)
 
 **🐛 Fixed bugs:**
@@ -38,10 +115,6 @@
 - Bump docker-maven-plugin from 0.40.2 to 0.40.3 [\#273](https://github.com/liquibase/liquibase-percona/pull/273) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.3.0 to 3.4.0 [\#272](https://github.com/liquibase/liquibase-percona/pull/272) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.2 to 10.1.4 [\#271](https://github.com/liquibase/liquibase-percona/pull/271) (@dependabot[bot])
-
-**✔️ Closed issues:**
-
-- Liquibase percona extension \(URL\) no longer available [\#275](https://github.com/liquibase/liquibase-percona/issues/275)
 
 ## [v4.18.0](https://github.com/liquibase/liquibase-percona/tree/v4.18.0) (2022-12-09)
 
