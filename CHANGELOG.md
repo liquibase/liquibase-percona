@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...HEAD)
 
+**🚀 Implemented enhancements:**
+
+- Support usePercona on SQL change type [\#80](https://github.com/liquibase/liquibase-percona/issues/80)
+- Add support for SQL change type [\#291](https://github.com/liquibase/liquibase-percona/pull/291) (@adangel)
+
 **🐛 Fixed bugs:**
 
 - Fix percona toolkit download after Percona homepage change [\#285](https://github.com/liquibase/liquibase-percona/pull/285) (@adangel)
