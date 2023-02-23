@@ -83,6 +83,7 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 - Support formatted SQL changelogs [\#287](https://github.com/liquibase/liquibase-percona/issues/287)
 - Support usePercona on SQL change type [\#80](https://github.com/liquibase/liquibase-percona/issues/80)
+- Include extension schema properly [\#294](https://github.com/liquibase/liquibase-percona/pull/294) (@adangel)
 - Add support for Formatted SQL changelogs [\#292](https://github.com/liquibase/liquibase-percona/pull/292) (@adangel)
 - Add support for SQL change type [\#291](https://github.com/liquibase/liquibase-percona/pull/291) (@adangel)
 
@@ -107,7 +108,7 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 **🎉 Merged pull requests:**
 
-- Include extension schema properly [\#294](https://github.com/liquibase/liquibase-percona/pull/294) (@adangel)
+- Fix deprecation warning about `set-output` [\#295](https://github.com/liquibase/liquibase-percona/pull/295) (@adangel)
 
 ## [v4.19.0](https://github.com/liquibase/liquibase-percona/tree/v4.19.0) (2023-01-20)
 
