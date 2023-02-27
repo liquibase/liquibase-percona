@@ -93,6 +93,7 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 **📦 Dependency updates:**
 
+- Bump maven-compiler-plugin from 3.10.1 to 3.11.0 [\#298](https://github.com/liquibase/liquibase-percona/pull/298) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.5 to 10.1.6 [\#297](https://github.com/liquibase/liquibase-percona/pull/297) (@dependabot[bot])
 - Bump maven from 3.8.6 to 3.9.0 [\#290](https://github.com/liquibase/liquibase-percona/pull/290) (@adangel)
 - Bump maven-javadoc-plugin from 3.4.1 to 3.5.0 [\#289](https://github.com/liquibase/liquibase-percona/pull/289) (@dependabot[bot])
