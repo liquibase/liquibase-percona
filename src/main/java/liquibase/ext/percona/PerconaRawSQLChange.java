@@ -39,6 +39,9 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     private static Logger log = Scope.getCurrentScope().getLog(PerconaRawSQLChange.class);
 
+    private String cachedTargetTableName = null;
+    private boolean hasCachedTargetTableName = false;
+
     @Override
     public SqlStatement[] generateStatements(Database database) {
         String table = getTargetTableName();
@@ -96,19 +99,23 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
      */
     @Override
     public String getTargetTableName() {
+        if (hasCachedTargetTableName) {
+            return cachedTargetTableName;
+        }
+
         String sql = getSql();
         if (sql == null) {
-            return null;
+            return setCachedTargetTableName(null);
         }
         if (Boolean.FALSE.equals(getUsePercona())) {
             // avoids unnecessary warnings
-            return null;
+            return setCachedTargetTableName(null);
         }
 
         String[] multiLineSQL = StringUtil.processMultiLineSQL(sql, true, true, getEndDelimiter());
         if (multiLineSQL.length != 1) {
             log.warning("Not using percona toolkit, because multiple statements are not supported: " + sql);
-            return null;
+            return setCachedTargetTableName(null);
         }
 
         // warning: this is a very crude way of parsing the SQL statements
@@ -127,7 +134,7 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
             } else if (firstChar == '`') {
                 // only beginning escape, no closing. See warning above.
                 log.warning("Not using percona toolkit, because can't parse sql statement: " + sql);
-                return null;
+                return setCachedTargetTableName(null);
             }
 
             // rename table?
@@ -136,13 +143,26 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
                     && !tokens[4].equalsIgnoreCase("index")
                     && !tokens[4].equalsIgnoreCase("key")) {
                 log.warning("Not using percona toolkit, because can't rename table: " + sql);
-                return null;
+                return setCachedTargetTableName(null);
             }
 
-            return table;
+            return setCachedTargetTableName(table);
         }
         log.warning("Not using percona toolkit, because this sql statement is not an alter table: " + sql);
-        return null;
+        return setCachedTargetTableName(null);
+    }
+
+    private String setCachedTargetTableName(String targetTableName) {
+        cachedTargetTableName = targetTableName;
+        hasCachedTargetTableName = true;
+        return cachedTargetTableName;
+    }
+
+    @Override
+    public void setSql(String sql) {
+        super.setSql(sql);
+        cachedTargetTableName = null;
+        hasCachedTargetTableName = false;
     }
 
     //CPD-OFF - common PerconaChange implementation

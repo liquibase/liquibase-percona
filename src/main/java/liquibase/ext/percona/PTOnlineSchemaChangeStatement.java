@@ -35,32 +35,34 @@ import java.util.regex.Pattern;
 
 import liquibase.Scope;
 import liquibase.database.Database;
+import liquibase.database.PreparedStatementFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.logging.Logger;
-import liquibase.sql.Sql;
-import liquibase.statement.core.RuntimeStatement;
+import liquibase.statement.ExecutablePreparedStatement;
 import liquibase.util.StreamUtil;
 
 /**
  * Statement to run {@code pt-online-schema-change} in order
  * to alter a database table.
  */
-public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
+public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatement {
     public static final String COMMAND = "pt-online-schema-change";
     static PerconaToolkitVersion perconaToolkitVersion = null;
     static Boolean available = null;
 
     private static Logger log = Scope.getCurrentScope().getLog(PTOnlineSchemaChangeStatement.class);
 
+    private Database database;
     private String databaseName;
     private String tableName;
     private String alterStatement;
     private Optional<String> perconaOptions;
 
-    public PTOnlineSchemaChangeStatement(String databaseName, String tableName, String alterStatement,
-            Optional<String> perconaOptions) {
+    public PTOnlineSchemaChangeStatement(Database database, String databaseName, String tableName, String alterStatement,
+                                         Optional<String> perconaOptions) {
+        this.database = database;
         this.databaseName = databaseName;
         this.tableName = tableName;
         this.alterStatement = alterStatement;
@@ -203,7 +205,7 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
      * @return always <code>null</code>
      */
     @Override
-    public Sql[] generate(Database database) {
+    public void execute(PreparedStatementFactory factory) throws DatabaseException {
         List<String> cmndline = buildCommand(database);
         log.info("Executing: " + filterCommands(cmndline));
 
@@ -259,13 +261,22 @@ public class PTOnlineSchemaChangeStatement extends RuntimeStatement {
                 p.destroy();
             }
         }
-        return null;
     }
 
     @Override
     public String toString() {
         return PTOnlineSchemaChangeStatement.class.getSimpleName()
                 + "[database: " + databaseName + ", table: " + tableName + ", alterStatement: " + alterStatement + "]";
+    }
+
+    @Override
+    public boolean skipOnUnsupported() {
+        return false;
+    }
+
+    @Override
+    public boolean continueOnError() {
+        return false;
     }
 
     private static class KeepAliveThread extends Thread {
