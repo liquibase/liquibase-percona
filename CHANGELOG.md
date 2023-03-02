@@ -89,6 +89,7 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 **🐛 Fixed bugs:**
 
+- Changes with pt-osc are executed multiple times \(liquibase 4.19.1\) [\#303](https://github.com/liquibase/liquibase-percona/issues/303)
 - Fix percona toolkit download after Percona homepage change [\#285](https://github.com/liquibase/liquibase-percona/pull/285) (@adangel)
 
 **📦 Dependency updates:**
@@ -112,6 +113,7 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 **🎉 Merged pull requests:**
 
+- Refactor PTOnlineSchemaChangeStatement to be a ExecutablePreparedStatement [\#304](https://github.com/liquibase/liquibase-percona/pull/304) (@adangel)
 - Fix deprecation warning about `set-output` [\#295](https://github.com/liquibase/liquibase-percona/pull/295) (@adangel)
 
 ## [v4.19.0](https://github.com/liquibase/liquibase-percona/tree/v4.19.0) (2023-01-20)
