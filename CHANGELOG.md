@@ -94,6 +94,7 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.19.0 to 4.19.1 [\#302](https://github.com/liquibase/liquibase-percona/pull/302) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.41.0 to 0.42.0 [\#301](https://github.com/liquibase/liquibase-percona/pull/301) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.3.0 to 4.7.3.2 [\#299](https://github.com/liquibase/liquibase-percona/pull/299) (@dependabot[bot])
 - Bump maven-compiler-plugin from 3.10.1 to 3.11.0 [\#298](https://github.com/liquibase/liquibase-percona/pull/298) (@dependabot[bot])
