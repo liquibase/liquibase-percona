@@ -95,6 +95,7 @@ public class PerconaChangeUtil {
         if (database instanceof MySQLDatabase) {
             if (PTOnlineSchemaChangeStatement.isAvailable()) {
                 PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(
+                        database,
                         change.getTargetDatabaseName(),
                         change.getTargetTableName(),
                         change.generateAlterStatement(database),

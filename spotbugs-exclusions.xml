@@ -7,4 +7,8 @@
         <Class name="liquibase.ext.percona.PTOnlineSchemaChangeStatement$KeepAliveThread" />
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
     </Match>
+    <Match>
+        <Class name="liquibase.ext.percona.PTOnlineSchemaChangeStatement" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
 </FindBugsFilter>
