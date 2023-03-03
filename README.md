@@ -544,7 +544,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.19.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.19.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
