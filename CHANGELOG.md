@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+## [v4.19.1](https://github.com/liquibase/liquibase-percona/tree/v4.19.1) (2023-03-03)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...v4.19.1)
 
 ### 🎉 New Features
 
@@ -12,8 +12,7 @@ This release of Liquibase Percona extension ships two new features.
 
 You can now use [Custom SQL changes](https://docs.liquibase.com/change-types/sql.html). The Liquibase Percona extension will automatically detect if it is a `ALTER TABLE` statement and will execute it using Percona Toolkit's `pt-online-schema-change` command.
 
-There are some limitations: Only a single statement is supported. When multiple statements (e.g. separated by `;`) are used, then the change is executed as usual. Also, if it is
-not an `ALTER TABLE` statement, the change is executed as usual without Percona Toolkit. If the statement can't be executed, a warning is logged
+There are some limitations: Only a single statement is supported. When multiple statements (e.g. separated by `;`) are used, then the change is executed as usual. Also, if it is not an `ALTER TABLE` statement, the change is executed as usual without Percona Toolkit. If the statement can't be executed, a warning is logged.
 
 | :warning:     Support for Custom SQL changes is enabled by default. <br> The Liquibase Percona extension will automatically try to execute Custom SQL changes via the Percona Toolkit. If this is not what you want, either disable the extension for this change globally (e.g. via the system property `liquibase.percona.skipChanges=sql`) or individually per change via the [UsePercona flag](https://github.com/liquibase/liquibase-percona#usepercona-flag). You can also globally disable Percona Toolkit usage with the system property `liquibase.percona.defaultOn` and enable it for specific changes only. See [System Properties](https://github.com/liquibase/liquibase-percona#system-properties). |
 |-----|
