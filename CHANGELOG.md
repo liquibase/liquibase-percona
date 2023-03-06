@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.1...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump tomcat-jdbc from 10.1.6 to 10.1.7 [\#305](https://github.com/liquibase/liquibase-percona/pull/305) (@dependabot[bot])
+
 ## [v4.19.1](https://github.com/liquibase/liquibase-percona/tree/v4.19.1) (2023-03-03)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.0...v4.19.1)
