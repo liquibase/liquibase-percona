@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.19.1 to 4.20.0 [\#306](https://github.com/liquibase/liquibase-percona/pull/306) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.6 to 10.1.7 [\#305](https://github.com/liquibase/liquibase-percona/pull/305) (@dependabot[bot])
 
 ## [v4.19.1](https://github.com/liquibase/liquibase-percona/tree/v4.19.1) (2023-03-03)
