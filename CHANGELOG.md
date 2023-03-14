@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.1...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.20.0...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump maven-surefire-plugin from 2.22.2 to 3.0.0 [\#307](https://github.com/liquibase/liquibase-percona/pull/307) (@dependabot[bot])
+
+## [v4.20.0](https://github.com/liquibase/liquibase-percona/tree/v4.20.0) (2023-03-10)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.19.1...v4.20.0)
 
 **📦 Dependency updates:**
 
