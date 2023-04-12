@@ -6,6 +6,15 @@
 
 **📦 Dependency updates:**
 
+- Bump spotbugs-maven-plugin from 4.7.3.3 to 4.7.3.4 [\#318](https://github.com/liquibase/liquibase-percona/pull/318) (@dependabot[bot])
+- Bump docker-maven-plugin from 0.42.0 to 0.42.1 [\#317](https://github.com/liquibase/liquibase-percona/pull/317) (@dependabot[bot])
+- Bump maven-enforcer-plugin from 3.2.1 to 3.3.0 [\#314](https://github.com/liquibase/liquibase-percona/pull/314) (@dependabot[bot])
+- Bump maven-invoker-plugin from 3.5.0 to 3.5.1 [\#313](https://github.com/liquibase/liquibase-percona/pull/313) (@dependabot[bot])
+- Bump maven-deploy-plugin from 3.1.0 to 3.1.1 [\#312](https://github.com/liquibase/liquibase-percona/pull/312) (@dependabot[bot])
+- Bump maven-resources-plugin from 3.3.0 to 3.3.1 [\#311](https://github.com/liquibase/liquibase-percona/pull/311) (@dependabot[bot])
+- Bump spotbugs-maven-plugin from 4.7.3.2 to 4.7.3.3 [\#310](https://github.com/liquibase/liquibase-percona/pull/310) (@dependabot[bot])
+- Bump mariadb-java-client from 3.1.2 to 3.1.3 [\#309](https://github.com/liquibase/liquibase-percona/pull/309) (@dependabot[bot])
+- Bump activesupport from 7.0.4.1 to 7.0.4.3 [\#308](https://github.com/liquibase/liquibase-percona/pull/308) (@dependabot[bot])
 - Bump maven-surefire-plugin from 2.22.2 to 3.0.0 [\#307](https://github.com/liquibase/liquibase-percona/pull/307) (@dependabot[bot])
 
 ## [v4.20.0](https://github.com/liquibase/liquibase-percona/tree/v4.20.0) (2023-03-10)
