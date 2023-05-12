@@ -10,6 +10,7 @@
 
 **📦 Dependency updates:**
 
+- Bump percona toolkit from 3.5.1 to 3.5.2 [\#329](https://github.com/liquibase/liquibase-percona/pull/329) (@adangel)
 - Bump liquibase-core from 4.20.0 to 4.22.0 [\#328](https://github.com/liquibase/liquibase-percona/pull/328) (@dependabot[bot])
 - Bump build-helper-maven-plugin from 3.3.0 to 3.4.0 [\#327](https://github.com/liquibase/liquibase-percona/pull/327) (@dependabot[bot])
 - Bump maven-surefire-plugin from 3.0.0 to 3.1.0 [\#326](https://github.com/liquibase/liquibase-percona/pull/326) (@dependabot[bot])
