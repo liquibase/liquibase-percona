@@ -4,8 +4,19 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.20.0...HEAD)
 
+**🐛 Fixed bugs:**
+
+- Branch Protection settings break "Update Changelog" changelog [\#316](https://github.com/liquibase/liquibase-percona/issues/316)
+
 **📦 Dependency updates:**
 
+- Bump build-helper-maven-plugin from 3.3.0 to 3.4.0 [\#327](https://github.com/liquibase/liquibase-percona/pull/327) (@dependabot[bot])
+- Bump maven-surefire-plugin from 3.0.0 to 3.1.0 [\#326](https://github.com/liquibase/liquibase-percona/pull/326) (@dependabot[bot])
+- Bump maven-gpg-plugin from 3.0.1 to 3.1.0 [\#325](https://github.com/liquibase/liquibase-percona/pull/325) (@dependabot[bot])
+- Bump mariadb-java-client from 3.1.3 to 3.1.4 [\#324](https://github.com/liquibase/liquibase-percona/pull/324) (@dependabot[bot])
+- Bump junit-jupiter from 5.9.2 to 5.9.3 [\#323](https://github.com/liquibase/liquibase-percona/pull/323) (@dependabot[bot])
+- Bump tomcat-jdbc from 10.1.7 to 10.1.8 [\#322](https://github.com/liquibase/liquibase-percona/pull/322) (@dependabot[bot])
+- Updated CHANGELOG.md to apply dependency updates [\#319](https://github.com/liquibase/liquibase-percona/pull/319) (@adangel)
 - Bump spotbugs-maven-plugin from 4.7.3.3 to 4.7.3.4 [\#318](https://github.com/liquibase/liquibase-percona/pull/318) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.42.0 to 0.42.1 [\#317](https://github.com/liquibase/liquibase-percona/pull/317) (@dependabot[bot])
 - Bump maven-enforcer-plugin from 3.2.1 to 3.3.0 [\#314](https://github.com/liquibase/liquibase-percona/pull/314) (@dependabot[bot])
