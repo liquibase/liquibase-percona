@@ -6,10 +6,11 @@
 
 **🐛 Fixed bugs:**
 
-- Branch Protection settings break "Update Changelog" changelog [\#316](https://github.com/liquibase/liquibase-percona/issues/316)
+- Branch Protection settings break "Update Changelog" workflow [\#316](https://github.com/liquibase/liquibase-percona/issues/316)
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.20.0 to 4.22.0 [\#328](https://github.com/liquibase/liquibase-percona/pull/328) (@dependabot[bot])
 - Bump build-helper-maven-plugin from 3.3.0 to 3.4.0 [\#327](https://github.com/liquibase/liquibase-percona/pull/327) (@dependabot[bot])
 - Bump maven-surefire-plugin from 3.0.0 to 3.1.0 [\#326](https://github.com/liquibase/liquibase-percona/pull/326) (@dependabot[bot])
 - Bump maven-gpg-plugin from 3.0.1 to 3.1.0 [\#325](https://github.com/liquibase/liquibase-percona/pull/325) (@dependabot[bot])
