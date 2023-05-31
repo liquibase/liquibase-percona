@@ -6,6 +6,9 @@
 
 **📦 Dependency updates:**
 
+- Bump docker-maven-plugin from 0.42.1 to 0.43.0 [\#333](https://github.com/liquibase/liquibase-percona/pull/333) (@dependabot[bot])
+- Bump maven-source-plugin from 3.2.1 to 3.3.0 [\#332](https://github.com/liquibase/liquibase-percona/pull/332) (@dependabot[bot])
+- Bump tomcat-jdbc from 10.1.8 to 10.1.9 [\#331](https://github.com/liquibase/liquibase-percona/pull/331) (@dependabot[bot])
 - Bump maven-pmd-plugin from 3.20.0 to 3.21.0 [\#330](https://github.com/liquibase/liquibase-percona/pull/330) (@dependabot[bot])
 
 ## [v4.22.0](https://github.com/liquibase/liquibase-percona/tree/v4.22.0) (2023-05-12)
