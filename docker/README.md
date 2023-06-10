@@ -37,7 +37,22 @@ The liquibase-percona extension and pt-online-schema-change
 will automatically be picked up:
 
 ```
-docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog andreasdangel/liquibase-percona \
+docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog \
+    andreasdangel/liquibase-percona \
+    --url="jdbc:mysql://<IP OR HOSTNAME>:3306/<DATABASE>" \
+    --changeLogFile=com/example/changelog.xml \
+    --username=<USERNAME> --password=<PASSWORD> \
+    --logLevel=info \
+    update
+```
+
+If you want to set a [system property](https://github.com/liquibase/liquibase-percona#system-properties),
+e.g. `liquibase.percona.defaultOn=false`, you need to use "**-e JAVA_OPTS**".
+
+```
+docker run --rm -v <PATH TO CHANGELOG DIR>:/liquibase/changelog \
+    -e JAVA_OPTS=-Dliquibase.percona.defaultOn=false \
+    andreasdangel/liquibase-percona \
     --url="jdbc:mysql://<IP OR HOSTNAME>:3306/<DATABASE>" \
     --changeLogFile=com/example/changelog.xml \
     --username=<USERNAME> --password=<PASSWORD> \

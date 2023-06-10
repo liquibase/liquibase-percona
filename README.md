@@ -527,7 +527,9 @@ You can set these properties by using the standard java `-D` option:
 Note: You'll have to call liquibase via "java -jar" as otherwise the system property cannot be set. You'll also
 need to make sure, that the liquibase-percona.jar file is on the classpath via the "--classpath" option.
 
-When executing liquibase through maven, you can use the [Properties Maven Plugin](http://www.mojohaus.org/properties-maven-plugin/usage.html#set-system-properties) to set the system property. An example can be found in the "createIndexSkipped"
+When executing liquibase through maven, you can use the
+[Properties Maven Plugin](http://www.mojohaus.org/properties-maven-plugin/usage.html#set-system-properties)
+to set the system property. An example can be found in the "createIndexSkipped"
 integration test.
 
 
