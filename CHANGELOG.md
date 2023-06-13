@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump tomcat-jdbc from 10.1.9 to 10.1.10 [\#335](https://github.com/liquibase/liquibase-percona/pull/335) (@dependabot[bot])
 - Bump maven-surefire-plugin from 3.1.0 to 3.1.2 [\#334](https://github.com/liquibase/liquibase-percona/pull/334) (@dependabot[bot])
 - Bump docker-maven-plugin from 0.42.1 to 0.43.0 [\#333](https://github.com/liquibase/liquibase-percona/pull/333) (@dependabot[bot])
 - Bump maven-source-plugin from 3.2.1 to 3.3.0 [\#332](https://github.com/liquibase/liquibase-percona/pull/332) (@dependabot[bot])
