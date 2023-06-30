@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump liquibase-core from 4.22.0 to 4.23.0 [\#338](https://github.com/liquibase/liquibase-percona/pull/338) (@dependabot[bot])
 - Bump spotbugs-maven-plugin from 4.7.3.4 to 4.7.3.5 [\#337](https://github.com/liquibase/liquibase-percona/pull/337) (@dependabot[bot])
 - Bump maven-invoker-plugin from 3.5.1 to 3.6.0 [\#336](https://github.com/liquibase/liquibase-percona/pull/336) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.9 to 10.1.10 [\#335](https://github.com/liquibase/liquibase-percona/pull/335) (@dependabot[bot])
