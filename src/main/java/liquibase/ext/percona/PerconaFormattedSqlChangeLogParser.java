@@ -44,8 +44,13 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
         for (int i = 0; i < changeLog.getChangeSets().size(); i++) {
             ChangeSet changeSet = changeLog.getChangeSets().get(i);
 
+            String contextFilter = null;
+            if (!changeSet.getContextFilter().isEmpty()) {
+                contextFilter = changeSet.getContextFilter().toString();
+            }
+
             ChangeSet perconaChangeSet = new ChangeSet(changeSet.getId(), changeSet.getAuthor(), changeSet.isAlwaysRun(),
-                    changeSet.isRunOnChange(), changeSet.getFilePath(), changeSet.getContextFilter().toString(),
+                    changeSet.isRunOnChange(), changeSet.getFilePath(), contextFilter,
                     changeSet.getDbmsSet() == null ? null : changeSet.getDbmsSet().stream().collect(Collectors.joining(",")),
                     changeSet.getRunWith(), changeSet.getRunWithSpoolFile(), changeSet.isRunInTransaction(), changeSet.getObjectQuotingStrategy(),
                     changeLog);
