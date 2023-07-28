@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump org.junit.jupiter:junit-jupiter from 5.9.3 to 5.10.0 [\#341](https://github.com/liquibase/liquibase-percona/pull/341) (@dependabot[bot])
 - Bump tomcat-jdbc from 10.1.10 to 10.1.11 [\#340](https://github.com/liquibase/liquibase-percona/pull/340) (@dependabot[bot])
 
 ## [v4.23.0](https://github.com/liquibase/liquibase-percona/tree/v4.23.0) (2023-06-30)
