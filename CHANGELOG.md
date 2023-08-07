@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump org.yaml:snakeyaml from 2.0 to 2.1 [\#344](https://github.com/liquibase/liquibase-percona/pull/344) (@dependabot[bot])
 - Bump protocol-http1 from 0.14.2 to 0.15.1 [\#343](https://github.com/liquibase/liquibase-percona/pull/343) (@dependabot[bot])
 - Bump io.fabric8:docker-maven-plugin from 0.43.0 to 0.43.2 [\#342](https://github.com/liquibase/liquibase-percona/pull/342) (@dependabot[bot])
 - Bump org.junit.jupiter:junit-jupiter from 5.9.3 to 5.10.0 [\#341](https://github.com/liquibase/liquibase-percona/pull/341) (@dependabot[bot])
