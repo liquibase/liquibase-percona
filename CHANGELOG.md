@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump percona toolkit from 3.5.3 to 3.5.4 [\#346](https://github.com/liquibase/liquibase-percona/pull/346) (@adangel)
 - Bump org.liquibase:liquibase-core from 4.23.0 to 4.23.1 [\#345](https://github.com/liquibase/liquibase-percona/pull/345) (@dependabot[bot])
 - Bump org.yaml:snakeyaml from 2.0 to 2.1 [\#344](https://github.com/liquibase/liquibase-percona/pull/344) (@dependabot[bot])
 - Bump protocol-http1 from 0.14.2 to 0.15.1 [\#343](https://github.com/liquibase/liquibase-percona/pull/343) (@dependabot[bot])
