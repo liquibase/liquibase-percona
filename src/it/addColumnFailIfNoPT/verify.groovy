@@ -22,4 +22,4 @@ import java.sql.ResultSet;
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.exists()
 def buildLogText = buildLog.text;
-assert buildLogText.contains("[ERROR] liquibase.exception.LiquibaseException: liquibase.exception.UnexpectedLiquibaseException: No percona toolkit found!")
+assert buildLogText.contains("[ERROR] liquibase.exception.ChangeLogParseException: liquibase.exception.UnexpectedLiquibaseException: No percona toolkit found!")
