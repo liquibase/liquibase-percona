@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.1...HEAD)
+
+**📦 Dependency updates:**
+
+- Bump io.fabric8:docker-maven-plugin from 0.43.2 to 0.43.3 [\#347](https://github.com/liquibase/liquibase-percona/pull/347) (@dependabot[bot])
+
+## [v4.23.1](https://github.com/liquibase/liquibase-percona/tree/v4.23.1) (2023-08-11)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.0...v4.23.1)
 
 **📦 Dependency updates:**
 
