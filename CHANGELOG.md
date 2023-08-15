@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump org.apache.tomcat:tomcat-jdbc from 10.1.11 to 10.1.12 [\#348](https://github.com/liquibase/liquibase-percona/pull/348) (@dependabot[bot])
 - Bump io.fabric8:docker-maven-plugin from 0.43.2 to 0.43.3 [\#347](https://github.com/liquibase/liquibase-percona/pull/347) (@dependabot[bot])
 
 ## [v4.23.1](https://github.com/liquibase/liquibase-percona/tree/v4.23.1) (2023-08-11)
