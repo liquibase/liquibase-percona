@@ -6,6 +6,9 @@
 
 **📦 Dependency updates:**
 
+- Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.10.0 [\#355](https://github.com/liquibase/liquibase-percona/pull/355) (@dependabot[bot])
+- Bump org.yaml:snakeyaml from 2.1 to 2.2 [\#353](https://github.com/liquibase/liquibase-percona/pull/353) (@dependabot[bot])
+- Bump org.apache.tomcat:tomcat-jdbc from 10.1.12 to 10.1.13 [\#352](https://github.com/liquibase/liquibase-percona/pull/352) (@dependabot[bot])
 - Bump activesupport from 7.0.4.3 to 7.0.7.2 [\#351](https://github.com/liquibase/liquibase-percona/pull/351) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-enforcer-plugin from 3.3.0 to 3.4.0 [\#350](https://github.com/liquibase/liquibase-percona/pull/350) (@dependabot[bot])
 - Bump io.fabric8:docker-maven-plugin from 0.43.3 to 0.43.4 [\#349](https://github.com/liquibase/liquibase-percona/pull/349) (@dependabot[bot])
