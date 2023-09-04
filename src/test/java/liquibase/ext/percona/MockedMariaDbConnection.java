@@ -187,7 +187,7 @@ public class MockedMariaDbConnection {
         }
 
         @Override
-        public int getTransactionIsolationLevel() {
+        public Integer getTransactionIsolationLevel() {
             return 0;
         }
 
@@ -243,6 +243,26 @@ public class MockedMariaDbConnection {
 
         @Override
         public void addStateFlag(int state) {
+        }
+
+        @Override
+        public void setCharset(String s) {
+
+        }
+
+        @Override
+        public void setThreadId(long l) {
+
+        }
+
+        @Override
+        public void setTreadsConnected(long l) {
+
+        }
+
+        @Override
+        public String getCharset() {
+            return null;
         }
 
         @Override
