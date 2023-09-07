@@ -17,7 +17,7 @@ jobs:
         mysql: [5.7, 8]
         mariadb: [10]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install Perl modules
       run: |
         sudo apt-get update
@@ -42,7 +42,7 @@ jobs:
     if: ${{ github.repository == 'liquibase/liquibase-percona' && github.ref == 'refs/heads/main' }}
     needs: integration-tests
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Perl modules
       run: |
