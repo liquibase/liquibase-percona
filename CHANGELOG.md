@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump org.apache.maven.plugins:maven-enforcer-plugin from 3.4.0 to 3.4.1 [\#357](https://github.com/liquibase/liquibase-percona/pull/357) (@dependabot[bot])
 - Bump actions/checkout from 3 to 4 [\#356](https://github.com/liquibase/liquibase-percona/pull/356) (@dependabot[bot])
 - Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.10.0 [\#355](https://github.com/liquibase/liquibase-percona/pull/355) (@dependabot[bot])
 - Bump org.mariadb.jdbc:mariadb-java-client from 3.1.4 to 3.2.0 [\#354](https://github.com/liquibase/liquibase-percona/pull/354) (@dependabot[bot])
