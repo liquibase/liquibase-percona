@@ -7,6 +7,7 @@
 **📦 Dependency updates:**
 
 - Bump org.apache.maven.plugins:maven-javadoc-plugin from 3.5.0 to 3.6.0 [\#359](https://github.com/liquibase/liquibase-percona/pull/359) (@dependabot[bot])
+- Bump org.liquibase:liquibase-core from 4.23.1 to 4.23.2 [\#358](https://github.com/liquibase/liquibase-percona/pull/358) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-enforcer-plugin from 3.4.0 to 3.4.1 [\#357](https://github.com/liquibase/liquibase-percona/pull/357) (@dependabot[bot])
 - Bump actions/checkout from 3 to 4 [\#356](https://github.com/liquibase/liquibase-percona/pull/356) (@dependabot[bot])
 - Bump org.apache.commons:commons-dbcp2 from 2.9.0 to 2.10.0 [\#355](https://github.com/liquibase/liquibase-percona/pull/355) (@dependabot[bot])
