@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import liquibase.change.Change;
 import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
@@ -78,11 +79,27 @@ public class ChangeLogParserTest {
     public void testReadLiquibaseUsePerconaFlagSQL() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
         Assertions.assertEquals(3, changelog.getChangeSets().size());
-        Change change = changelog.getChangeSets().get(0).getChanges().get(0);
+
+        // changeset 1
+        ChangeSet changeSet = changelog.getChangeSets().get(0);
+        Change change = changeSet.getChanges().get(0);
         assertChange(change, PerconaRawSQLChange.class, null, null);
-        change = changelog.getChangeSets().get(1).getChanges().get(0);
+        Assertions.assertEquals(1, changeSet.getRollback().getChanges().size());
+        Change rollback = changeSet.getRollback().getChanges().get(0);
+        assertChange(rollback, PerconaRawSQLChange.class, null, null);
+
+        // changeset 2
+        changeSet = changelog.getChangeSets().get(1);
+        change = changeSet.getChanges().get(0);
         assertChange(change, PerconaRawSQLChange.class, Boolean.FALSE, null);
-        change = changelog.getChangeSets().get(2).getChanges().get(0);
+        rollback = changeSet.getRollback().getChanges().get(0);
+        assertChange(rollback, PerconaRawSQLChange.class, Boolean.FALSE, null);
+
+        // changeset 3
+        changeSet = changelog.getChangeSets().get(2);
+        change = changeSet.getChanges().get(0);
         assertChange(change, PerconaRawSQLChange.class, null, "--foo");
+        rollback = changeSet.getRollback().getChanges().get(0);
+        assertChange(rollback, PerconaRawSQLChange.class, null, "--foo");
     }
 }

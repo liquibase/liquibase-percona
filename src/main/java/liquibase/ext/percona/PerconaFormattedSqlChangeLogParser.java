@@ -57,14 +57,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
             for (Change change : changeSet.getChanges()) {
                 RawSQLChange rawSQLChange = (RawSQLChange) change;
-                PerconaRawSQLChange perconaChange = new PerconaRawSQLChange();
-                perconaChange.setSql(rawSQLChange.getSql());
-                perconaChange.setSplitStatements(rawSQLChange.isSplitStatements());
-                perconaChange.setStripComments(rawSQLChange.isStripComments());
-                perconaChange.setEndDelimiter(rawSQLChange.getEndDelimiter());
-                perconaChange.setRerunnable(rawSQLChange.isRerunnable());
-                perconaChange.setComment(rawSQLChange.getComment());
-                perconaChange.setDbms(rawSQLChange.getDbms());
+                PerconaRawSQLChange perconaChange = convert(rawSQLChange);
                 perconaChangeSet.addChange(perconaChange);
 
                 String sql = perconaChange.getSql();
@@ -78,9 +71,34 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                     perconaChange.setPerconaOptions(perconaOptionsMatcher.group(1));
                 }
             }
+
+            for (Change change : changeSet.getRollback().getChanges()) {
+                RawSQLChange rawSQLChange = (RawSQLChange) change;
+                PerconaRawSQLChange rollbackChange = convert(rawSQLChange);
+
+                assert perconaChangeSet.getChanges().size() == 1;
+                PerconaRawSQLChange forwardChange = (PerconaRawSQLChange) perconaChangeSet.getChanges().get(0);
+                rollbackChange.setUsePercona(forwardChange.getUsePercona());
+                rollbackChange.setPerconaOptions(forwardChange.getPerconaOptions());
+
+                perconaChangeSet.getRollback().getChanges().add(rollbackChange);
+            }
+
             changeLog.getChangeSets().set(i, perconaChangeSet);
         }
 
         return changeLog;
+    }
+
+    private static PerconaRawSQLChange convert(RawSQLChange rawSQLChange) {
+        PerconaRawSQLChange perconaChange = new PerconaRawSQLChange();
+        perconaChange.setSql(rawSQLChange.getSql());
+        perconaChange.setSplitStatements(rawSQLChange.isSplitStatements());
+        perconaChange.setStripComments(rawSQLChange.isStripComments());
+        perconaChange.setEndDelimiter(rawSQLChange.getEndDelimiter());
+        perconaChange.setRerunnable(rawSQLChange.isRerunnable());
+        perconaChange.setComment(rawSQLChange.getComment());
+        perconaChange.setDbms(rawSQLChange.getDbms());
+        return perconaChange;
     }
 }
