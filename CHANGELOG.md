@@ -9,6 +9,10 @@
 - Support Rollback in Formatted SQL [\#361](https://github.com/liquibase/liquibase-percona/issues/361)
 - Set server\_id=1 for MySQL in integration tests [\#364](https://github.com/liquibase/liquibase-percona/pull/364) (@adangel)
 
+**📦 Dependency updates:**
+
+- Bump Percona Toolkit from 3.5.4 to 3.5.5 [\#365](https://github.com/liquibase/liquibase-percona/pull/365) (@adangel)
+
 **🎉 Merged pull requests:**
 
 - Support rollback for formatted SQL changelogs [\#362](https://github.com/liquibase/liquibase-percona/pull/362) (@adangel)
