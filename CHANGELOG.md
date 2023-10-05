@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+## [v4.24.0](https://github.com/liquibase/liquibase-percona/tree/v4.24.0) (2023-10-05)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.2...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.2...v4.24.0)
 
 **🚀 Implemented enhancements:**
 
