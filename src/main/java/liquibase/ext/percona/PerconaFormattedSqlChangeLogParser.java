@@ -18,17 +18,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import liquibase.Scope;
 import liquibase.change.Change;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
+import liquibase.logging.Logger;
 import liquibase.parser.core.formattedsql.FormattedSqlChangeLogParser;
 import liquibase.resource.ResourceAccessor;
 import liquibase.servicelocator.PrioritizedService;
 
 public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogParser {
+    private static Logger log = Scope.getCurrentScope().getLog(PerconaFormattedSqlChangeLogParser.class);
+
     @Override
     public int getPriority() {
         return PrioritizedService.PRIORITY_DEFAULT + 50;
@@ -55,6 +59,11 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                     changeSet.getRunWith(), changeSet.getRunWithSpoolFile(), changeSet.isRunInTransaction(), changeSet.getObjectQuotingStrategy(),
                     changeLog);
 
+            log.fine(String.format("Changeset %s::%s::%s contains %d changes and %d rollback changes",
+                    changeSet.getFilePath(), changeSet.getId(), changeSet.getAuthor(),
+                    changeSet.getChanges().size(),
+                    changeSet.getRollback().getChanges().size()));
+
             for (Change change : changeSet.getChanges()) {
                 RawSQLChange rawSQLChange = (RawSQLChange) change;
                 PerconaRawSQLChange perconaChange = convert(rawSQLChange);
@@ -76,10 +85,22 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                 RawSQLChange rawSQLChange = (RawSQLChange) change;
                 PerconaRawSQLChange rollbackChange = convert(rawSQLChange);
 
-                assert perconaChangeSet.getChanges().size() == 1;
-                PerconaRawSQLChange forwardChange = (PerconaRawSQLChange) perconaChangeSet.getChanges().get(0);
-                rollbackChange.setUsePercona(forwardChange.getUsePercona());
-                rollbackChange.setPerconaOptions(forwardChange.getPerconaOptions());
+                if (!perconaChangeSet.getChanges().isEmpty()) {
+                    if (perconaChangeSet.getChanges().size() > 1) {
+                        log.warning(String.format("The changeset %s::%s::%s contains %d changes - using the first " +
+                                        "one to copy percona options",
+                                perconaChangeSet.getFilePath(), perconaChangeSet.getId(), perconaChangeSet.getAuthor(),
+                                perconaChangeSet.getChanges().size()));
+                    }
+
+                    PerconaRawSQLChange forwardChange = (PerconaRawSQLChange) perconaChangeSet.getChanges().get(0);
+                    rollbackChange.setUsePercona(forwardChange.getUsePercona());
+                    rollbackChange.setPerconaOptions(forwardChange.getPerconaOptions());
+                } else {
+                    log.warning(String.format("The changeset %s::%s::%s contains 0 changes, but contains rollback - " +
+                                    "using default percona options",
+                            perconaChangeSet.getFilePath(), perconaChangeSet.getId(), perconaChangeSet.getAuthor()));
+                }
 
                 perconaChangeSet.getRollback().getChanges().add(rollbackChange);
             }
