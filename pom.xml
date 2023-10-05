@@ -455,6 +455,14 @@
                                         <env>
                                             <MYSQL_ROOT_PASSWORD>${config_password}</MYSQL_ROOT_PASSWORD>
                                         </env>
+                                        <cmd>
+                                            <exec>
+                                                <!-- set server_id to 1 for mysql 5.7 and percona-toolkit 3.5.5, see https://jira.percona.com/browse/PT-2268
+                                                Note: mysql 8.0 and mariadb use by default server_id=1, only mysql 5.7 uses server_id=0 as default.
+                                                -->
+                                                <arg>--server-id=1</arg>
+                                            </exec>
+                                        </cmd>
                                         <containerNamePattern>%a</containerNamePattern>
                                         <network>
                                             <mode>bridge</mode>
