@@ -6,7 +6,12 @@
 
 **🚀 Implemented enhancements:**
 
+- Support Rollback in Formatted SQL [\#361](https://github.com/liquibase/liquibase-percona/issues/361)
 - Set server\_id=1 for MySQL in integration tests [\#364](https://github.com/liquibase/liquibase-percona/pull/364) (@adangel)
+
+**🎉 Merged pull requests:**
+
+- Support rollback for formatted SQL changelogs [\#362](https://github.com/liquibase/liquibase-percona/pull/362) (@adangel)
 
 ## [v4.23.2](https://github.com/liquibase/liquibase-percona/tree/v4.23.2) (2023-09-18)
 
