@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.2...HEAD)
+
+**🚀 Implemented enhancements:**
+
+- Set server\_id=1 for MySQL in integration tests [\#364](https://github.com/liquibase/liquibase-percona/pull/364) (@adangel)
+
 ## [v4.23.2](https://github.com/liquibase/liquibase-percona/tree/v4.23.2) (2023-09-18)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.23.1...v4.23.2)
