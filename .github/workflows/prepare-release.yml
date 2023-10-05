@@ -12,6 +12,7 @@ jobs:
   setup:
     name: Prepare Versions and Create Tag
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     outputs:
       extensionVersion: ${{ steps.determine_version.outputs.extensionVersion }}
       liquibaseVersion: ${{ steps.determine_version.outputs.liquibaseVersion }}
@@ -70,6 +71,7 @@ jobs:
     needs: setup
     name: "Build and Unit Test"
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -106,6 +108,7 @@ jobs:
     needs: setup
     name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       matrix:
         java: [8, 11, 17]
@@ -141,6 +144,7 @@ jobs:
   draft-release:
     needs: [setup, build, integration-tests]
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
