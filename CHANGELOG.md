@@ -13,6 +13,7 @@
 
 - Bump Percona Toolkit from 3.5.4 to 3.5.5 [\#365](https://github.com/liquibase/liquibase-percona/pull/365) (@adangel)
 - Bump org.liquibase:liquibase-core from 4.23.2 to 4.24.0 [\#363](https://github.com/liquibase/liquibase-percona/pull/363) (@dependabot[bot])
+- Bump com.github.spotbugs:spotbugs-maven-plugin from 4.7.3.5 to 4.7.3.6 [\#360](https://github.com/liquibase/liquibase-percona/pull/360) (@dependabot[bot])
 
 **🎉 Merged pull requests:**
 
