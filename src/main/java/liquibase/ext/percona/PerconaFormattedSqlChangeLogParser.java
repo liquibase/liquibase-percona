@@ -18,17 +18,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import liquibase.Scope;
 import liquibase.change.Change;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
+import liquibase.logging.Logger;
 import liquibase.parser.core.formattedsql.FormattedSqlChangeLogParser;
 import liquibase.resource.ResourceAccessor;
 import liquibase.servicelocator.PrioritizedService;
 
 public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogParser {
+    private static final Logger LOG = Scope.getCurrentScope().getLog(PerconaFormattedSqlChangeLogParser.class);
+
+    private static final Pattern USE_PERCONA_PATTERN = Pattern.compile("(?im)^\\s*\\-\\-\\s*liquibasePercona:usePercona=\"(false|true)\"\\s*$");
+    private static final Pattern PERCONA_OPTIONS_PATTERN = Pattern.compile("(?im)^\\s*\\-\\-\\s*liquibasePercona:perconaOptions=\"(.*)\"\\s*$");
+
     @Override
     public int getPriority() {
         return PrioritizedService.PRIORITY_DEFAULT + 50;
@@ -36,9 +43,6 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
-        Pattern usePerconaPattern = Pattern.compile("(?im)^\\s*\\-\\-\\s*liquibasePercona:usePercona=\"(false|true)\"\\s*$");
-        Pattern perconaOptionsPattern = Pattern.compile("(?im)^\\s*\\-\\-\\s*liquibasePercona:perconaOptions=\"(.*)\"\\s*$");
-
         DatabaseChangeLog changeLog = super.parse(physicalChangeLogLocation, changeLogParameters, resourceAccessor);
 
         for (int i = 0; i < changeLog.getChangeSets().size(); i++) {
@@ -55,32 +59,67 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                     changeSet.getRunWith(), changeSet.getRunWithSpoolFile(), changeSet.isRunInTransaction(), changeSet.getObjectQuotingStrategy(),
                     changeLog);
 
+            LOG.fine(String.format("Changeset %s::%s::%s contains %d changes and %d rollback changes",
+                    changeSet.getFilePath(), changeSet.getId(), changeSet.getAuthor(),
+                    changeSet.getChanges().size(),
+                    changeSet.getRollback().getChanges().size()));
+
             for (Change change : changeSet.getChanges()) {
                 RawSQLChange rawSQLChange = (RawSQLChange) change;
-                PerconaRawSQLChange perconaChange = new PerconaRawSQLChange();
-                perconaChange.setSql(rawSQLChange.getSql());
-                perconaChange.setSplitStatements(rawSQLChange.isSplitStatements());
-                perconaChange.setStripComments(rawSQLChange.isStripComments());
-                perconaChange.setEndDelimiter(rawSQLChange.getEndDelimiter());
-                perconaChange.setRerunnable(rawSQLChange.isRerunnable());
-                perconaChange.setComment(rawSQLChange.getComment());
-                perconaChange.setDbms(rawSQLChange.getDbms());
+                PerconaRawSQLChange perconaChange = convert(rawSQLChange);
                 perconaChangeSet.addChange(perconaChange);
 
                 String sql = perconaChange.getSql();
-                Matcher usePerconaMatcher = usePerconaPattern.matcher(sql);
+                Matcher usePerconaMatcher = USE_PERCONA_PATTERN.matcher(sql);
                 if (usePerconaMatcher.find()) {
                     perconaChange.setUsePercona(Boolean.valueOf(usePerconaMatcher.group(1)));
                 }
 
-                Matcher perconaOptionsMatcher = perconaOptionsPattern.matcher(sql);
+                Matcher perconaOptionsMatcher = PERCONA_OPTIONS_PATTERN.matcher(sql);
                 if (perconaOptionsMatcher.find()) {
                     perconaChange.setPerconaOptions(perconaOptionsMatcher.group(1));
                 }
             }
+
+            for (Change change : changeSet.getRollback().getChanges()) {
+                RawSQLChange rawSQLChange = (RawSQLChange) change;
+                PerconaRawSQLChange rollbackChange = convert(rawSQLChange);
+
+                if (!perconaChangeSet.getChanges().isEmpty()) {
+                    if (perconaChangeSet.getChanges().size() > 1) {
+                        LOG.warning(String.format("The changeset %s::%s::%s contains %d changes - using the first " +
+                                        "one to copy percona options",
+                                perconaChangeSet.getFilePath(), perconaChangeSet.getId(), perconaChangeSet.getAuthor(),
+                                perconaChangeSet.getChanges().size()));
+                    }
+
+                    PerconaRawSQLChange forwardChange = (PerconaRawSQLChange) perconaChangeSet.getChanges().get(0);
+                    rollbackChange.setUsePercona(forwardChange.getUsePercona());
+                    rollbackChange.setPerconaOptions(forwardChange.getPerconaOptions());
+                } else {
+                    LOG.warning(String.format("The changeset %s::%s::%s contains 0 changes, but contains rollback - " +
+                                    "using default percona options",
+                            perconaChangeSet.getFilePath(), perconaChangeSet.getId(), perconaChangeSet.getAuthor()));
+                }
+
+                perconaChangeSet.getRollback().getChanges().add(rollbackChange);
+            }
+
             changeLog.getChangeSets().set(i, perconaChangeSet);
         }
 
         return changeLog;
+    }
+
+    private static PerconaRawSQLChange convert(RawSQLChange rawSQLChange) {
+        PerconaRawSQLChange perconaChange = new PerconaRawSQLChange();
+        perconaChange.setSql(rawSQLChange.getSql());
+        perconaChange.setSplitStatements(rawSQLChange.isSplitStatements());
+        perconaChange.setStripComments(rawSQLChange.isStripComments());
+        perconaChange.setEndDelimiter(rawSQLChange.getEndDelimiter());
+        perconaChange.setRerunnable(rawSQLChange.isRerunnable());
+        perconaChange.setComment(rawSQLChange.getComment());
+        perconaChange.setDbms(rawSQLChange.getDbms());
+        return perconaChange;
     }
 }
