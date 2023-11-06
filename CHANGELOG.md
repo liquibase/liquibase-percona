@@ -7,6 +7,7 @@
 **📦 Dependency updates:**
 
 - Bump org.junit.jupiter:junit-jupiter from 5.10.0 to 5.10.1 [\#371](https://github.com/liquibase/liquibase-percona/pull/371) (@dependabot[bot])
+- Bump org.apache.maven.plugins:maven-surefire-plugin from 3.1.2 to 3.2.1 [\#368](https://github.com/liquibase/liquibase-percona/pull/368) (@dependabot[bot])
 - Bump org.apache.tomcat:tomcat-jdbc from 10.1.14 to 10.1.15 [\#367](https://github.com/liquibase/liquibase-percona/pull/367) (@dependabot[bot])
 - Bump org.apache.tomcat:tomcat-jdbc from 10.1.13 to 10.1.14 [\#366](https://github.com/liquibase/liquibase-percona/pull/366) (@dependabot[bot])
 
