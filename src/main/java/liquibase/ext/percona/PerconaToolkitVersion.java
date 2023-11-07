@@ -14,7 +14,7 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
-public class PerconaToolkitVersion {
+public final class PerconaToolkitVersion {
 
     private final int major;
     private final int minor;
