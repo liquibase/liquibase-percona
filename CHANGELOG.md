@@ -6,6 +6,7 @@
 
 **📦 Dependency updates:**
 
+- Bump com.github.spotbugs:spotbugs-maven-plugin from 4.7.3.6 to 4.8.1.0 [\#372](https://github.com/liquibase/liquibase-percona/pull/372) (@dependabot[bot])
 - Bump org.junit.jupiter:junit-jupiter from 5.10.0 to 5.10.1 [\#371](https://github.com/liquibase/liquibase-percona/pull/371) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-pmd-plugin from 3.21.0 to 3.21.2 [\#370](https://github.com/liquibase/liquibase-percona/pull/370) (@dependabot[bot])
 - Bump org.apache.commons:commons-dbcp2 from 2.10.0 to 2.11.0 [\#369](https://github.com/liquibase/liquibase-percona/pull/369) (@dependabot[bot])
