@@ -128,6 +128,11 @@ public class MockedMariaDbConnection {
         public HostAddress getHostAddress() {
             return null;
         }
+
+        @Override
+        public String getSocketIp() {
+            return null;
+        }
     }
 
     private static class MockedContext implements Context {
