@@ -7,6 +7,7 @@
 **📦 Dependency updates:**
 
 - Bump org.apache.tomcat:tomcat-jdbc from 10.1.15 to 10.1.16 [\#377](https://github.com/liquibase/liquibase-percona/pull/377) (@dependabot[bot])
+- Bump org.liquibase:liquibase-core from 4.24.0 to 4.25.0 [\#376](https://github.com/liquibase/liquibase-percona/pull/376) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-javadoc-plugin from 3.6.0 to 3.6.2 [\#374](https://github.com/liquibase/liquibase-percona/pull/374) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-surefire-plugin from 3.2.1 to 3.2.2 [\#373](https://github.com/liquibase/liquibase-percona/pull/373) (@dependabot[bot])
 - Bump com.github.spotbugs:spotbugs-maven-plugin from 4.7.3.6 to 4.8.1.0 [\#372](https://github.com/liquibase/liquibase-percona/pull/372) (@dependabot[bot])
