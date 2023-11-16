@@ -83,22 +83,11 @@ public class DatabaseConnectionUtilTest {
     }
 
     @Test
-    public void testGetPasswordMySQL_5_1() throws Exception {
-        // with MySQL Connector 5.1.38, we use JDBC4Connection and its superclass ConnectionImpl
-        // to get hold of the password.
-        Class<?> connectionImpl = loadClass("com.mysql.jdbc.ConnectionImpl");
-        Assumptions.assumeFalse(connectionImpl == null, "The class com.mysql.jdbc.ConnectionImpl wasn't on the test classpath.");
-        Field propsField = connectionImpl.getDeclaredField("props");
-        Assertions.assertNotNull(propsField, "The field props is not existing");
-    }
-
-    @Test
-    public void testGetPasswordMySQL_6() throws Exception {
-        // with MySQL Connector 6.0.4, the packages changed.
+    public void testGetPasswordMySQL() throws Exception {
         Class<?> connectionImpl = loadClass("com.mysql.cj.jdbc.ConnectionImpl");
         Assumptions.assumeFalse(connectionImpl == null, "The class com.mysql.cj.jdbc.ConnectionImpl wasn't on the test classpath.");
-        Field propsField2 = connectionImpl.getDeclaredField("props");
-        Assertions.assertNotNull(propsField2, "The field props is not existing");
+        Field propsField = connectionImpl.getDeclaredField("props");
+        Assertions.assertNotNull(propsField, "The field props is not existing");
     }
 
     @Test
