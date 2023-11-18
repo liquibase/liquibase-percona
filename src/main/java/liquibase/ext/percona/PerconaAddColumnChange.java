@@ -80,7 +80,7 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
     String convertColumnToSql(AddColumnConfig column, Database database) {
         String nullable = "";
         ConstraintsConfig constraintsConfig = column.getConstraints();
-        if (constraintsConfig != null && !constraintsConfig.isNullable()) {
+        if (constraintsConfig != null && constraintsConfig.isNullable() != null && !constraintsConfig.isNullable()) {
             nullable = " NOT NULL";
         } else {
             nullable = " NULL";
