@@ -109,48 +109,50 @@ public class DatabaseConnectionUtil {
                 jdbcCon = getDelegatedDbcp2Connection(jdbcCon);
                 jdbcCon = getUnderlyingJdbcConnectionFromProxy(jdbcCon);
     
-                Class<?> connectionImplClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
-                        "com.mysql.jdbc.ConnectionImpl",   // MySQL Connector 5.1.38: com.mysql.jdbc.ConnectionImpl
-                        "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 6.0.4: com.mysql.cj.jdbc.ConnectionImpl
+                Class<?> mysqlConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                        "com.mysql.cj.jdbc.ConnectionImpl" // MySQL Connector 8.x: com.mysql.cj.jdbc.ConnectionImpl
                     );
     
-                Class<?> mariadbConnection2Class = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                Class<?> mariadb2ConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
                         "org.mariadb.jdbc.MariaDbConnection" // MariaDB Connector 2.x
                     );
 
-                Class<?> mariadbConnection3Class = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
+                Class<?> mariadb3ConnectionClass = ReflectionUtils.findClass(jdbcCon.getClass().getClassLoader(),
                         "org.mariadb.jdbc.Connection"         // MariaDB Connector 3.x
                     );
 
-                boolean isMySQL = false;
-                boolean isMariaDB = false;
+                boolean isMySQLConnector = false;
+                boolean isMariadb2Connector = false;
+                boolean isMariadb3Connector = false;
     
-                if (connectionImplClass != null && connectionImplClass.isInstance(jdbcCon)) {
-                    isMySQL = true;
+                if (mysqlConnectionClass != null && mysqlConnectionClass.isInstance(jdbcCon)) {
+                    isMySQLConnector = true;
                 }
-                if (mariadbConnection2Class != null && mariadbConnection2Class.isInstance(jdbcCon)
-                        || mariadbConnection3Class != null && mariadbConnection3Class.isInstance(jdbcCon)) {
-                    isMariaDB = true;
+                if (mariadb2ConnectionClass != null && mariadb2ConnectionClass.isInstance(jdbcCon)) {
+                    isMariadb2Connector = true;
+                }
+                if (mariadb3ConnectionClass != null && mariadb3ConnectionClass.isInstance(jdbcCon)) {
+                    isMariadb3Connector = true;
                 }
     
-                if (isMySQL) {
+                if (isMySQLConnector) {
                     // ConnectionImpl stores the properties, and the jdbc connection is a subclass of it...
-                    Properties props = ReflectionUtils.readField(connectionImplClass, jdbcCon, "props");
+                    Properties props = ReflectionUtils.readField(mysqlConnectionClass, jdbcCon, "props");
                     String password = props.getProperty(PASSWORD_PROPERTY_NAME);
                     if (password != null && !password.trim().isEmpty()) {
                         return password;
                     }
-                } else if (isMariaDB && mariadbConnection2Class != null) {
+                } else if (isMariadb2Connector) {
                     // MariaDB Connector 2.x
-                    Object protocol = ReflectionUtils.readField(mariadbConnection2Class, jdbcCon, "protocol");
+                    Object protocol = ReflectionUtils.readField(mariadb2ConnectionClass, jdbcCon, "protocol");
                     Object urlParser = ReflectionUtils.invokeMethod(protocol.getClass(), protocol, "getUrlParser");
                     Object password = ReflectionUtils.invokeMethod(urlParser.getClass(), urlParser, "getPassword");
                     if (password != null && !password.toString().trim().isEmpty()) {
                         return password.toString();
                     }
-                } else if (isMariaDB && mariadbConnection3Class != null) {
+                } else if (isMariadb3Connector) {
                     // MariaDB Connector 3.x
-                    Object configuration = ReflectionUtils.readField(mariadbConnection3Class, jdbcCon, "conf");
+                    Object configuration = ReflectionUtils.readField(mariadb3ConnectionClass, jdbcCon, "conf");
                     Object password = ReflectionUtils.invokeMethod(configuration.getClass(), configuration, "password");
                     if (password != null && !password.toString().trim().isEmpty()) {
                         return password.toString();
