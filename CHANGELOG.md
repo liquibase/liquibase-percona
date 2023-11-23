@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.25.0...HEAD)
+
+**🐛 Fixed bugs:**
+
+- NPE in PerconaAddColumnChange when constraint without nullable attribute [\#380](https://github.com/liquibase/liquibase-percona/issues/380)
+
+**🎉 Merged pull requests:**
+
+- Add missing null check for ConstrainsConfig::isNullable [\#381](https://github.com/liquibase/liquibase-percona/pull/381) (@adangel)
+
 ## [v4.25.0](https://github.com/liquibase/liquibase-percona/tree/v4.25.0) (2023-11-16)
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.24.0...v4.25.0)
