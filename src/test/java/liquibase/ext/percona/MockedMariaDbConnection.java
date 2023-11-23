@@ -17,15 +17,18 @@ package liquibase.ext.percona;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.function.Function;
 
 import org.mariadb.jdbc.Configuration;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.HostAddress;
 import org.mariadb.jdbc.Statement;
 import org.mariadb.jdbc.client.Client;
+import org.mariadb.jdbc.client.ColumnDecoder;
 import org.mariadb.jdbc.client.Completion;
 import org.mariadb.jdbc.client.Context;
 import org.mariadb.jdbc.client.PrepareCache;
+import org.mariadb.jdbc.client.ReadableByteBuf;
 import org.mariadb.jdbc.client.ServerVersion;
 import org.mariadb.jdbc.export.ExceptionFactory;
 import org.mariadb.jdbc.export.Prepare;
@@ -177,11 +180,6 @@ public class MockedMariaDbConnection {
         }
 
         @Override
-        public boolean isExtendedInfo() {
-            return false;
-        }
-
-        @Override
         public boolean isEofDeprecated() {
             return false;
         }
@@ -244,6 +242,11 @@ public class MockedMariaDbConnection {
         @Override
         public boolean canSkipMeta() {
             return false;
+        }
+
+        @Override
+        public Function<ReadableByteBuf, ColumnDecoder> getColumnDecoderFunction() {
+            return null;
         }
 
         @Override
