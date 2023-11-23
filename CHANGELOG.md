@@ -8,6 +8,10 @@
 
 - NPE in PerconaAddColumnChange when constraint without nullable attribute [\#380](https://github.com/liquibase/liquibase-percona/issues/380)
 
+**📦 Dependency updates:**
+
+- Bump org.codehaus.mojo:exec-maven-plugin from 3.1.0 to 3.1.1 [\#379](https://github.com/liquibase/liquibase-percona/pull/379) (@dependabot[bot])
+
 **🎉 Merged pull requests:**
 
 - Add missing null check for ConstrainsConfig::isNullable [\#381](https://github.com/liquibase/liquibase-percona/pull/381) (@adangel)
