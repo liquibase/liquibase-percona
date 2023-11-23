@@ -19,6 +19,7 @@
 
 **🎉 Merged pull requests:**
 
+- Run Integration Tests additionally with Java 21 [\#383](https://github.com/liquibase/liquibase-percona/pull/383) (@adangel)
 - Add missing null check for ConstrainsConfig::isNullable [\#381](https://github.com/liquibase/liquibase-percona/pull/381) (@adangel)
 
 ## [v4.25.0](https://github.com/liquibase/liquibase-percona/tree/v4.25.0) (2023-11-16)
