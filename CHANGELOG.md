@@ -14,6 +14,7 @@
 
 **📦 Dependency updates:**
 
+- Update MySQL and MariaDB versions for integration tests [\#382](https://github.com/liquibase/liquibase-percona/pull/382) (@adangel)
 - Bump org.codehaus.mojo:exec-maven-plugin from 3.1.0 to 3.1.1 [\#379](https://github.com/liquibase/liquibase-percona/pull/379) (@dependabot[bot])
 
 **🎉 Merged pull requests:**
