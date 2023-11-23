@@ -16,7 +16,7 @@ jobs:
       matrix:
         java: [8, 11, 17]
         mysql: [5.7, 8]
-        mariadb: [10]
+        mariadb: [10, 11]
     steps:
     - uses: actions/checkout@v4
     - name: Install Perl modules

@@ -62,7 +62,7 @@
         <config_password>root</config_password>
         <config_dbname>testdb</config_dbname>
         <mysql_image>mysql:5.7</mysql_image>
-        <mariadb_image>mariadb:10</mariadb_image>
+        <mariadb_image>mariadb:11</mariadb_image>
 
         <docker.removeVolumes>true</docker.removeVolumes>
         <percona.toolkit.usecache>true</percona.toolkit.usecache>
