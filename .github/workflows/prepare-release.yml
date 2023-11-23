@@ -111,7 +111,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [8, 11, 17]
+        java: [8, 11, 17, 21]
         mysql: [8.0, 8.2]
         mariadb: [10, 11]
     steps:
