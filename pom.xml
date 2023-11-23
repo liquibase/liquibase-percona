@@ -44,7 +44,7 @@
 
         <java.version>1.8</java.version>
         <liquibase.version>4.25.0</liquibase.version>
-        <mysql.version>8.0.30</mysql.version>
+        <mysql.connector.version>8.2.0</mysql.connector.version>
         <mariadb.connector.version>3.2.0</mariadb.connector.version>
         <percona.toolkit.version>3.5.5</percona.toolkit.version>
 
@@ -61,8 +61,8 @@
         <config_user>root</config_user>
         <config_password>root</config_password>
         <config_dbname>testdb</config_dbname>
-        <mysql_image>mysql:5.7</mysql_image>
-        <mariadb_image>mariadb:10</mariadb_image>
+        <mysql_image>mysql:8.2</mysql_image>
+        <mariadb_image>mariadb:11</mariadb_image>
 
         <docker.removeVolumes>true</docker.removeVolumes>
         <percona.toolkit.usecache>true</percona.toolkit.usecache>
@@ -90,9 +90,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.connector.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
