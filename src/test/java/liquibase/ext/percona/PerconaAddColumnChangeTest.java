@@ -317,4 +317,22 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
                 + "ADD CONSTRAINT fk_test_column FOREIGN KEY (testColumn) REFERENCES _person_new(id)",
                 c.convertColumnToSql(column, database));
     }
+
+    @Test
+    void testConvertColumnWithoutExplicitNullable() {
+        PerconaAddColumnChange change = getChange();
+        Database database = getDatabase();
+
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName("address");
+        column.setType("varchar(255)");
+
+        ConstraintsConfig constraints = new ConstraintsConfig();
+        constraints.setNullable((Boolean) null); // make sure, it is null
+        constraints.setUnique(true);
+        column.setConstraints(constraints);
+
+        Assertions.assertEquals("ADD COLUMN address VARCHAR(255) NULL, ADD UNIQUE (address)",
+                change.convertColumnToSql(column, database));
+    }
 }
