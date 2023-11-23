@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.25.0...HEAD)
 
+**💥 Breaking changes:**
+
+- Remove support for old mysql connectors \(5.x and 6.x\) [\#378](https://github.com/liquibase/liquibase-percona/pull/378) (@adangel)
+
 **🐛 Fixed bugs:**
 
 - NPE in PerconaAddColumnChange when constraint without nullable attribute [\#380](https://github.com/liquibase/liquibase-percona/issues/380)
