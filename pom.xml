@@ -68,6 +68,15 @@
         <percona.toolkit.usecache>true</percona.toolkit.usecache>
         <percona.toolkit.cachedir>${project.basedir}/.cache</percona.toolkit.cachedir>
         <itPrebuildHookScript>../sharedScripts/setup</itPrebuildHookScript>
+        <sonar.organization>liquibase</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.scm.provider>git</sonar.scm.provider>
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.projectKey>liquibase_${project.artifactId}</sonar.projectKey>
+        <sonar.projectDescription>${project.description}</sonar.projectDescription>
     </properties>
 
     <dependencies>
