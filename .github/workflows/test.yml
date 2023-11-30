@@ -24,6 +24,7 @@ jobs:
   integration-tests:
     name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
     runs-on: ubuntu-latest
+    needs: build-test
     timeout-minutes: 60
     strategy:
       matrix:
