@@ -1,27 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-parent-pom</artifactId>
-        <version>0.3.3</version> 
-    </parent>
-
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
     <version>4.25.1-SNAPSHOT</version>
     <name>Liquibase Percona Extension</name>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
+    <organization>
+        <name>Liquibase.org</name>
+        <url>http://www.liquibase.org</url>
+    </organization>
+    <inceptionYear>2014</inceptionYear>
+    <licenses>
+        <license>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <name>Apache License, Version 2.0</name>
+        </license>
+    </licenses>
+    <issueManagement>
+        <url>https://github.com/liquibase/liquibase-percona/issues</url>
+        <system>github</system>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:http://github.com/liquibase/liquibase-percona.git</connection>
+        <url>https://github.com/liquibase/liquibase-percona</url>
+        <tag>HEAD</tag>
+    </scm>
+    <developers>
+        <developer>
+            <id>adangel</id>
+            <name>Andreas Dangel</name>
+            <email>andreas.dangel at adangel.org</email>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
-        <project.build.outputTimestamp>2023-11-30T12:06:43Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2023-11-16T08:01:37+00:00</project.build.outputTimestamp>
+
+        <java.version>1.8</java.version>
         <liquibase.version>4.25.0</liquibase.version>
         <mysql.connector.version>8.2.0</mysql.connector.version>
         <mariadb.connector.version>3.2.0</mariadb.connector.version>
         <percona.toolkit.version>3.5.5</percona.toolkit.version>
+
         <config_host>127.0.0.1</config_host>
         <!--
         Docker will choose a random free port for the mysql instance
@@ -37,10 +63,21 @@
         <config_dbname>testdb</config_dbname>
         <mysql_image>mysql:8.2</mysql_image>
         <mariadb_image>mariadb:11</mariadb_image>
+
         <docker.removeVolumes>true</docker.removeVolumes>
         <percona.toolkit.usecache>true</percona.toolkit.usecache>
         <percona.toolkit.cachedir>${project.basedir}/.cache</percona.toolkit.cachedir>
         <itPrebuildHookScript>../sharedScripts/setup</itPrebuildHookScript>
+        <sonar.organization>liquibase</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.scm.provider>git</sonar.scm.provider>
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.projectKey>liquibase_${project.artifactId}</sonar.projectKey>
+        <sonar.projectDescription>${project.description}</sonar.projectDescription>
+        <gmavenplus-plugin.version>3.0.2</gmavenplus-plugin.version>
     </properties>
 
     <dependencies>
@@ -174,7 +211,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -191,9 +228,50 @@
     
         <plugins>
             <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <optimize>true</optimize>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>${java.version}</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
-                    <targetJdk>11</targetJdk>
+                    <targetJdk>${java.version}</targetJdk>
                     <printFailingErrors>true</printFailingErrors>
                     <linkXRef>false</linkXRef>
                 </configuration>
@@ -254,13 +332,181 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype-nexus-staging</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <profiles>
+        <profile>
+            <id>snapshot</id>
+            <properties>
+                <liquibase.version>4.24.0</liquibase.version>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.liquibase.ext</groupId>
+                        <artifactId>liquibase-sdk-maven-plugin</artifactId>
+                        <version>0.10.20</version>
+                        <configuration>
+                            <githubToken>${env.GITHUB_TOKEN}</githubToken>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                         <groupId>org.codehaus.gmavenplus</groupId>
+                         <artifactId>gmavenplus-plugin</artifactId>
+                         <version>${gmavenplus-plugin.version}</version>
+                         <executions>
+                             <execution>
+                                 <goals>
+                                     <goal>addSources</goal>
+                                     <goal>addTestSources</goal>
+                                     <goal>compile</goal>
+                                     <goal>compileTests</goal>
+                                     <goal>removeStubs</goal>
+                                     <goal>removeTestStubs</goal>
+                                 </goals>
+                                 <!--Runs standard tests and CommandTests which require liquibase-extension-testing-->
+                                 <configuration>
+                                     <testSources>
+                                         <testSource>
+                                             <directory>${project.basedir}/src/test/</directory>
+                                             <includes>
+                                                 <include>**/**.groovy</include>
+                                             </includes>
+                                         </testSource>
+                                     </testSources>
+                                 </configuration>
+                             </execution>
+                         </executions>
+                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>coverage</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                              <goals>
+                                <goal>prepare-agent</goal>
+                              </goals>
+                            </execution>
+                            <execution>
+                              <id>report</id>
+                              <phase>test</phase>
+                              <goals>
+                                <goal>report</goal>
+                              </goals>
+                            </execution>
+                          </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <author>false</author>
+                            <doctitle>Liquibase ${project.name} ${project.version} API</doctitle>
+                            <quiet>true</quiet>
+                            <doclint>none</doclint>
+                            <encoding>UTF-8</encoding>
+                            <jarOutputDirectory>${project.build.directory}</jarOutputDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>jar-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>${copy-rename-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>copy</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <fileSets>
+                                        <fileSet>
+                                            <sourceFile>${project.basedir}/pom.xml</sourceFile>
+                                            <destinationFile>${project.basedir}/target/${project.artifactId}-${project.version}.pom</destinationFile>
+                                        </fileSet>
+                                    </fileSets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <!-- Required for deployment to Sonatype -->
             <id>release</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
