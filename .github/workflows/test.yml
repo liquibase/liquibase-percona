@@ -1,0 +1,51 @@
+name: Build and Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  build-test:
+    uses: liquibase/build-logic/.github/workflows/os-extension-test.yml@v0.5.7
+    secrets: inherit
+    with:
+      java: "[11, 17, 18]"
+      os: '["ubuntu-latest", "windows-latest"]'
+
+  dependabot-automerge:
+    needs: build-test
+    uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@v0.5.7
+    secrets: inherit
+
+  integration-tests:
+    name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [8, 11, 17, 21]
+        mysql: [8.0, 8.2]
+        mariadb: [10, 11]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Perl modules
+      run: |
+        sudo apt-get update
+        sudo apt-get install libdbd-mysql-perl
+    - name: Set up JDK ${{ matrix.java }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'temurin'
+        cache: 'maven'
+    - name: Run Integration Tests With Maven
+      shell: bash
+      run: |
+        ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
+            clean verify -Prun-its \
+            -Dmysql_image=mysql:${{ matrix.mysql }} \
+            -Dmariadb_image=mariadb:${{ matrix.mariadb }}
