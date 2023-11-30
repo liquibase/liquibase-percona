@@ -1,53 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-parent-pom</artifactId>
+        <version>0.3.3</version> 
+    </parent>
+
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
     <version>4.25.1-SNAPSHOT</version>
     <name>Liquibase Percona Extension</name>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
-    <organization>
-        <name>Liquibase.org</name>
-        <url>http://www.liquibase.org</url>
-    </organization>
-    <inceptionYear>2014</inceptionYear>
-    <licenses>
-        <license>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-            <name>Apache License, Version 2.0</name>
-        </license>
-    </licenses>
-    <issueManagement>
-        <url>https://github.com/liquibase/liquibase-percona/issues</url>
-        <system>github</system>
-    </issueManagement>
-    <scm>
-        <connection>scm:git:http://github.com/liquibase/liquibase-percona.git</connection>
-        <url>https://github.com/liquibase/liquibase-percona</url>
-        <tag>HEAD</tag>
-    </scm>
-    <developers>
-        <developer>
-            <id>adangel</id>
-            <name>Andreas Dangel</name>
-            <email>andreas.dangel at adangel.org</email>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
         <project.build.outputTimestamp>2023-11-16T08:01:37+00:00</project.build.outputTimestamp>
-
-        <java.version>1.8</java.version>
         <liquibase.version>4.25.0</liquibase.version>
         <mysql.connector.version>8.2.0</mysql.connector.version>
         <mariadb.connector.version>3.2.0</mariadb.connector.version>
         <percona.toolkit.version>3.5.5</percona.toolkit.version>
-
         <config_host>127.0.0.1</config_host>
         <!--
         Docker will choose a random free port for the mysql instance
@@ -63,20 +37,10 @@
         <config_dbname>testdb</config_dbname>
         <mysql_image>mysql:8.2</mysql_image>
         <mariadb_image>mariadb:11</mariadb_image>
-
         <docker.removeVolumes>true</docker.removeVolumes>
         <percona.toolkit.usecache>true</percona.toolkit.usecache>
         <percona.toolkit.cachedir>${project.basedir}/.cache</percona.toolkit.cachedir>
         <itPrebuildHookScript>../sharedScripts/setup</itPrebuildHookScript>
-        <sonar.organization>liquibase</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.scm.provider>git</sonar.scm.provider>
-        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-        <sonar.sources>src/main/java</sonar.sources>
-        <sonar.tests>src/test/java</sonar.tests>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.projectKey>liquibase_${project.artifactId}</sonar.projectKey>
-        <sonar.projectDescription>${project.description}</sonar.projectDescription>
     </properties>
 
     <dependencies>
@@ -227,47 +191,6 @@
     
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <optimize>true</optimize>
-                    <debug>true</debug>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-java</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>${java.version}</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <targetJdk>${java.version}</targetJdk>
@@ -331,32 +254,8 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>sonatype-nexus-staging</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Nexus Release Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <profiles>
         <profile>
