@@ -77,6 +77,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.projectKey>liquibase_${project.artifactId}</sonar.projectKey>
         <sonar.projectDescription>${project.description}</sonar.projectDescription>
+        <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -209,6 +210,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.4.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>3.1.1</version>
                 </plugin>
@@ -221,29 +227,6 @@
         </pluginManagement>
     
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.4.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-pom</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>${project.basedir}/pom.xml</file>
-                                    <type>pom</type>
-                                    <classifier>original</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -378,8 +361,103 @@
 
     <profiles>
         <profile>
+            <id>coverage</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                              <goals>
+                                <goal>prepare-agent</goal>
+                              </goals>
+                            </execution>
+                            <execution>
+                              <id>report</id>
+                              <phase>test</phase>
+                              <goals>
+                                <goal>report</goal>
+                              </goals>
+                            </execution>
+                          </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <author>false</author>
+                            <doctitle>Liquibase ${project.name} ${project.version} API</doctitle>
+                            <quiet>true</quiet>
+                            <doclint>none</doclint>
+                            <encoding>UTF-8</encoding>
+                            <jarOutputDirectory>${project.build.directory}</jarOutputDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>jar-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>${copy-rename-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>copy</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <fileSets>
+                                        <fileSet>
+                                            <sourceFile>${project.basedir}/pom.xml</sourceFile>
+                                            <destinationFile>${project.basedir}/target/${project.artifactId}-${project.version}.pom</destinationFile>
+                                        </fileSet>
+                                    </fileSets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <!-- Required for deployment to Sonatype -->
             <id>release</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -416,24 +494,24 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <configuration>
-                            <passphrase>${env.GPG_PASSPHRASE}</passphrase>
-                            <gpgArguments>
-                                <!-- This is necessary for gpg to not try to use the pinentry programs -->
-                                <arg>--batch</arg>
-                                <arg>--no-tty</arg>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>${copy-rename-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>sign-artifacts</id>
+                                <id>copy</id>
+                                <phase>package</phase>
                                 <goals>
-                                    <goal>sign</goal>
+                                    <goal>copy</goal>
                                 </goals>
+                                <configuration>
+                                    <fileSets>
+                                        <fileSet>
+                                            <sourceFile>${project.basedir}/pom.xml</sourceFile>
+                                            <destinationFile>${project.basedir}/target/${project.artifactId}-${project.version}.pom</destinationFile>
+                                        </fileSet>
+                                    </fileSets>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -600,6 +678,31 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>remote-repositories</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>liquibase</id>
+                    <url>https://maven.pkg.github.com/liquibase/liquibase</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>liquibase-pro</id>
+                    <url>https://maven.pkg.github.com/liquibase/liquibase-pro</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
         </profile>
     </profiles>
 </project>
