@@ -78,6 +78,10 @@
         <sonar.projectKey>liquibase_${project.artifactId}</sonar.projectKey>
         <sonar.projectDescription>${project.description}</sonar.projectDescription>
         <gmavenplus-plugin.version>3.0.2</gmavenplus-plugin.version>
+        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.6.0</maven-javadoc-plugin.version>
+        <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
     </properties>
 
     <dependencies>
