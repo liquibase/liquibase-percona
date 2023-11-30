@@ -10,14 +10,14 @@
 
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.25.1</version>
+    <version>4.25.2-SNAPSHOT</version>
     <name>Liquibase Percona Extension</name>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
 
     <properties>
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
-        <project.build.outputTimestamp>2023-11-30T12:06:33Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2023-11-30T12:06:43Z</project.build.outputTimestamp>
         <liquibase.version>4.25.0</liquibase.version>
         <mysql.connector.version>8.2.0</mysql.connector.version>
         <mariadb.connector.version>3.2.0</mariadb.connector.version>
@@ -483,8 +483,4 @@
             </build>
         </profile>
     </profiles>
-
-  <scm>
-    <tag>liquibase-percona-4.25.1</tag>
-  </scm>
 </project>
