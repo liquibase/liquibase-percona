@@ -126,10 +126,12 @@ public class PerconaChangeUtil {
     public static ValidationErrors validate(ValidationErrors validationErrors, Database database) {
         // Note: MariaDB is a subclass of MySQLDatabase - so the Percona changes are
         // used for both MySQLDatabase and MariaDBDatabase.
-        if (database instanceof MySQLDatabase
-                && !PTOnlineSchemaChangeStatement.isAvailable()
-                && Configuration.failIfNoPT()) {
-            validationErrors.addError("No percona toolkit found!");
+        if (database instanceof MySQLDatabase && !PTOnlineSchemaChangeStatement.isAvailable()) {
+            if (Configuration.failIfNoPT()) {
+                validationErrors.addError("No percona toolkit found!");
+            } else {
+                validationErrors.addWarning("Not using percona toolkit, because it is not available!");
+            }
         }
         return validationErrors;
     }
