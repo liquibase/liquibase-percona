@@ -277,5 +277,15 @@ public class MockedMariaDbConnection {
         public boolean permitPipeline() {
             return false;
         }
+
+        @Override
+        public void setAutoIncrement(long l) {
+
+        }
+
+        @Override
+        public Long getAutoIncrement() {
+            return null;
+        }
     }
 }
