@@ -28,6 +28,7 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.ValidationErrors;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
 import liquibase.executor.jvm.JdbcExecutor;
@@ -120,6 +121,10 @@ public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
     }
     protected SqlStatement[] generateRollbackStatements() throws RollbackImpossibleException {
         return change.generateRollbackStatements(database);
+    }
+
+    protected ValidationErrors validate() {
+        return change.validate(database);
     }
 
     protected void enableLogging() {
