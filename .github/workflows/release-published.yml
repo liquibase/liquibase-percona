@@ -1,33 +1,11 @@
 name: Release Extension to Sonatype
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
 jobs:
-    release:
-      runs-on: ubuntu-latest
-      timeout-minutes: 60
-      steps:
-        - uses: actions/checkout@v4
-
-        - name: Set up Java for publishing to Maven Central Repository
-          uses: actions/setup-java@v3
-          with:
-            java-version: '11'
-            distribution: 'temurin'
-            server-id: sonatype-nexus-staging
-            server-username: MAVEN_USERNAME
-            server-password: MAVEN_PASSWORD
-            gpg-private-key: ${{ secrets.GPG_SECRET }}
-            gpg-passphrase: GPG_PASSPHRASE
-
-        - name: Publish to the Maven Central Repository
-          run: |
-            ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
-               -Dmaven.test.skip -Dpmd.skip -Dcpd.skip -Dspotbugs.skip \
-               clean deploy -Prelease
-          env:
-            MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-            MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
-            GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+  release:
+    uses: liquibase/build-logic/.github/workflows/extension-release-published.yml@v0.6.6
+    secrets: inherit

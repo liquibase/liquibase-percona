@@ -2,10 +2,34 @@
 
 ## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.24.0...HEAD)
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.25.0...HEAD)
+
+**💥 Breaking changes:**
+
+- Remove support for old mysql connectors \(5.x and 6.x\) [\#378](https://github.com/liquibase/liquibase-percona/pull/378) (@adangel)
+
+**🐛 Fixed bugs:**
+
+- NPE in PerconaAddColumnChange when constraint without nullable attribute [\#380](https://github.com/liquibase/liquibase-percona/issues/380)
 
 **📦 Dependency updates:**
 
+- Update MySQL and MariaDB versions for integration tests [\#382](https://github.com/liquibase/liquibase-percona/pull/382) (@adangel)
+- Bump org.codehaus.mojo:exec-maven-plugin from 3.1.0 to 3.1.1 [\#379](https://github.com/liquibase/liquibase-percona/pull/379) (@dependabot[bot])
+
+**🎉 Merged pull requests:**
+
+- Run Integration Tests additionally with Java 21 [\#383](https://github.com/liquibase/liquibase-percona/pull/383) (@adangel)
+- Add missing null check for ConstrainsConfig::isNullable [\#381](https://github.com/liquibase/liquibase-percona/pull/381) (@adangel)
+
+## [v4.25.0](https://github.com/liquibase/liquibase-percona/tree/v4.25.0) (2023-11-16)
+
+[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.24.0...v4.25.0)
+
+**📦 Dependency updates:**
+
+- Bump org.apache.tomcat:tomcat-jdbc from 10.1.15 to 10.1.16 [\#377](https://github.com/liquibase/liquibase-percona/pull/377) (@dependabot[bot])
+- Bump org.liquibase:liquibase-core from 4.24.0 to 4.25.0 [\#376](https://github.com/liquibase/liquibase-percona/pull/376) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-javadoc-plugin from 3.6.0 to 3.6.2 [\#374](https://github.com/liquibase/liquibase-percona/pull/374) (@dependabot[bot])
 - Bump org.apache.maven.plugins:maven-surefire-plugin from 3.2.1 to 3.2.2 [\#373](https://github.com/liquibase/liquibase-percona/pull/373) (@dependabot[bot])
 - Bump com.github.spotbugs:spotbugs-maven-plugin from 4.7.3.6 to 4.8.1.0 [\#372](https://github.com/liquibase/liquibase-percona/pull/372) (@dependabot[bot])
