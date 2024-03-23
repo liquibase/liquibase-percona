@@ -17,15 +17,18 @@ package liquibase.ext.percona;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.function.Function;
 
 import org.mariadb.jdbc.Configuration;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.HostAddress;
 import org.mariadb.jdbc.Statement;
 import org.mariadb.jdbc.client.Client;
+import org.mariadb.jdbc.client.ColumnDecoder;
 import org.mariadb.jdbc.client.Completion;
 import org.mariadb.jdbc.client.Context;
 import org.mariadb.jdbc.client.PrepareCache;
+import org.mariadb.jdbc.client.ReadableByteBuf;
 import org.mariadb.jdbc.client.ServerVersion;
 import org.mariadb.jdbc.export.ExceptionFactory;
 import org.mariadb.jdbc.export.Prepare;
@@ -128,6 +131,11 @@ public class MockedMariaDbConnection {
         public HostAddress getHostAddress() {
             return null;
         }
+
+        @Override
+        public String getSocketIp() {
+            return null;
+        }
     }
 
     private static class MockedContext implements Context {
@@ -169,11 +177,6 @@ public class MockedMariaDbConnection {
 
         @Override
         public void resetPrepareCache() {
-        }
-
-        @Override
-        public boolean isExtendedInfo() {
-            return false;
         }
 
         @Override
@@ -242,6 +245,11 @@ public class MockedMariaDbConnection {
         }
 
         @Override
+        public Function<ReadableByteBuf, ColumnDecoder> getColumnDecoderFunction() {
+            return null;
+        }
+
+        @Override
         public void addStateFlag(int state) {
         }
 
@@ -268,6 +276,16 @@ public class MockedMariaDbConnection {
         @Override
         public boolean permitPipeline() {
             return false;
+        }
+
+        @Override
+        public void setAutoIncrement(long l) {
+
+        }
+
+        @Override
+        public Long getAutoIncrement() {
+            return null;
         }
     }
 }
