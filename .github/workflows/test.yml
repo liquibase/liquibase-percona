@@ -6,11 +6,6 @@ on:
       - opened
       - reopened
       - synchronize
-  pull_request_target:
-    types:
-      - opened
-      - reopened
-      - synchronize
 
 jobs:
   authorize:
