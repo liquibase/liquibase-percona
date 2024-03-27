@@ -25,6 +25,7 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.database.Database;
+import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 import liquibase.util.StringUtil;
 
@@ -134,6 +135,11 @@ public class PerconaAddUniqueConstraintChange extends AddUniqueConstraintChange 
         fields.remove("usePercona");
         fields.remove("perconaOptions");
         return Collections.unmodifiableSet(fields);
+    }
+
+    @Override
+    public ValidationErrors validate(Database database) {
+        return PerconaChangeUtil.validate(super.validate(database), database);
     }
     //CPD-ON
 }

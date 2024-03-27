@@ -24,6 +24,7 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.DropColumnChange;
 import liquibase.database.Database;
+import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 
 /**
@@ -121,6 +122,11 @@ public class PerconaDropColumnChange extends DropColumnChange implements Percona
         fields.remove("usePercona");
         fields.remove("perconaOptions");
         return Collections.unmodifiableSet(fields);
+    }
+
+    @Override
+    public ValidationErrors validate(Database database) {
+        return PerconaChangeUtil.validate(super.validate(database), database);
     }
     //CPD-ON
 }
