@@ -1,5 +1,5 @@
 
-name-template: 'Liquibase Git Resource v$RESOLVED_VERSION'
+name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 exclude-labels:
   - 'skipReleaseNotes'
