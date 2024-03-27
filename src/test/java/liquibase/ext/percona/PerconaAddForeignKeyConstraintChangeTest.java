@@ -16,9 +16,9 @@ package liquibase.ext.percona;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.AddForeignKeyConstraintStatement;
 import liquibase.statement.core.CommentStatement;
@@ -71,25 +71,9 @@ public class PerconaAddForeignKeyConstraintChangeTest extends AbstractPerconaCha
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        Assertions.assertThrows(RuntimeException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                generateStatements();
-            }
-        });
-    }
-
-    @Test
-    public void testWithoutPerdatabaseconaRollbackAndFail() throws RollbackImpossibleException {
-        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
-        PTOnlineSchemaChangeStatement.available = false;
-
-        Assertions.assertThrows(RuntimeException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                generateRollbackStatements();
-            }
-        });
+        ValidationErrors errors = validate();
+        Assertions.assertTrue(errors.hasErrors());
+        Assertions.assertTrue(errors.getErrorMessages().contains("No percona toolkit found!"));
     }
 
     @Test

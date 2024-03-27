@@ -34,6 +34,7 @@ import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 
 /**
@@ -233,6 +234,11 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
         fields.remove("usePercona");
         fields.remove("perconaOptions");
         return Collections.unmodifiableSet(fields);
+    }
+
+    @Override
+    public ValidationErrors validate(Database database) {
+        return PerconaChangeUtil.validate(super.validate(database), database);
     }
     //CPD-ON
 }

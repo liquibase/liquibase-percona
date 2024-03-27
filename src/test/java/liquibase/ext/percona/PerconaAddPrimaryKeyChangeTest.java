@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.AddPrimaryKeyStatement;
 import liquibase.statement.core.CommentStatement;
@@ -62,12 +63,9 @@ public class PerconaAddPrimaryKeyChangeTest extends AbstractPerconaChangeTest<Pe
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        Assertions.assertThrows(RuntimeException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                generateStatements();
-            }
-        });
+        ValidationErrors errors = validate();
+        Assertions.assertTrue(errors.hasErrors());
+        Assertions.assertEquals("No percona toolkit found!", errors.getErrorMessages().get(0));
     }
 
     @Test

@@ -27,7 +27,7 @@ import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.exception.DatabaseException;
-import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.exception.ValidationErrors;
 import liquibase.executor.Executor;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
@@ -116,14 +116,24 @@ public class PerconaChangeUtil {
                     statements.add(statement);
                 }
             } else {
-                if (Configuration.failIfNoPT()) {
-                    throw new UnexpectedLiquibaseException("No percona toolkit found!");
-                }
                 maybeLog("Not using percona toolkit, because it is not available!");
             }
         }
 
         return statements.toArray(new SqlStatement[statements.size()]);
+    }
+
+    public static ValidationErrors validate(ValidationErrors validationErrors, Database database) {
+        // Note: MariaDB is a subclass of MySQLDatabase - so the Percona changes are
+        // used for both MySQLDatabase and MariaDBDatabase.
+        if (database instanceof MySQLDatabase && !PTOnlineSchemaChangeStatement.isAvailable()) {
+            if (Configuration.failIfNoPT()) {
+                validationErrors.addError("No percona toolkit found!");
+            } else {
+                validationErrors.addWarning("Not using percona toolkit, because it is not available!");
+            }
+        }
+        return validationErrors;
     }
 
     /**
