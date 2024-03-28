@@ -46,7 +46,7 @@
         <liquibase.version>4.26.0</liquibase.version>
         <mysql.connector.version>8.3.0</mysql.connector.version>
         <mariadb.connector.version>3.3.3</mariadb.connector.version>
-        <percona.toolkit.version>3.5.5</percona.toolkit.version>
+        <percona.toolkit.version>3.5.7</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--
