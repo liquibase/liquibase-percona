@@ -1,26 +1,91 @@
 # Changelog
 
-## [Unreleased](https://github.com/liquibase/liquibase-percona/tree/HEAD)
+Note: The current release notes are on GitHub: <https://github.com/liquibase/liquibase-percona/releases>.
+This file is updated occasionally after a release and might be out of date.
 
-[Full Changelog](https://github.com/liquibase/liquibase-percona/compare/v4.25.0...HEAD)
+## [v4.26.0](https://github.com/liquibase/liquibase-percona/tree/v4.26.0) (2024-03-27)
 
-**💥 Breaking changes:**
+Support for Liquibase 4.26.0.
 
-- Remove support for old mysql connectors \(5.x and 6.x\) [\#378](https://github.com/liquibase/liquibase-percona/pull/378) (@adangel)
+## Changes
 
-**🐛 Fixed bugs:**
+- (#424) Fix integration test (addColumnFailIfNoPT) @adangel
+- (#383) Run Integration Tests additionally with Java 21 @adangel
 
-- NPE in PerconaAddColumnChange when constraint without nullable attribute [\#380](https://github.com/liquibase/liquibase-percona/issues/380)
+## 🐛 Bug Fixes 🛠
 
-**📦 Dependency updates:**
+- (#381) Add missing null check for ConstrainsConfig::isNullable @adangel
 
-- Update MySQL and MariaDB versions for integration tests [\#382](https://github.com/liquibase/liquibase-percona/pull/382) (@adangel)
-- Bump org.codehaus.mojo:exec-maven-plugin from 3.1.0 to 3.1.1 [\#379](https://github.com/liquibase/liquibase-percona/pull/379) (@dependabot[bot])
+## 💥 Breaking Changes
 
-**🎉 Merged pull requests:**
+- (#378) Remove support for old mysql connectors (5.x and 6.x) @adangel
 
-- Run Integration Tests additionally with Java 21 [\#383](https://github.com/liquibase/liquibase-percona/pull/383) (@adangel)
-- Add missing null check for ConstrainsConfig::isNullable [\#381](https://github.com/liquibase/liquibase-percona/pull/381) (@adangel)
+## 🧰 Maintenance
+
+<details>
+<summary>9 changes</summary>
+
+- (#433) chore(release-drafter.yml): Add chore category, fix full changelog re… @adangel
+- (#432) chore: Bump version to 4.26.0-SNAPSHOT @adangel
+- (#431) chore(release-drafter.yml): Fix name-template @adangel
+- (#426) fix(test.yml): change event trigger from 'workflow\_dispatch' to 'pull… @jandroav
+- (#390) Update workflows @jandroav
+- (#389) Update workflows @jandroav
+- (#388) Update workflows @jandroav
+- (#387) chore(pom.xml): remove unused configuration and plugins from pom.xml @jandroav
+- (#385) fix workflows @jandroav
+</details>
+
+## 🤖 Security Driver and Other Updates
+
+<details>
+<summary>42 changes</summary>
+
+- (#430) chore(deps): bump liquibase/build-logic from 0.6.7 to 0.6.8 @dependabot
+- (#429) chore(deps-dev): bump org.apache.tomcat:tomcat-jdbc from 10.1.19 to 10.1.20 @dependabot
+- (#428) chore(deps): bump org.apache.maven.plugins:maven-gpg-plugin from 3.2.1 to 3.2.2 @dependabot
+- (#427) chore(deps): bump liquibase/build-logic from 0.6.6 to 0.6.7 @dependabot
+- (#393) Bump org.codehaus.mojo:build-helper-maven-plugin from 3.4.0 to 3.5.0 @dependabot
+- (#375) Bump org.mariadb.jdbc:mariadb-java-client from 3.2.0 to 3.3.3 @dependabot
+- (#386) Bump actions/setup-java from 3 to 4 @dependabot
+- (#423) chore(deps): bump liquibase/build-logic from 0.6.5 to 0.6.6 @dependabot
+- (#422) chore(deps): bump org.apache.maven.plugins:maven-compiler-plugin from 3.12.1 to 3.13.0 @dependabot
+- (#421) chore(deps): bump org.apache.maven.plugins:maven-gpg-plugin from 3.2.0 to 3.2.1 @dependabot
+- (#420) chore(deps): bump org.apache.maven.plugins:maven-gpg-plugin from 3.1.0 to 3.2.0 @dependabot
+- (#419) chore(deps): bump liquibase/build-logic from 0.6.4 to 0.6.5 @dependabot
+- (#418) chore(deps): bump liquibase/build-logic from 0.6.3 to 0.6.4 @dependabot
+- (#417) chore(deps-dev): bump org.apache.commons:commons-dbcp2 from 2.11.0 to 2.12.0 @dependabot
+- (#416) chore(deps): bump liquibase/build-logic from 0.6.2 to 0.6.3 @dependabot
+- (#415) Bump org.codehaus.mojo:exec-maven-plugin from 3.1.1 to 3.2.0 @dependabot
+- (#414) Bump org.apache.tomcat:tomcat-jdbc from 10.1.18 to 10.1.19 @dependabot
+- (#413) Bump io.fabric8:docker-maven-plugin from 0.43.4 to 0.44.0 @dependabot
+- (#412) Bump liquibase/build-logic from 0.6.1 to 0.6.2 @dependabot
+- (#411) Bump com.github.spotbugs:spotbugs-maven-plugin from 4.8.3.0 to 4.8.3.1 @dependabot
+- (#410) Bump org.liquibase:liquibase-core from 4.25.1 to 4.26.0 @dependabot
+- (#409) Bump org.junit.jupiter:junit-jupiter from 5.10.1 to 5.10.2 @dependabot
+- (#408) Bump com.mysql:mysql-connector-j from 8.2.0 to 8.3.0 @dependabot
+- (#407) Bump liquibase/build-logic from 0.6.0 to 0.6.1 @dependabot
+- (#406) Bump com.github.spotbugs:spotbugs-maven-plugin from 4.8.2.0 to 4.8.3.0 @dependabot
+- (#405) Bump org.apache.tomcat:tomcat-jdbc from 10.1.17 to 10.1.18 @dependabot
+- (#402) Bump org.apache.maven.plugins:maven-compiler-plugin from 3.12.0 to 3.12.1 @dependabot
+- (#404) Bump org.apache.maven.plugins:maven-surefire-plugin from 3.2.3 to 3.2.5 @dependabot
+- (#403) Bump liquibase/build-logic from 0.5.9 to 0.6.0 @dependabot
+- (#401) Bump org.liquibase:liquibase-core from 4.25.0 to 4.25.1 @dependabot
+- (#400) Bump org.apache.maven.plugins:maven-compiler-plugin from 3.11.0 to 3.12.0 @dependabot
+- (#399) Bump liquibase/build-logic from 0.5.8 to 0.5.9 @dependabot
+- (#398) Bump org.apache.maven.plugins:maven-surefire-plugin from 3.2.2 to 3.2.3 @dependabot
+- (#397) Bump org.apache.tomcat:tomcat-jdbc from 10.1.16 to 10.1.17 @dependabot
+- (#396) Bump liquibase/build-logic from 0.5.7 to 0.5.8 @dependabot
+- (#394) Bump com.github.spotbugs:spotbugs-maven-plugin from 4.8.1.0 to 4.8.2.0 @dependabot
+- (#395) Bump org.apache.maven.plugins:maven-javadoc-plugin from 3.6.2 to 3.6.3 @dependabot
+- (#391) Bump org.apache.maven.plugins:maven-javadoc-plugin from 3.6.0 to 3.6.2 @dependabot
+- (#392) Bump org.jacoco:jacoco-maven-plugin from 0.8.10 to 0.8.11 @dependabot
+- (#384) Bump org.codehaus.mojo:build-helper-maven-plugin from 3.4.0 to 3.5.0 @dependabot
+- (#382) Update MySQL and MariaDB versions for integration tests @adangel
+- (#379) Bump org.codehaus.mojo:exec-maven-plugin from 3.1.0 to 3.1.1 @dependabot
+</details>
+
+**Full Changelog**: https://github.com/liquibase/liquibase-percona/compare/v4.25.0...v4.26.0
 
 ## [v4.25.0](https://github.com/liquibase/liquibase-percona/tree/v4.25.0) (2023-11-16)
 
