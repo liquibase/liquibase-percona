@@ -1,0 +1,176 @@
+name: Manual Release from Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: 'Name of an existing tag from which the release should be done, e.g. v4.26.0'
+        required: true
+        default: ''
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref:  ${{ inputs.tagName }}
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
+      - name: Set up Java for publishing to Maven Central Repository
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
+      - name: maven-settings-xml-action
+        uses: whelk-io/maven-settings-xml-action@v21
+        with:
+          repositories: |
+            [
+              {
+                "id": "liquibase",
+                "url": "https://maven.pkg.github.com/liquibase/liquibase",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "true",
+                  "updatePolicy": "always"
+                }
+              },
+              {
+                "id": "liquibase-pro",
+                "url": "https://maven.pkg.github.com/liquibase/liquibase-pro",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "true",
+                  "updatePolicy": "always"
+                }
+              },
+              {
+                "id": "sonatype-nexus-staging",
+                "url": "https://oss.sonatype.org/service/local/staging/deploy/maven2/",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "false"
+                }
+              }
+            ]
+          servers: |
+            [
+              {
+                "id": "liquibase-pro",
+                "username": "liquibot",
+                "password": "${{ secrets.LIQUIBOT_PAT }}"
+              },
+              {
+                "id": "liquibase",
+                "username": "liquibot",
+                "password": "${{ secrets.LIQUIBOT_PAT }}"
+              },
+              {
+                "id": "sonatype-nexus-staging",
+                "username": "${{ secrets.SONATYPE_USERNAME }}",
+                "password": "${{ secrets.SONATYPE_TOKEN }}"
+              }
+            ]
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_SECRET }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
+      - name: Build release artifacts
+        id: build-release-artifacts
+        run: ./mvnw clean deploy -DskipTests -Dpmd.skip -Dcpd.skip -Dspotbugs.skip=true -DsignWithMavenGPGPlugin=true -DskipRemoteStaging=true
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
+      - name: Get Artifact ID and Version
+        id: get-artifact-id
+        run: |
+          echo "artifact_id=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
+          echo "artifact_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
+      - name: Get release ID and upload url
+        id: get-release
+        run: |
+          releases=$(curl -X GET -H "Authorization: token ${{ secrets.BOT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases?per_page=10")
+          FOUND_RELEASE_ID=$(echo $releases | jq -r '.[] | select(.name == "${{ inputs.tagName }}") | .id')
+          FOUND_UPLOAD_URL=$(echo $releases | jq -r '.[] | select(.name == "${{ inputs.tagName }}") | .upload_url')
+          FOUND_UPLOAD_URL="${FOUND_UPLOAD_URL//{?name,label\}}"
+          echo "Found Release ID: $FOUND_RELEASE_ID"
+          echo "Found Upload URL: $FOUND_UPLOAD_URL"
+          echo "RELEASE_ID=$FOUND_RELEASE_ID" >> $GITHUB_ENV
+          echo "RELEASE_UPLOAD_URL=$FOUND_UPLOAD_URL" >> $GITHUB_ENV
+
+      - name: List artifacts in release
+        if: env.RELEASE_ID != '' && env.RELEASE_ID != null
+        id: list-artifacts
+        run: |
+          RELEASE_ID="${{ env.RELEASE_ID }}"
+          ARTIFACTS=$(curl -X GET -H "Authorization: token ${{ secrets.BOT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets" | jq -r '.[].id')
+          echo "Artifacts to delete: $ARTIFACTS"
+          ARTIFACTS_CLEANED=$(echo "$ARTIFACTS" | tr -s '[:space:]' ',' | sed 's/,$//')
+          echo "ARTIFACTS_TO_DELETE=$ARTIFACTS_CLEANED" >> $GITHUB_ENV
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
+      - name: Delete artifacts
+        if: env.ARTIFACTS_TO_DELETE != null
+        run: |
+          RELEASE_ID="${{ env.RELEASE_ID }}"
+          ARTIFACTS_TO_DELETE="${{ env.ARTIFACTS_TO_DELETE }}"
+          IFS=',' read -ra values <<< "$ARTIFACTS_TO_DELETE"
+          for value in "${values[@]}"; do
+            curl -X DELETE -H "Authorization: token ${{ secrets.BOT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/assets/$value"
+            echo "Deleted artifact ID: $value"
+          done
+
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/sign_artifact.sh
+      - name: Create checksums
+        run: |
+          for FILE in $(find target/nexus-staging -name "${{ env.artifact_id }}-${{ env.artifact_version }}*.jar" -o -name "${{ env.artifact_id }}-${{ env.artifact_version }}.pom"); do
+            shasum -b -a 1 "$FILE" | cut -d " " -f 1 > "target/$(basename $FILE).sha1"
+            md5sum -b "$FILE" | cut -d " " -f 1 > "target/$(basename $FILE).md5"
+          done
+
+      - name: Attach Files to Release
+        id: upload-release-asset
+        run: |
+          files=()
+          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*.{sha1,md5}; do
+            files+=($FILE)
+          done
+          for FILE in $(find target/nexus-staging -name "${{ env.artifact_id }}-${{ env.artifact_version }}*.jar*" -o -name "${{ env.artifact_id }}-${{ env.artifact_version }}.pom*"); do
+            files+=($FILE)
+          done
+          
+          for FILE in ${files[*]}; do
+            SIZE=$(stat -c "%s" $FILE)
+            if [[ $SIZE -eq 0 ]]; then
+            echo "$FILE is empty."
+            exit 1;
+            fi
+            MIME=$(file -b --mime-type $FILE)
+            echo "Uploading $FILE (size=$SIZE, mime=$MIME)..."
+            curl \
+              -H "Authorization: token ${{ secrets.BOT_TOKEN }}" \
+              -H "Content-Length: $SIZE"\
+              -H "Content-Type: $MIME" \
+              --data-binary @$file "${{ env.RELEASE_UPLOAD_URL }}?name=$(basename $FILE)"
+          done
+
+      - name: Publish to Maven Central
+        run: ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged -DautoReleaseAfterClose=true -DautoDropAfterRelease=true
