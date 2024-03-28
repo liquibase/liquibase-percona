@@ -1,5 +1,5 @@
-ARG LIQUIBASE_VERSION=4.25.0
-ARG LB_PERCONA_VERSION=4.25.0
+ARG LIQUIBASE_VERSION=4.26.0
+ARG LB_PERCONA_VERSION=4.26.0
 ARG PERCONA_TOOLKIT_VERSION=3.5.5
 
 FROM liquibase/liquibase:${LIQUIBASE_VERSION}
@@ -11,7 +11,9 @@ RUN apt-get update \
     && apt-get -y install gpg perl libdbd-mysql-perl curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/pt-online-schema-change
+RUN ln -s /liquibase/percona-toolkit/bin/pt-online-schema-change /usr/local/bin/pt-online-schema-change \
+    && mkdir -p /home/liquibase/.gnupg \
+    && chown -R liquibase /home/liquibase
 
 USER liquibase
 SHELL ["/bin/bash", "-c"]
