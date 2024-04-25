@@ -23,7 +23,7 @@
         <system>github</system>
     </issueManagement>
     <scm>
-        <connection>scm:git:http://github.com/liquibase/liquibase-percona.git</connection>
+        <connection>scm:git:https://github.com/liquibase/liquibase-percona.git</connection>
         <url>https://github.com/liquibase/liquibase-percona</url>
         <tag>HEAD</tag>
     </scm>
