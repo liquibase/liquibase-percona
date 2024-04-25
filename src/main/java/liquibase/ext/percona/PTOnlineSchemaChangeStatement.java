@@ -234,8 +234,7 @@ public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatemen
             };
             p = pb.start();
             try (InputStream in = p.getInputStream();
-                 InputStream err = p.getErrorStream();
-                 OutputStream out = p.getOutputStream()) {
+                 InputStream err = p.getErrorStream()) {
                 IOThread reader = new IOThread(in, tee);
                 IOThread reader2 = new IOThread(err, tee);
                 reader.start();
@@ -314,12 +313,12 @@ public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatemen
                 try (Statement stmt = connection.createStatement()) {
                     log.fine("Pinging database...");
                     stmt.execute("SELECT 1");
-                    Thread.sleep(sleepTimeInMillis);
+                    sleep(sleepTimeInMillis);
                 } catch (SQLException | DatabaseException e) {
                     log.severe("Couldn't ping database", e);
                     running = false;
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    currentThread().interrupt();
                     running = false;
                 }
             }
@@ -392,9 +391,7 @@ public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatemen
         Process p = null;
         try {
             p = pb.start();
-            try (InputStream err = p.getErrorStream();
-                 InputStream in = p.getInputStream();
-                 OutputStream out = p.getOutputStream()) {
+            try (InputStream in = p.getInputStream()) {
                 p.waitFor();
                 String output = StreamUtil.readStreamAsString(in);
                 if (output != null) {
