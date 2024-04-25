@@ -28,7 +28,6 @@ import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.Logger;
 import liquibase.parser.core.formattedsql.FormattedSqlChangeLogParser;
 import liquibase.resource.ResourceAccessor;
-import liquibase.servicelocator.PrioritizedService;
 
 public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogParser {
     private static final Logger LOG = Scope.getCurrentScope().getLog(PerconaFormattedSqlChangeLogParser.class);
@@ -38,7 +37,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
     @Override
     public int getPriority() {
-        return PrioritizedService.PRIORITY_DEFAULT + 50;
+        return PRIORITY_DEFAULT + 50;
     }
 
     @Override
