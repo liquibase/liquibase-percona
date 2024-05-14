@@ -92,7 +92,7 @@ Github secret named: `GPG_SECRET`
 According to [the advanced java setup docs for github actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg) the GPG key should be exported by: `gpg --armor --export-secret-keys YOUR_ID`. From the datical/build-maven:jdk-8 docker container, this can be export by the following:
 
 ```bash
-$ docker run -it -u root docker.artifactory.datical.net/datical/build-maven:jdk-8 bash
+$ docker run -it -u root docker.liquibase.net/build-maven:jdk-8 bash
 
 $  gpg -k
 /home/jenkins/.gnupg/pubring.kbx
