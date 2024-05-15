@@ -89,6 +89,8 @@ This liquibase extension supports the following changeset formats:
 * Liquibase 4.23.2 (liquibase-percona 4.23.2). Percona Toolkit 3.5.4.
 * Liquibase 4.24.0 (liquibase-percona 4.24.0). Percona Toolkit 3.5.5.
 * Liquibase 4.25.0 (liquibase-percona 4.25.0). Percona Toolkit 3.5.5.
+* Liquibase 4.26.0 (liquibase-percona 4.26.0). Percona Toolkit 3.5.5.
+* Liquibase 4.27.0 (liquibase-percona 4.27.0). Percona Toolkit 3.5.7.
 
 ## Supported Changes and examples
 
@@ -553,7 +555,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.25.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.26.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -564,7 +566,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.25.0</version>
+    <version>4.26.0</version>
 </dependency>
 ```
 

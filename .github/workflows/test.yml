@@ -15,7 +15,7 @@ jobs:
       - run: true
 
   build-test:
-    uses: liquibase/build-logic/.github/workflows/os-extension-test.yml@v0.6.6
+    uses: liquibase/build-logic/.github/workflows/os-extension-test.yml@v0.7.5
     needs: authorize
     secrets: inherit
     with:
@@ -24,7 +24,7 @@ jobs:
 
   dependabot-automerge:
     needs: build-test
-    uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@v0.6.6
+    uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@v0.7.5
     secrets: inherit
 
   integration-tests:
@@ -39,6 +39,8 @@ jobs:
         mariadb: [10, 11]
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.ref }}
     - name: Install Perl modules
       run: |
         sudo apt-get update

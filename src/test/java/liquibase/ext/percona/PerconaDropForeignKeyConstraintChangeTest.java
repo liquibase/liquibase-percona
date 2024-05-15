@@ -16,8 +16,8 @@ package liquibase.ext.percona;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
+import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
 import liquibase.statement.core.DropForeignKeyConstraintStatement;
@@ -50,12 +50,9 @@ public class PerconaDropForeignKeyConstraintChangeTest extends AbstractPerconaCh
         System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
         PTOnlineSchemaChangeStatement.available = false;
 
-        Assertions.assertThrows(RuntimeException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                generateStatements();
-            }
-        });
+        ValidationErrors errors = validate();
+        Assertions.assertTrue(errors.hasErrors());
+        Assertions.assertEquals("No percona toolkit found!", errors.getErrorMessages().get(0));
     }
 
     @Test

@@ -1,5 +1,5 @@
 
-name-template: 'Liquibase Git Resource v$RESOLVED_VERSION'
+name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 exclude-labels:
   - 'skipReleaseNotes'
@@ -17,6 +17,9 @@ categories:
   - title: '💥 Breaking Changes'
     labels: 
       - 'breakingChanges'
+  - title: '🧰 Maintenance'
+    collapse-after: 5
+    label: 'chore'
   - title: '🤖 Security Driver and Other Updates'
     collapse-after: 5
     labels:
@@ -49,4 +52,4 @@ template: |
   
   $CHANGES
 
-  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...$REPOSITORY-$RESOLVED_VERSION
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
