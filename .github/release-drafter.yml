@@ -4,7 +4,7 @@ tag-template: 'v$RESOLVED_VERSION'
 exclude-labels:
   - 'skipReleaseNotes'
 categories:
-  - title: ':green_book: Notable Changes'
+  - title: '📗 Notable Changes'
     labels: 
       - 'notableChanges'
   - title: '🚀 New Features'
