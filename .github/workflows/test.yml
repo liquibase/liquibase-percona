@@ -19,7 +19,7 @@ jobs:
     needs: authorize
     secrets: inherit
     with:
-      java: "[11, 17, 18]"
+      java: "[11, 17, 21]"
       os: '["ubuntu-latest", "windows-latest"]'
 
   dependabot-automerge:
