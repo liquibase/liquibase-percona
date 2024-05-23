@@ -8,24 +8,63 @@ This file is updated occasionally after a release and might be out of date.
 Replace: ([#$1](https:/github.com/liquibase/liquibase-percona/pull/$1))
 -->
 
+## [v4.27.0](https://github.com/liquibase/liquibase-percona/tree/v4.27.0) (2024-04-25)
+
+Support for Liquibase 4.27.0.
+
+### 📗 Notable Changes
+
+- ([#453](https://github.com/liquibase/liquibase-percona/issues/453)) Bump org.liquibase:liquibase-core from 4.26.0 to 4.27.0 @adangel
+
+### 🧰 Maintenance
+
+- ([#454](https://github.com/liquibase/liquibase-percona/issues/454)) chore: Use https for scm connection @adangel
+- ([#450](https://github.com/liquibase/liquibase-percona/issues/450)) Update CHANGELOG.md @adangel
+- ([#449](https://github.com/liquibase/liquibase-percona/issues/449)) chore: Fix PMD issues @adangel
+
+### 🤖 Security Driver and Other Updates
+
+<details>
+<summary>16 changes</summary>
+
+- ([#453](https://github.com/liquibase/liquibase-percona/issues/453)) Bump org.liquibase:liquibase-core from 4.26.0 to 4.27.0 @adangel
+- ([#451](https://github.com/liquibase/liquibase-percona/issues/451)) Bump Percona Toolkit from 3.5.5 to 3.5.7 @adangel
+- ([#452](https://github.com/liquibase/liquibase-percona/issues/452)) chore(deps): bump liquibase/build-logic from 0.7.2 to 0.7.4 @dependabot
+- ([#448](https://github.com/liquibase/liquibase-percona/issues/448)) chore(deps): bump org.apache.maven.plugins:maven-pmd-plugin from 3.21.2 to 3.22.0 @dependabot
+- ([#447](https://github.com/liquibase/liquibase-percona/issues/447)) chore(deps-dev): bump org.apache.tomcat:tomcat-jdbc from 10.1.20 to 10.1.23 @dependabot
+- ([#446](https://github.com/liquibase/liquibase-percona/issues/446)) chore(deps): bump org.apache.maven.plugins:maven-jar-plugin from 3.4.0 to 3.4.1 @dependabot
+- ([#445](https://github.com/liquibase/liquibase-percona/issues/445)) chore(deps): bump liquibase/build-logic from 0.7.1 to 0.7.2 @dependabot
+- ([#444](https://github.com/liquibase/liquibase-percona/issues/444)) chore(deps): bump org.apache.maven.plugins:maven-gpg-plugin from 3.2.3 to 3.2.4 @dependabot
+- ([#443](https://github.com/liquibase/liquibase-percona/issues/443)) chore(deps): bump liquibase/build-logic from 0.7.0 to 0.7.1 @dependabot
+- ([#442](https://github.com/liquibase/liquibase-percona/issues/442)) chore(deps): bump org.apache.maven.plugins:maven-jar-plugin from 3.3.0 to 3.4.0 @dependabot
+- ([#441](https://github.com/liquibase/liquibase-percona/issues/441)) chore(deps): bump liquibase/build-logic from 0.6.9 to 0.7.0 @dependabot
+- ([#436](https://github.com/liquibase/liquibase-percona/issues/436)) chore(deps): bump whelk-io/maven-settings-xml-action from 21 to 22 @dependabot
+- ([#440](https://github.com/liquibase/liquibase-percona/issues/440)) chore(deps): bump org.apache.maven.plugins:maven-gpg-plugin from 3.2.2 to 3.2.3 @dependabot
+- ([#439](https://github.com/liquibase/liquibase-percona/issues/439)) chore(deps): bump org.apache.maven.plugins:maven-source-plugin from 3.3.0 to 3.3.1 @dependabot
+- ([#438](https://github.com/liquibase/liquibase-percona/issues/438)) chore(deps): bump liquibase/build-logic from 0.6.8 to 0.6.9 @dependabot
+- ([#437](https://github.com/liquibase/liquibase-percona/issues/437)) chore(deps): bump org.apache.maven.plugins:maven-invoker-plugin from 3.6.0 to 3.6.1 @dependabot
+</details>
+
+**Full Changelog**: https://github.com/liquibase/liquibase-percona/compare/v4.26.0...v4.27.0
+
 ## [v4.26.0](https://github.com/liquibase/liquibase-percona/tree/v4.26.0) (2024-03-27)
 
 Support for Liquibase 4.26.0.
 
-## Changes
+### Changes
 
 - ([#424](https:/github.com/liquibase/liquibase-percona/pull/424)) Fix integration test (addColumnFailIfNoPT) @adangel
 - ([#383](https:/github.com/liquibase/liquibase-percona/pull/383)) Run Integration Tests additionally with Java 21 @adangel
 
-## 🐛 Bug Fixes 🛠
+### 🐛 Bug Fixes 🛠
 
 - ([#381](https:/github.com/liquibase/liquibase-percona/pull/381)) Add missing null check for ConstrainsConfig::isNullable @adangel
 
-## 💥 Breaking Changes
+### 💥 Breaking Changes
 
 - ([#378](https:/github.com/liquibase/liquibase-percona/pull/378)) Remove support for old mysql connectors (5.x and 6.x) @adangel
 
-## 🧰 Maintenance
+### 🧰 Maintenance
 
 <details>
 <summary>9 changes</summary>
@@ -41,7 +80,7 @@ Support for Liquibase 4.26.0.
 - ([#385](https:/github.com/liquibase/liquibase-percona/pull/385)) fix workflows @jandroav
 </details>
 
-## 🤖 Security Driver and Other Updates
+### 🤖 Security Driver and Other Updates
 
 <details>
 <summary>42 changes</summary>
