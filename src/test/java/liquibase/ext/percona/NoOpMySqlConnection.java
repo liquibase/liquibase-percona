@@ -24,6 +24,8 @@ import com.mysql.cj.conf.DefaultPropertySet;
 import com.mysql.cj.conf.HostInfo;
 import com.mysql.cj.conf.PropertyKey;
 import com.mysql.cj.jdbc.ConnectionImpl;
+import com.mysql.cj.jdbc.JdbcPropertySet;
+import com.mysql.cj.jdbc.JdbcPropertySetImpl;
 import com.mysql.cj.protocol.NetworkResources;
 
 public class NoOpMySqlConnection extends ConnectionImpl {
@@ -33,8 +35,13 @@ public class NoOpMySqlConnection extends ConnectionImpl {
 
     public NoOpMySqlConnection(String hostToConnectTo, int portToConnectTo, Properties info,
             String databaseToConnectTo, String url) throws SQLException {
-        super(convert(hostToConnectTo, portToConnectTo, info, databaseToConnectTo, url));
+        super();
         this.info = info;
+
+        HostInfo hostInfo = convert(hostToConnectTo, portToConnectTo, info, databaseToConnectTo, url);
+        this.props = hostInfo.exposeAsProperties();
+        this.propertySet = new JdbcPropertySetImpl();
+        this.propertySet.initializeProperties(this.props);
     }
 
     private static HostInfo convert(String hostToConnectTo, int portToConnectTo, Properties info,
