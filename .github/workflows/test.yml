@@ -22,11 +22,6 @@ jobs:
       java: "[11, 17, 18]"
       os: '["ubuntu-latest", "windows-latest"]'
 
-  dependabot-automerge:
-    needs: build-test
-    uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@v0.7.7
-    secrets: inherit
-
   integration-tests:
     name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
     runs-on: ubuntu-latest
@@ -58,3 +53,8 @@ jobs:
             clean verify -Prun-its \
             -Dmysql_image=mysql:${{ matrix.mysql }} \
             -Dmariadb_image=mariadb:${{ matrix.mariadb }}
+
+  dependabot-automerge:
+    needs: integration-tests
+    uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@v0.7.7
+    secrets: inherit
