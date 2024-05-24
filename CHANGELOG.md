@@ -8,6 +8,41 @@ This file is updated occasionally after a release and might be out of date.
 Replace: ([#$1](https:/github.com/liquibase/liquibase-percona/pull/$1))
 -->
 
+## [v4.28.0](https://github.com/liquibase/liquibase-percona/tree/v4.28.0) (2024-05-24)
+
+Support for Liquibase 4.28.0.
+
+### 📗 Notable Changes
+
+- ([#468](https://github.com/liquibase/liquibase-percona/issues/468)) Bump org.liquibase:liquibase-core from 4.27.0 to 4.28.0 @adangel
+
+### Changes
+
+- ([#460](https:/github.com/liquibase/liquibase-percona/pull/460)) DAT-17572   Modify CI/CD Configurations for Nexus Integration @jandroav
+
+### 🧰 Maintenance
+
+- ([#466](https:/github.com/liquibase/liquibase-percona/pull/466)) build: run automerge only after integration tests @adangel
+- ([#465](https:/github.com/liquibase/liquibase-percona/pull/465)) chore: Use java 21 instead of 18 for building @adangel
+- ([#464](https:/github.com/liquibase/liquibase-percona/pull/464)) chore: Update CHANGELOG.md and docker image after v4.27.0 release @adangel
+- ([#467](https:/github.com/liquibase/liquibase-percona/pull/467)) build: Run integration tests against mysql 8.0 and 8.2 @adangel
+- ([#463](https:/github.com/liquibase/liquibase-percona/pull/463)) chore: Fix unit tests after mysql update @adangel
+
+### 🤖 Security Driver and Other Updates
+
+<details>
+<summary>6 changes</summary>
+
+- ([#462](https:/github.com/liquibase/liquibase-percona/pull/462)) chore(deps): bump org.codehaus.mojo:exec-maven-plugin from 3.2.0 to 3.3.0 @dependabot
+- ([#461](https:/github.com/liquibase/liquibase-percona/pull/461)) chore(deps-dev): bump org.apache.tomcat:tomcat-jdbc from 10.1.23 to 10.1.24 @dependabot
+- ([#459](https:/github.com/liquibase/liquibase-percona/pull/459)) chore(deps): bump liquibase/build-logic from 0.7.5 to 0.7.7 @dependabot
+- ([#457](https:/github.com/liquibase/liquibase-percona/pull/457)) chore(deps-dev): bump com.mysql:mysql-connector-j from 8.3.0 to 8.4.0 @dependabot
+- ([#456](https:/github.com/liquibase/liquibase-percona/pull/456)) chore(deps): bump org.apache.maven.plugins:maven-deploy-plugin from 3.1.1 to 3.1.2 @dependabot
+- ([#455](https:/github.com/liquibase/liquibase-percona/pull/455)) chore(deps): bump liquibase/build-logic from 0.7.4 to 0.7.5 @dependabot
+</details>
+
+**Full Changelog**: https://github.com/liquibase/liquibase-percona/compare/v4.27.0...v4.28.0
+
 ## [v4.27.0](https://github.com/liquibase/liquibase-percona/tree/v4.27.0) (2024-04-25)
 
 Support for Liquibase 4.27.0.
