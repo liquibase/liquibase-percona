@@ -42,6 +42,7 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     private static Logger log = Scope.getCurrentScope().getLog(PerconaRawSQLChange.class);
 
+    private boolean determinedTargetNames;
     private String targetDatabaseName;
     private String targetTableName;
 
@@ -88,6 +89,7 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     @Override
     public String getTargetDatabaseName() {
+        determineTargetNames();
         return targetDatabaseName;
     }
 
@@ -99,13 +101,14 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
      */
     @Override
     public String getTargetTableName() {
+        determineTargetNames();
         return targetTableName;
     }
 
     @Override
     public void setSql(String sql) {
         super.setSql(sql);
-        determineTargetNames();
+        determinedTargetNames = false;
     }
 
     /**
@@ -116,8 +119,13 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
      * that we can't use pt-osc.</p>
      */
     private void determineTargetNames() {
+        if (determinedTargetNames) {
+            return;
+        }
+
         targetDatabaseName = null;
         targetTableName = null;
+        determinedTargetNames = true;
 
         String sql = getSql();
         if (sql == null) {
