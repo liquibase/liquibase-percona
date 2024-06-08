@@ -99,11 +99,20 @@ public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
     protected void assertPerconaRollbackChange(String alter) throws RollbackImpossibleException {
         assertPerconaChange(alter, generateRollbackStatements());
     }
+
     protected void assertPerconaChange(String alter) {
         assertPerconaChange(alter, generateStatements());
     }
 
+    protected void assertPerconaChangeWithDatabaseTableNames(String alter, String targetDatabaseName, String targetTableName) {
+        assertPerconaChange(alter, generateStatements(), targetDatabaseName, targetTableName);
+    }
+
     protected void assertPerconaChange(String alter, SqlStatement[] statements) {
+        assertPerconaChange(alter, statements, targetDatabaseName, targetTableName);
+    }
+
+    protected void assertPerconaChange(String alter, SqlStatement[] statements, String targetDatabaseName, String targetTableName) {
         Assertions.assertEquals(1, statements.length);
         Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
         Assertions.assertEquals("pt-online-schema-change "

@@ -17,6 +17,8 @@ package liquibase.ext.percona;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import liquibase.Scope;
 import liquibase.change.ChangeMetaData;
@@ -40,8 +42,8 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     private static Logger log = Scope.getCurrentScope().getLog(PerconaRawSQLChange.class);
 
-    private String cachedTargetTableName = null;
-    private boolean hasCachedTargetTableName = false;
+    private String targetDatabaseName;
+    private String targetTableName;
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
@@ -86,56 +88,74 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     @Override
     public String getTargetDatabaseName() {
-        // will fall back to Database#getLiquibaseCatalogName(), see PTOnlineSchemaChangeStatement
-        return null;
+        return targetDatabaseName;
     }
 
     /**
-     * Tries to determine the table name from the sql statements. This is only possible, if the statement
-     * begins with "alter table".
-     * <p>In case, the table name could not be determined, this method will return {@code null}. That means,
-     * that we can't use pt-osc.</p>
+     * Returns the previously determined table name from the sql statements or {@code null} if the
+     * sql statement could not be parsed. Then pt-osc won't be used.
      *
-     * @return the table name or {@code null} if the sql statement could be parsed.
+     * @return the table name or {@code null} if the sql statement couldn't be parsed.
      */
     @Override
     public String getTargetTableName() {
-        if (hasCachedTargetTableName) {
-            return cachedTargetTableName;
-        }
+        return targetTableName;
+    }
+
+    @Override
+    public void setSql(String sql) {
+        super.setSql(sql);
+        determineTargetNames();
+    }
+
+    /**
+     * Tries to determine the database and table names from the sql statements. This is only possible, if the statement
+     * begins with "alter table".
+     * <p>In case, the table name could not be determined, this will unset targetDatabaseName and targetTableName.
+     * A following call to {@link #getTargetTableName()} will return {@code null} then. That means,
+     * that we can't use pt-osc.</p>
+     */
+    private void determineTargetNames() {
+        targetDatabaseName = null;
+        targetTableName = null;
 
         String sql = getSql();
         if (sql == null) {
-            return setCachedTargetTableName(null);
+            return;
         }
         if (Boolean.FALSE.equals(getUsePercona())) {
             // avoids unnecessary warnings
-            return setCachedTargetTableName(null);
+            return;
         }
 
         String[] multiLineSQL = StringUtil.processMultiLineSQL(sql, true, true, getEndDelimiter());
         if (multiLineSQL.length != 1) {
             log.warning("Not using percona toolkit, because multiple statements are not supported: " + sql);
-            return setCachedTargetTableName(null);
+            return;
         }
 
-        // warning: this is a very crude way of parsing the SQL statements
-        // e.g. a table name containing spaces will be determined wrongly: alter table `my table` add foo int null
         String[] tokens = multiLineSQL[0].trim().split("\\s+");
         if (tokens.length >= 3
                 && "alter".equalsIgnoreCase(tokens[0])
                 && "table".equalsIgnoreCase(tokens[1])) {
             String table = tokens[2];
 
-            // escaped?
+            // in case the table name contains spaces, we split it up wrongly. Spaces need to be escaped
+            // so, the firstChar is a backtick, but we miss the closing backtick then...
             char firstChar = table.charAt(0);
             char lastChar = table.charAt(table.length() - 1);
-            if (firstChar == '`' && lastChar == '`') {
-                table = table.substring(1, table.length() - 1);
-            } else if (firstChar == '`') {
-                // only beginning escape, no closing. See warning above.
+            if (firstChar == '`' && lastChar != '`') {
+                // only beginning escape, no closing. See comment above.
                 log.warning("Not using percona toolkit, because can't parse sql statement: " + sql);
-                return setCachedTargetTableName(null);
+                return;
+            }
+
+            // escaped?
+            Pattern escapedTableName = Pattern.compile("^(?:`?(?<database>[^`.]+)`?\\.)?`?(?<table>[^`.]+)`?$");
+            Matcher matcher = escapedTableName.matcher(table);
+            if (!matcher.matches()) {
+                log.warning("Not using percona toolkit, because can't parse sql statement: " + sql);
+                return;
             }
 
             // rename table?
@@ -144,26 +164,17 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
                     && !tokens[4].equalsIgnoreCase("index")
                     && !tokens[4].equalsIgnoreCase("key")) {
                 log.warning("Not using percona toolkit, because can't rename table: " + sql);
-                return setCachedTargetTableName(null);
+                return;
             }
 
-            return setCachedTargetTableName(table);
+            targetDatabaseName = matcher.group("database");
+            targetTableName = matcher.group("table");
+
+            log.fine("Determined target database: " + targetDatabaseName);
+            log.fine("Determined target table: " + targetTableName);
+        } else {
+            log.warning("Not using percona toolkit, because this sql statement is not an alter table: " + sql);
         }
-        log.warning("Not using percona toolkit, because this sql statement is not an alter table: " + sql);
-        return setCachedTargetTableName(null);
-    }
-
-    private String setCachedTargetTableName(String targetTableName) {
-        cachedTargetTableName = targetTableName;
-        hasCachedTargetTableName = true;
-        return cachedTargetTableName;
-    }
-
-    @Override
-    public void setSql(String sql) {
-        super.setSql(sql);
-        cachedTargetTableName = null;
-        hasCachedTargetTableName = false;
     }
 
     //CPD-OFF - common PerconaChange implementation

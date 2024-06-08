@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import liquibase.Scope;
 import liquibase.change.Change;
@@ -88,7 +89,7 @@ public class PerconaChangeUtil {
             return originalStatements;
         }
 
-        List<SqlStatement> statements = new ArrayList<SqlStatement>(Arrays.asList(originalStatements));
+        List<SqlStatement> statements = new ArrayList<>(Arrays.asList(originalStatements));
 
         // Note: MariaDB is a subclass of MySQLDatabase - so the Percona changes are
         // used for both MySQLDatabase and MariaDBDatabase.
@@ -102,14 +103,17 @@ public class PerconaChangeUtil {
                         Optional.ofNullable(change.getPerconaOptions()));
 
                 if (isDryRun(database)) {
-                    CommentStatement commentStatement = new CommentStatement(statement.printCommand(database));
+                    String printedStatements = statement.printCommand(database);
+                    List<CommentStatement> comments = Arrays.stream(printedStatements.split("\\R"))
+                            .map(CommentStatement::new)
+                            .collect(Collectors.toList());
 
                     if (Configuration.noAlterSqlDryMode()) {
                         statements.clear();
-                        statements.add(0, commentStatement);
+                        statements.addAll(comments);
                     } else {
-                        statements.add(0, commentStatement);
-                        statements.add(1, new CommentStatement("Instead of the following statements, pt-online-schema-change will be used"));
+                        statements.addAll(0, comments);
+                        statements.add(comments.size(), new CommentStatement("Instead of the following statements, pt-online-schema-change will be used"));
                     }
                 } else {
                     statements.clear();
