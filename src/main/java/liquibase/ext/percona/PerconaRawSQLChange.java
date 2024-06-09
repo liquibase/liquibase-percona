@@ -17,8 +17,6 @@ package liquibase.ext.percona;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import liquibase.Scope;
 import liquibase.change.ChangeMetaData;
@@ -142,47 +140,26 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
             return;
         }
 
-        String[] tokens = multiLineSQL[0].trim().split("\\s+");
-        if (tokens.length >= 3
-                && "alter".equalsIgnoreCase(tokens[0])
-                && "table".equalsIgnoreCase(tokens[1])) {
-            String table = tokens[2];
-
-            // in case the table name contains spaces, we split it up wrongly. Spaces need to be escaped
-            // so, the firstChar is a backtick, but we miss the closing backtick then...
-            char firstChar = table.charAt(0);
-            char lastChar = table.charAt(table.length() - 1);
-            if (firstChar == '`' && lastChar != '`') {
-                // only beginning escape, no closing. See comment above.
-                log.warning("Not using percona toolkit, because can't parse sql statement: " + sql);
-                return;
-            }
-
-            // escaped?
-            Pattern escapedTableName = Pattern.compile("^(?:`?(?<database>[^`.]+)`?\\.)?`?(?<table>[^`.]+)`?$");
-            Matcher matcher = escapedTableName.matcher(table);
-            if (!matcher.matches()) {
-                log.warning("Not using percona toolkit, because can't parse sql statement: " + sql);
-                return;
-            }
-
-            // rename table?
-            if (tokens.length >= 5 && tokens[3].equalsIgnoreCase("rename")
-                    && !tokens[4].equalsIgnoreCase("column")
-                    && !tokens[4].equalsIgnoreCase("index")
-                    && !tokens[4].equalsIgnoreCase("key")) {
-                log.warning("Not using percona toolkit, because can't rename table: " + sql);
-                return;
-            }
-
-            targetDatabaseName = matcher.group("database");
-            targetTableName = matcher.group("table");
-
-            log.fine("Determined target database: " + targetDatabaseName);
-            log.fine("Determined target table: " + targetTableName);
-        } else {
+        AlterTableParser parser = new AlterTableParser(multiLineSQL[0]);
+        if (!parser.isValid()) {
             log.warning("Not using percona toolkit, because this sql statement is not an alter table: " + sql);
+            return;
         }
+
+        // rename table?
+        String[] tokens = parser.getAlterTableOptions().split("\\s+");
+        if (tokens.length >= 2 && tokens[0].equalsIgnoreCase("rename")
+            && !tokens[1].equalsIgnoreCase("column")
+            && !tokens[1].equalsIgnoreCase("index")
+            && !tokens[1].equalsIgnoreCase("key")) {
+            log.warning("Not using percona toolkit, because can't rename table: " + sql);
+            return;
+        }
+
+        targetDatabaseName = parser.getTargetDatabaseName();
+        targetTableName = parser.getTargetTableName();
+        log.fine("Determined target database: " + targetDatabaseName);
+        log.fine("Determined target table: " + targetTableName);
     }
 
     //CPD-OFF - common PerconaChange implementation

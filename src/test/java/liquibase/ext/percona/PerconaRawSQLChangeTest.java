@@ -79,9 +79,16 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         assertEquals("person", change.getTargetTableName());
         assertEquals(alterTextEscaped, change.generateAlterStatement(getDatabase()));
         assertPerconaChange(alterTextEscaped);
+    }
 
+    @Test
+    void testTargetTableNameAndAlterStatementWithQuotedTableNameWithSpaces() {
+        PerconaRawSQLChange change = getChange();
+        String alterTextEscaped = "ADD COLUMN `address` VARCHAR(255) NULL";
         change.setSql("altEr tAble `my pErSoN table` " + alterTextEscaped);
-        assertNoPerconaToolkit();
+        assertEquals("my pErSoN table", change.getTargetTableName());
+        assertEquals(alterTextEscaped, change.generateAlterStatement(getDatabase()));
+        assertPerconaChangeWithDatabaseTableNames(alterTextEscaped, "testdb", "my pErSoN table");
     }
 
     @Test
