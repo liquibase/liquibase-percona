@@ -99,20 +99,36 @@ public abstract class AbstractPerconaChangeTest<T extends PerconaChange> {
     protected void assertPerconaRollbackChange(String alter) throws RollbackImpossibleException {
         assertPerconaChange(alter, generateRollbackStatements());
     }
+
     protected void assertPerconaChange(String alter) {
         assertPerconaChange(alter, generateStatements());
     }
 
+    protected void assertPerconaChangeWithDatabaseTableNames(String alter, String targetDatabaseName, String targetTableName) {
+        assertPerconaChange(alter, generateStatements(), targetDatabaseName, targetTableName);
+    }
+
     protected void assertPerconaChange(String alter, SqlStatement[] statements) {
+        assertPerconaChange(alter, statements, targetDatabaseName, targetTableName);
+    }
+
+    protected void assertPerconaChange(String alter, SqlStatement[] statements, String targetDatabaseName, String targetTableName) {
         Assertions.assertEquals(1, statements.length);
         Assertions.assertEquals(PTOnlineSchemaChangeStatement.class, statements[0].getClass());
+
+        boolean dsnNeedsQuotes = targetDatabaseName != null && targetDatabaseName.contains(" ")
+                || targetTableName != null && targetTableName.contains(" ");
+
         Assertions.assertEquals("pt-online-schema-change "
                 + (change.getPerconaOptions() == null
                         ? "--alter-foreign-keys-method=auto --nocheck-unique-key-change"
                         : change.getPerconaOptions())
                 + " --alter=\"" + alter + "\" "
                 + "--password=*** --execute "
-                + "h=localhost,P=3306,u=user,D=" + targetDatabaseName + ",t=" + targetTableName,
+                + "h="
+                + (dsnNeedsQuotes ? "\"" : "")
+                + "localhost,P=3306,u=user,D=" + targetDatabaseName + ",t=" + targetTableName
+                + (dsnNeedsQuotes ? "\"" : ""),
                 ((PTOnlineSchemaChangeStatement)statements[0]).printCommand(database));
     }
 
