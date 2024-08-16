@@ -13,3 +13,8 @@ ALTER TABLE person ADD address VARCHAR(255) NULL;
 -- liquibasePercona:perconaOptions="--foo"
 --rollback ALTER TABLE person DROP COLUMN email;
 ALTER TABLE person ADD email VARCHAR(255) NULL;
+
+--changeset Alice:4
+--liquibasePercona:usePercona="true"
+--rollback ALTER TABLE person DROP COLUMN phone;
+ALTER TABLE person ADD phone VARCHAR(255) NULL;
