@@ -63,6 +63,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                     changeSet.getChanges().size(),
                     changeSet.getRollback().getChanges().size()));
 
+            boolean usePerconaChangeSet = Configuration.getDefaultOn();
             for (Change change : changeSet.getChanges()) {
                 RawSQLChange rawSQLChange = (RawSQLChange) change;
                 PerconaRawSQLChange perconaChange = convert(rawSQLChange);
@@ -71,13 +72,21 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                 String sql = perconaChange.getSql();
                 Matcher usePerconaMatcher = USE_PERCONA_PATTERN.matcher(sql);
                 if (usePerconaMatcher.find()) {
-                    perconaChange.setUsePercona(Boolean.valueOf(usePerconaMatcher.group(1)));
+                    boolean usePercona = Boolean.parseBoolean(usePerconaMatcher.group(1));
+                    perconaChange.setUsePercona(usePercona);
+                    usePerconaChangeSet = usePerconaChangeSet || usePercona;
                 }
 
                 Matcher perconaOptionsMatcher = PERCONA_OPTIONS_PATTERN.matcher(sql);
                 if (perconaOptionsMatcher.find()) {
                     perconaChange.setPerconaOptions(perconaOptionsMatcher.group(1));
                 }
+            }
+
+            if (!usePerconaChangeSet) {
+                LOG.fine(String.format("Not using percona toolkit for changeset %s::%s::%s, because no change requests it",
+                        perconaChangeSet.getFilePath(), perconaChangeSet.getId(), perconaChangeSet.getAuthor()));
+                continue;
             }
 
             for (Change change : changeSet.getRollback().getChanges()) {
