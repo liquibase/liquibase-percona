@@ -72,7 +72,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                 String sql = perconaChange.getSql();
                 Matcher usePerconaMatcher = USE_PERCONA_PATTERN.matcher(sql);
                 if (usePerconaMatcher.find()) {
-                    Boolean usePercona = Boolean.valueOf(usePerconaMatcher.group(1));
+                    boolean usePercona = Boolean.parseBoolean(usePerconaMatcher.group(1));
                     perconaChange.setUsePercona(usePercona);
                     usePerconaChangeSet = usePerconaChangeSet || usePercona;
                 }

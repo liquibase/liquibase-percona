@@ -20,8 +20,10 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.change.Change;
+import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
@@ -30,6 +32,7 @@ import liquibase.parser.ChangeLogParserFactory;
 import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
+@ExtendWith(RestoreSystemPropertiesExtension.class)
 public class ChangeLogParserTest {
 
     private ResourceAccessor resourceAccessor;
@@ -113,40 +116,42 @@ public class ChangeLogParserTest {
     @Test
     public void testReadLiquibaseUsePerconaFlagSQL_defaultOff() throws Exception {
         System.setProperty(Configuration.DEFAULT_ON, "false");
-        try {
-            DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
-            Assertions.assertEquals(4, changelog.getChangeSets().size());
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
+        Assertions.assertEquals(4, changelog.getChangeSets().size());
 
-            // changeset 1
-            ChangeSet changeSet = changelog.getChangeSets().get(0);
-            Change change = changeSet.getChanges().get(0);
-            Assertions.assertFalse(change instanceof PerconaRawSQLChange);
-            Assertions.assertEquals(1, changeSet.getRollback().getChanges().size());
-            Change rollback = changeSet.getRollback().getChanges().get(0);
-            Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
+        // changeset 1
+        ChangeSet changeSet = changelog.getChangeSets().get(0);
+        Change change = changeSet.getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, change.getClass());
+        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        Assertions.assertEquals(1, changeSet.getRollback().getChanges().size());
+        Change rollback = changeSet.getRollback().getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, rollback.getClass());
+        Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-            // changeset 2
-            changeSet = changelog.getChangeSets().get(1);
-            change = changeSet.getChanges().get(0);
-            Assertions.assertFalse(change instanceof PerconaRawSQLChange);
-            rollback = changeSet.getRollback().getChanges().get(0);
-            Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
+        // changeset 2
+        changeSet = changelog.getChangeSets().get(1);
+        change = changeSet.getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, change.getClass());
+        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        rollback = changeSet.getRollback().getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, rollback.getClass());
+        Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-            // changeset 3
-            changeSet = changelog.getChangeSets().get(2);
-            change = changeSet.getChanges().get(0);
-            Assertions.assertFalse(change instanceof PerconaRawSQLChange);
-            rollback = changeSet.getRollback().getChanges().get(0);
-            Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
+        // changeset 3
+        changeSet = changelog.getChangeSets().get(2);
+        change = changeSet.getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, change.getClass());
+        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        rollback = changeSet.getRollback().getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, rollback.getClass());
+        Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-            // changeset 4
-            changeSet = changelog.getChangeSets().get(3);
-            change = changeSet.getChanges().get(0);
-            assertChange(change, PerconaRawSQLChange.class, Boolean.TRUE, null);
-            rollback = changeSet.getRollback().getChanges().get(0);
-            assertChange(rollback, PerconaRawSQLChange.class, Boolean.TRUE, null);
-        } finally {
-            System.clearProperty(Configuration.DEFAULT_ON);
-        }
+        // changeset 4 - the only one, that explicitly uses percona
+        changeSet = changelog.getChangeSets().get(3);
+        change = changeSet.getChanges().get(0);
+        assertChange(change, PerconaRawSQLChange.class, Boolean.TRUE, null);
+        rollback = changeSet.getRollback().getChanges().get(0);
+        assertChange(rollback, PerconaRawSQLChange.class, Boolean.TRUE, null);
     }
 }
