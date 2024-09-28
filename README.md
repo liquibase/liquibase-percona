@@ -92,6 +92,7 @@ This liquibase extension supports the following changeset formats:
 * Liquibase 4.26.0 (liquibase-percona 4.26.0). Percona Toolkit 3.5.5.
 * Liquibase 4.27.0 (liquibase-percona 4.27.0). Percona Toolkit 3.5.7.
 * Liquibase 4.28.0 (liquibase-percona 4.28.0). Percona Toolkit 3.5.7.
+* Liquibase 4.29.2 (liquibase-percona 4.29.2). Percona Toolkit 3.6.0.
 
 ## Supported Changes and examples
 
