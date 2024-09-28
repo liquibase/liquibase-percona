@@ -587,6 +587,7 @@
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
                         <configuration>
+<!--                            <showLogs>true</showLogs>-->
                             <images>
                                 <image>
                                     <name>${mysql_image}</name>
@@ -611,11 +612,7 @@
                                             <port>config_port:3306</port>
                                         </ports>
                                         <wait>
-                                            <tcp>
-                                                <ports>
-                                                    <port>3306</port>
-                                                </ports>
-                                            </tcp>
+                                            <log>port: 3306</log>
                                             <time>180000</time>
                                         </wait>
                                     </run>
@@ -635,11 +632,7 @@
                                             <port>config_port_mariadb:3306</port>
                                         </ports>
                                         <wait>
-                                            <tcp>
-                                                <ports>
-                                                    <port>3306</port>
-                                                </ports>
-                                            </tcp>
+                                            <log>port: 3306</log>
                                             <time>180000</time>
                                         </wait>
                                     </run>
