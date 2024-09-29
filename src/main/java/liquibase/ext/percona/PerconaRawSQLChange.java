@@ -206,5 +206,14 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
     public ValidationErrors validate(Database database) {
         return PerconaChangeUtil.validate(super.validate(database), database);
     }
+
+    @SuppressWarnings("PMD.UselessOverridingMethod")
+    @Override
+    public boolean supports(Database database) {
+        // just using the same logic as super; in case we don't support this change for percona,
+        // we'll anyway return just the original statements.
+        // See liquibase.change.ChangeFactory#verifySupportsMethodImplementation for the verification logic.
+        return super.supports(database);
+    }
     //CPD-ON
 }
