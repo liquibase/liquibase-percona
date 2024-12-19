@@ -31,12 +31,16 @@ import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 
 public class PerconaConstraintsService {
-    private static PerconaConstraintsService instance = new PerconaConstraintsService();
+    private static final PerconaConstraintsService INSTANCE = new PerconaConstraintsService();
     private Logger log = Scope.getCurrentScope().getLog(PerconaConstraintsService.class);
     private boolean enabled = true;
 
+    private PerconaConstraintsService() {
+        // private constructor to prevent instantiation from somewhere else
+    }
+
     public static PerconaConstraintsService getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     /**
