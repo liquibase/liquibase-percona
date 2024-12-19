@@ -15,10 +15,13 @@ package liquibase.ext.percona;
  */
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 
+import org.mariadb.jdbc.BasePreparedStatement;
 import org.mariadb.jdbc.Configuration;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.HostAddress;
@@ -27,7 +30,6 @@ import org.mariadb.jdbc.client.Client;
 import org.mariadb.jdbc.client.ColumnDecoder;
 import org.mariadb.jdbc.client.Completion;
 import org.mariadb.jdbc.client.Context;
-import org.mariadb.jdbc.client.PrepareCache;
 import org.mariadb.jdbc.client.ReadableByteBuf;
 import org.mariadb.jdbc.client.ServerVersion;
 import org.mariadb.jdbc.export.ExceptionFactory;
@@ -151,16 +153,17 @@ public class MockedMariaDbConnection {
         }
 
         @Override
+        public boolean canUseTransactionIsolation() {
+            return false;
+        }
+
+        @Override
         public ServerVersion getVersion() {
             return new ServerVersionUtility("0", false);
         }
 
         @Override
         public void setWarning(int warning) {
-        }
-
-        @Override
-        public void setTransactionIsolationLevel(int transactionIsolationLevel) {
         }
 
         @Override
@@ -195,6 +198,21 @@ public class MockedMariaDbConnection {
         }
 
         @Override
+        public void setTransactionIsolationLevel(Integer transactionIsolationLevel) {
+
+        }
+
+        @Override
+        public Prepare getPrepareCacheCmd(String sql, BasePreparedStatement preparedStatement) {
+            return null;
+        }
+
+        @Override
+        public Prepare putPrepareCacheCmd(String sql, Prepare result, BasePreparedStatement preparedStatement) {
+            return null;
+        }
+
+        @Override
         public long getThreadId() {
             return 0;
         }
@@ -222,11 +240,6 @@ public class MockedMariaDbConnection {
         @Override
         public boolean hasClientCapability(long l) {
             return false;
-        }
-
-        @Override
-        public PrepareCache getPrepareCache() {
-            return null;
         }
 
         @Override
@@ -259,6 +272,21 @@ public class MockedMariaDbConnection {
         }
 
         @Override
+        public TimeZone getConnectionTimeZone() {
+            return null;
+        }
+
+        @Override
+        public void setConnectionTimeZone(TimeZone connectionTimeZone) {
+
+        }
+
+        @Override
+        public Calendar getDefaultCalendar() {
+            return null;
+        }
+
+        @Override
         public void setThreadId(long l) {
 
         }
@@ -281,6 +309,16 @@ public class MockedMariaDbConnection {
         @Override
         public void setAutoIncrement(long l) {
 
+        }
+
+        @Override
+        public void setRedirectUrl(String redirectUrl) {
+
+        }
+
+        @Override
+        public String getRedirectUrl() {
+            return "";
         }
 
         @Override
