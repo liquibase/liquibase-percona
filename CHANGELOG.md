@@ -17,17 +17,17 @@ Replace: [#$1](https://github.com/liquibase/liquibase-percona/issues/$1)
 
 Support for Liquibase 4.30.0.
 
-## 📗 Notable Changes
+### 📗 Notable Changes
 
 - ([#532](https://github.com/liquibase/liquibase-percona/pull/532)) build(deps): bump org.liquibase:liquibase-core from 4.29.2 to 4.30.0 @dependabot
 
-## 🧰 Maintenance
+### 🧰 Maintenance
 
 - ([#536](https://github.com/liquibase/liquibase-percona/pull/536)) chore: Prepare release 4.30.0 @adangel
 - ([#535](https://github.com/liquibase/liquibase-percona/pull/535)) chore: Rework release workflow @adangel
 - ([#534](https://github.com/liquibase/liquibase-percona/pull/534)) build: execute verify lifecycle for "build-test" @adangel
 
-## 🤖 Security Driver and Other Updates
+### 🤖 Security Driver and Other Updates
 
 <details>
 <summary>21 changes</summary>
@@ -61,21 +61,21 @@ Support for Liquibase 4.30.0.
 
 Support for Liquibase 4.29.2.
 
-## 📗 Notable Changes
+### 📗 Notable Changes
 
 - ([#507](https://github.com/liquibase/liquibase-percona/pull/507)) Bump org.liquibase:liquibase-core from 4.28.0 to 4.29.2 @adangel
 
-## 🐛 Bug Fixes 🛠
+### 🐛 Bug Fixes 🛠
 
 - ([#493](https://github.com/liquibase/liquibase-percona/pull/493)) Fixes [#492](https://github.com/liquibase/liquibase-percona/issues/492): Effectively disable sql parser when defaultOn=false @westse
 - ([#477](https://github.com/liquibase/liquibase-percona/pull/477)) Fixes [#473](https://github.com/liquibase/liquibase-percona/issues/473): parsing database name and table name from raw sql @adangel
 
-## 🧰 Maintenance
+### 🧰 Maintenance
 
 - ([#505](https://github.com/liquibase/liquibase-percona/pull/505)) chore: wait for log output when starting mysql/mariadb @adangel
 - ([#509](https://github.com/liquibase/liquibase-percona/pull/509)) chore: Prepare release 4.29.2 @adangel
 
-## 🤖 Security Driver and Other Updates
+### 🤖 Security Driver and Other Updates
 
 <details>
 <summary>28 changes</summary>
