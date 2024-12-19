@@ -1,132 +1,118 @@
 # Release Workflow
 
-The release automation is designed to quickly release updates to liquibase extensions. This routinely happens
-when there is a new release of liquibase core.
+Creating a new release is partly manual, partly automated.
+Note that the release workflow of liquibase-percona doesn't follow the workflow of other
+extensions, as it simply doesn't work.
+See [GitHub Actions, Building, PR, and Releasing Questions #425](https://github.com/liquibase/liquibase-percona/issues/425)
+for more detailed information about that. That's why the workflow "release-published.yml" is disabled.
 
-The release process is semi-automated so that you still have control over e.g. the release notes and
-when the release is happening and you have the ability to merge other PRs as well before the release.
+## Step by Step
 
-The update of liquibase core is triggered by a pull request by dependabot. This PR is created automatically
-and signals: liquibase core is generally available via maven central. You need to manually merge
-this PR after you've reviewed the changes and test results.
+1. Before a release, make sure, you have merged all open PRs that should be part of the release.
+   Dependabot creates usually PRs for updating dependencies. If all goes well, these would be merged
+   automatically, but sometimes some manual fixes need to be made, so some PRs might be left open.
 
-After that, you can immediately trigger manually the workflow "prepare-release". You could start
-this workflow also later when it is more convenient for you and you have time to fix potential issues.
+2. Especially check, that `liquibase-core` has been updated to the desired version. Usually, for every
+   liquibase-core release, the extension is released as well.
+   Label such a PR with `notableChanges`, so that it appears separately in the release notes.
 
-The workflow "prepare-release" will create a draft release on github. By publishing this draft release,
-the new extension version is made available via maven central.
+3. Create a new branch in the main repository (**not** in your fork). This main repository is considered
+   "internal" and pull requests created from branches from there be correctly merged. External PRs don't
+   work correctly.
 
-## Triggers
+   This new branch is called `chore-prepare-release-x.y.z`
 
-### Pull Request Opened
+   Update the following files:
+   * README.md
+     * Update the versions in the code snippets for the maven dependency
+     * Add/Update the version in section "Liquibase version(s) tested against", check/update version of percona toolkit
+   * CHANGELOG.md
+     * Go to <https://github.com/liquibase/liquibase-percona/releases> - the release drafter has created a draft
+       release already
+     * Copy the draft release into this file
+     * Make sure to replace `(#123)` with the corresponding links to PRs/issues
+   * docker/README.md
+     * Create new version entry
+     * for the old version, take the commit id of the last "chore: Prepare release ..." commit
+   * docker/Dockerfile
+     * Update versions (all versions, if necessary: liquibase-core and percona-toolkit as well...)
 
-Dependabot checks daily whether there are new updates for your dependencies. One of these
-dependencies is `org.liquibase:liquibase-core`. Once a PR for this dependency arrives, you know: It's
-time for a new extension release.
+   Then push this branch and create a new PR with the title "chore: Prepare release x.y.z".
+   Set the correct milestone for this PR - which is usually "next".
 
-This pull request executes the usual build which includes integration tests.
-You should verify, that all tests pass before merging the PR.
+   Then update "CHANGELOG.md" once again and manually add this very PR. Push another commit to this PR.
 
-### Manual workflow "prepare-release"
+   Finally merge this PR.
 
-Once you are satisfied with what's in the release, you can trigger manually the workflow "prepare-release"
-via the github web ui: <https://github.com/liquibase/liquibase-percona/actions/workflows/prepare-release.yml>.
+4. Create the necessary version updates and tags locally and push manually. "developmentVersion" is the next
+   version, and "newVersion" is the version to be released.
 
-This workflow will prepare a release from branch `main` and can be executed at any time. Updates to
-liquibase-core or any other release you want to publish for your extension.
+   ```
+   ./mvnw release:clean release:prepare \
+     -Dmaven.javadoc.skip=true -Dmaven.test.skipTests=true -Dmaven.test.skip=true -Dmaven.deploy.skip=true" \
+     -DdevelopmentVersion=x.(y+1).0-SNAPSHOT \
+     -DnewVersion=x.y.z \
+     -Dtag=vx.y.z \
+     -DpushChanges=false
+   ```
 
-You can specify an extensionVersion - that is the "to-be-released" version of your extension. You can leave it
-empty, if you create a new release to support a new liquibase-core version. Then the extension will have the
-same version as liquibase-core (e.g. 4.5.0). If you create an patch version for your extension, then you
-can enter here for example 4.5.0.1.
+5. Now you should have a tag "vx.y.z" created and the version in the pom.xml should be the next SNAPSHOT
+   version. If this looks correct, you can push:
 
-This workflow will perform the following steps:
+   ```
+   git push origin main
+   git push origin tag vx.y.z
+   ```
 
-*   Updates the version to the extension version in the `pom.xml` including the property
-    `project.build.outputTimestamp` (in order to support reproducible builds)
-*   Creates a new tag
-*   Updates the version to the next SNAPSHOT development version
-*   Pushes these changes to the main branch
-*   Runs the integration tests
-*   Creates a draft release on github
+6. Edit the draft release on <https://github.com/liquibase/liquibase-percona/releases>
+   * Select the just created tag instead of letting github create a new tag: vx.y.z
+   * Change the name of the release to match the tag name: vx.y.z
+   * Don't care about the attached assets, they will be removed with the next step and replaced by
+     a new build.
+   * Save it as a draft, don't publish yet.
 
-The push uses the automatically generated `GITHUB_TOKEN` provided by [Github Actions](https://docs.github.com/en/actions/security-guides/automatic-token-authentication).
-So there is no need for an additional token.
+7. Run the action [manual-release-from-tag](https://github.com/liquibase/liquibase-percona/actions/workflows/manual-release-from-tag.yml)
+   and select the tag "vx.y.z". This action will
+   * checkout the tag
+   * build liquibase-percona
+   * attach the jar files to the draft release
+   * publish the jar files to maven central. It should eventually be available on
+     * https://central.sonatype.com/artifact/org.liquibase.ext/liquibase-percona
+     * https://repo1.maven.org/maven2/org/liquibase/ext/liquibase-percona/
 
-All changes for workflow always happen on the branch `main`. This means, releases can currently only
-be created from `main`. If there is a patch release needed for an older version, then this release
-needs to be done completely manually.
+8. If the action ran successfully, then you can finally publish the release on github.
 
-You can now download the extension jar from the draft release and do local testing.
-Also don't forget to review the release notes.
-
-If you are satisfied with the release, you can publish it. This will trigger the next step.
-
-### Draft Release is Published
-
-Once the GitHub release is published, the signed artifact is uploaded to Sonatype Nexus.
-The `<autoReleaseAfterClose>true</autoReleaseAfterClose>` option is defined in the POM, so for
-all releases without the `SNAPSHOT` suffix, they will automatically release after all
-the staging test have passed. If everything goes well, no further manual action is required.
-
-Note: This workflow will actually checkout the sources from the extension version tag and
-build the extension (without running tests) again, signs the artifacts and uploads it to Sonatype Nexus.
-Hence it's good, when the extension allows for reproducible builds. Otherwise the jar file and the
-github release would be different from the jar file in Maven Central.
-
-## Tests
-
-Liquibase Percona has extended integration tests. These integration tests start MySQL and MariaDB docker instances
-and run the integration tests from `src/it/*`. The integration tests are only executed, if the profile `run-its`
-is activated, e.g. `./mvnw verify -Prun-its`.
-
-By default, these tests run automatically for every build from the main branch.
+Notes:
+* liquibase-percona has reproducible builds, that means, you can rebuild the extension from the same tag
+and this should produce the exact same artifacts.
+* If anything goes wrong, you can redo the steps 1.-7. as long as the jar files have not been published
+to maven central yet. You can remove the tag, push more commits for fixing, create another tag and
+run step 7 (manual-release-from-tag) again. However, if the jar files were successfully published into
+maven central, there is no way anymore, to change the version. If anything is wrong, you need to
+create an entire new release then. And you shouldn't change the tag afterwards (as otherwise, the version
+won't be reproducible anymore).
 
 ## Repository Configuration
 
 The automation requires the below secrets and configuration in order to run.
+The action [manual-release-from-tag](https://github.com/liquibase/liquibase-percona/actions/workflows/manual-release-from-tag.yml)
+executes the same commands as the actions from [Liquibase Reusable Workflows](https://github.com/liquibase/build-logic/) do.
+The same secrets are reused. This allows to publish to maven central.
 
-### GPG SECRET
-Github secret named: `GPG_SECRET`
+### LIQUIBOT_PAT
+Used to access liquibase maven repository on GitHub (https://github.com/orgs/liquibase/packages)
 
-According to [the advanced java setup docs for github actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg) the GPG key should be exported by: `gpg --armor --export-secret-keys YOUR_ID`. From the datical/build-maven:jdk-8 docker container, this can be export by the following:
+### BOT_TOKEN
+Used to access GitHub API to query releases, add/remove release assets.
 
-```bash
-$ docker run -it -u root docker.liquibase.net/build-maven:jdk-8 bash
+### GPG_SECRET
+According to [the advanced java setup docs for github actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg)
+the GPG key should be exported by: `gpg --armor --export-secret-keys YOUR_ID`.
 
-$  gpg -k
-/home/jenkins/.gnupg/pubring.kbx
---------------------------------
-pub   rsa2048 2020-02-12 [SC] [expires: 2022-02-11]
-      **** OBFUSCATED ID ****
-uid           [ultimate] Liquibase <support@liquibase.org>
-sub   rsa2048 2020-02-12 [E] [expires: 2022-02-11]
+### GPG_PASSPHRASE
 
-$ gpg --armor --export-secret-keys --pinentry-mode loopback **** OBFUSCATED ID ****
-Enter passphrase: *** GPG PASSPHRASE ***
------BEGIN PGP PRIVATE KEY BLOCK-----
-******
-******
-=XCvo
------END PGP PRIVATE KEY BLOCK-----
-```
+### SONATYPE_USERNAME
+The username or token for the sonatype account. Used for publishing to maven central.
 
-### GPG PASSPHRASE
-Github secret named: `GPG_PASSPHRASE`
-The passphrase is the same one used previously for the manual release and is documented elsewhere for the manual release process.
-
-### SONATYPE USERNAME
-Github secret named: `SONATYPE_USERNAME`
-
-The username or token for the sonatype account. Current managed and shared via lastpass for the Shared-DevOps group. 
-
-### SONATYPE TOKEN
-Github secret named: `SONATYPE_TOKEN`
-
-The password or token for the sonatype account. Current managed and shared via lastpass for the Shared-DevOps group.
-
-## Useful Links
-
-*   [Github Actions Documentation](https://docs.github.com/en/actions)
-*   [Advanced Java Setup for GitHub Actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg)
-*   [Deploying to Sonatype Nexus with Apache Maven](https://central.sonatype.org/publish/publish-maven/)
+### SONATYPE_TOKEN
+The password or token for the sonatype account. Used for publishing to maven central.

@@ -2,8 +2,9 @@ name: Release Extension to Sonatype
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
+  # disabled on purpose, see RELEASE.md
+  #release:
+  #  types: [published]
 
 jobs:
   release:
