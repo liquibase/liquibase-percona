@@ -43,7 +43,7 @@
         <project.build.outputTimestamp>2024-09-29T11:19:15+00:00</project.build.outputTimestamp>
 
         <java.version>1.8</java.version>
-        <liquibase.version>4.29.2</liquibase.version>
+        <liquibase.version>4.30.0</liquibase.version>
         <mysql.connector.version>9.1.0</mysql.connector.version>
         <mariadb.connector.version>3.3.3</mariadb.connector.version>
         <percona.toolkit.version>3.6.0</percona.toolkit.version>
@@ -78,9 +78,9 @@
         <sonar.projectKey>liquibase_${project.artifactId}</sonar.projectKey>
         <sonar.projectDescription>${project.description}</sonar.projectDescription>
         <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.10.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
     </properties>
 
     <dependencies>
@@ -93,13 +93,13 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.2</version>
+            <version>2.3</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.2</version>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -117,7 +117,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>10.1.30</version>
+            <version>11.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -129,7 +129,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
-            <version>2.12.0</version>
+            <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -172,7 +172,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.9.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -180,11 +180,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.10.1</version> <!-- for reproducible builds: >= 3.10.1 -->
+                    <version>3.11.2</version> <!-- for reproducible builds: >= 3.11.2 -->
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.25.0</version>
+                    <version>3.26.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -196,7 +196,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.5.2</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
@@ -209,17 +209,17 @@
                 <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.44.0</version>
+                    <version>0.45.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
