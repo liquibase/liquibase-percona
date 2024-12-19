@@ -76,7 +76,9 @@ for more detailed information about that. That's why the workflow "release-publi
    * checkout the tag
    * build liquibase-percona
    * attach the jar files to the draft release
-   * publish the jar files to maven central
+   * publish the jar files to maven central. It should eventually be available on
+     * https://central.sonatype.com/artifact/org.liquibase.ext/liquibase-percona
+     * https://repo1.maven.org/maven2/org/liquibase/ext/liquibase-percona/
 
 8. If the action ran successfully, then you can finally publish the release on github.
 
