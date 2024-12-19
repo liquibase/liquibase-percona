@@ -81,6 +81,20 @@ for more detailed information about that. That's why the workflow "release-publi
      * https://repo1.maven.org/maven2/org/liquibase/ext/liquibase-percona/
 
 8. If the action ran successfully, then you can finally publish the release on github.
+  Don't forget to rename the [milestone](https://github.com/liquibase/liquibase-percona/milestones) from next to x.y.z
+  and create a new fresh milestone.
+
+9. Once the release is available in maven central, you can build the docker image and publish it:
+   ```
+   cd docker
+   IMAGE=andreasdangel/liquibase-percona
+   docker build \
+     -t $IMAGE:latest -t $IMAGE:x.y.z -t $IMAGE:x.y \
+     .
+   docker push $IMAGE:latest
+   docker push $IMAGE:x.y.z
+   docker push $IMAGE:x.y
+   ```
 
 Notes:
 * liquibase-percona has reproducible builds, that means, you can rebuild the extension from the same tag
