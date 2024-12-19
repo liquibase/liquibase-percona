@@ -23,6 +23,7 @@ Support for Liquibase 4.30.0.
 
 ## 🧰 Maintenance
 
+- ([#536](https://github.com/liquibase/liquibase-percona/pull/536)) chore: Prepare release 4.30.0 @adangel
 - ([#535](https://github.com/liquibase/liquibase-percona/pull/535)) chore: Rework release workflow @adangel
 - ([#534](https://github.com/liquibase/liquibase-percona/pull/534)) build: execute verify lifecycle for "build-test" @adangel
 
