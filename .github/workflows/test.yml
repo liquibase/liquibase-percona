@@ -21,6 +21,7 @@ jobs:
     with:
       java: "[11, 17, 21]"
       os: '["ubuntu-latest", "windows-latest"]'
+      extraMavenArgs: 'verify'
 
   integration-tests:
     name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
