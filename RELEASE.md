@@ -49,9 +49,9 @@ for more detailed information about that. That's why the workflow "release-publi
 
    ```
    ./mvnw release:clean release:prepare \
-     -Dmaven.javadoc.skip=true -Dmaven.test.skipTests=true -Dmaven.test.skip=true -Dmaven.deploy.skip=true" \
-     -DdevelopmentVersion=x.(y+1).0-SNAPSHOT \
-     -DnewVersion=x.y.z \
+     -Darguments="-Dmaven.javadoc.skip=true -Dmaven.test.skipTests=true -Dmaven.test.skip=true -Dmaven.deploy.skip=true -Dpmd.skip=true -Dcpd.skip=true -Dspotbugs.skip=true" \
+     -DdevelopmentVersion=x.y.1-SNAPSHOT \
+     -DreleaseVersion=x.y.z \
      -Dtag=vx.y.z \
      -DpushChanges=false
    ```
