@@ -106,7 +106,7 @@ function determine_latest_toolkit()
     latest=$(curl --silent https://docs.percona.com/percona-toolkit/release_notes.html)
 
     local version
-    version=$(echo "$latest"|grep -A 5 'id="percona-toolkit"'|tail -n +2|grep 'section id="'|head -1|sed 's/.*v\([0-9][0-9]*\)-\([0-9][0-9]*\)-\([0-9][0-9]*\).*/\1.\2.\3/')
+    version=$(echo "$latest"|grep -i '<section id="v'|head -1|sed 's/.*v\([0-9][0-9]*\)-\([0-9][0-9]*\)-\([0-9][0-9]*\).*/\1.\2.\3/')
 
     if [ "$version" = "" ]; then
       echo "Couldn't determine latest toolkit version!" >&2
