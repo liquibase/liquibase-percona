@@ -64,6 +64,11 @@ This liquibase extension supports the following changeset formats:
 
 ## Liquibase version(s) tested against
 
+* Liquibase 4.31.0 (liquibase-percona 4.31.0). Percona Toolkit 3.7.0.
+
+<details>
+<summary>Old Versions</summary>
+
 * Liquibase 3.2.0 (liquibase-percona 1.0.0)
 * Liquibase 3.3.0 (liquibase-percona 1.1.1)
 * Liquibase 3.3.5 and 3.4.2 (liquibase-percona 1.2.1)
@@ -94,6 +99,8 @@ This liquibase extension supports the following changeset formats:
 * Liquibase 4.28.0 (liquibase-percona 4.28.0). Percona Toolkit 3.5.7.
 * Liquibase 4.29.2 (liquibase-percona 4.29.2). Percona Toolkit 3.6.0.
 * Liquibase 4.30.0 (liquibase-percona 4.30.0). Percona Toolkit 3.6.0.
+
+</details>
 
 ## Supported Changes and examples
 
@@ -558,7 +565,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.30.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-4.31.0.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -569,7 +576,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.30.0</version>
+    <version>4.31.0</version>
 </dependency>
 ```
 
@@ -606,13 +613,13 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.30.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.31.1-SNAPSHOT`:
 
 ```xml
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.30.1-SNAPSHOT</version>
+    <version>4.31.1-SNAPSHOT</version>
 </dependency>
 ```
 

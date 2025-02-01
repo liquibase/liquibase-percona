@@ -6,7 +6,8 @@ with [Liquibase Percona Extension](https://github.com/liquibase/liquibase-percon
 
 ## Supported tags
 
-*   [4.30.0, 4.30, latest](https://github.com/liquibase/liquibase-percona/blob/main/docker/Dockerfile) (Percona Toolkit 3.6.0)
+*   [4.31.0, 4.31, latest](https://github.com/liquibase/liquibase-percona/blob/main/docker/Dockerfile) (Percona Toolkit 3.7.0)
+*   [4.30.0, 4.30](https://github.com/liquibase/liquibase-percona/blob/793e18ad5f1c715475087b72fa652bad5dfc6d49/docker/Dockerfile) (Percona Toolkit 3.6.0)
 *   [4.29.2, 4.29](https://github.com/liquibase/liquibase-percona/blob/465cb21da46db1c9a3d15b3dc084434e17c57f24/docker/Dockerfile) (Percona Toolkit 3.6.0)
 *   [4.28.0, 4.28](https://github.com/liquibase/liquibase-percona/blob/4924b4fe1670909d01b409e752cdc7210884ff59/docker/Dockerfile) (Percona Toolkit 3.5.7)
 *   [4.27.0, 4.27](https://github.com/liquibase/liquibase-percona/blob/ec56085fc71f988ca2ac29fdaf51897d190a4bf0/docker/Dockerfile) (Percona Toolkit 3.5.7)

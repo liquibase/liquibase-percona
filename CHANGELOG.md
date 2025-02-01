@@ -13,6 +13,31 @@ For Issues:
 Replace: [#$1](https://github.com/liquibase/liquibase-percona/issues/$1)
 -->
 
+## [v4.31.0](https://github.com/liquibase/liquibase-percona/tree/v4.31.0) (2025-02-01)
+
+Support for Liquibase 4.31.0.
+
+### 📗 Notable Changes
+
+- ([#541](https://github.com/liquibase/liquibase-percona/pull/541)) build(deps): bump org.liquibase:liquibase-core from 4.30.0 to 4.31.0 @adangel
+
+### 🚀 New Features
+
+- ([#542](https://github.com/liquibase/liquibase-percona/pull/542)) Support MySQL 8.4 @adangel
+
+### 🧰 Maintenance
+
+- ([#539](https://github.com/liquibase/liquibase-percona/pull/539)) Fix script download-toolkit.sh @adangel
+
+### 🤖 Security Driver and Other Updates
+
+- ([#541](https://github.com/liquibase/liquibase-percona/pull/541)) build(deps): bump org.liquibase:liquibase-core from 4.30.0 to 4.31.0 @adangel
+- ([#540](https://github.com/liquibase/liquibase-percona/pull/540)) Bump percona-toolkit from 3.6.0 to 3.7.0 @adangel
+- ([#538](https://github.com/liquibase/liquibase-percona/pull/538)) build(deps-dev): bump com.mysql:mysql-connector-j from 9.1.0 to 9.2.0 @[dependabot[bot]](https://github.com/apps/dependabot)
+- ([#537](https://github.com/liquibase/liquibase-percona/pull/537)) Bump maven-release-plugin to 3.1.1 @adangel
+
+**Full Changelog**: https://github.com/liquibase/liquibase-percona/compare/v4.30.0...v4.31.0
+
 ## [v4.30.0](https://github.com/liquibase/liquibase-percona/tree/v4.30.0) (2024-12-19)
 
 Support for Liquibase 4.30.0.
