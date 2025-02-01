@@ -61,7 +61,7 @@
         <config_user>root</config_user>
         <config_password>root</config_password>
         <config_dbname>testdb</config_dbname>
-        <mysql_image>mysql:8.2</mysql_image>
+        <mysql_image>mysql:8.4</mysql_image>
         <mariadb_image>mariadb:11</mariadb_image>
 
         <docker.removeVolumes>true</docker.removeVolumes>
