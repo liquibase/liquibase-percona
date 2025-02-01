@@ -31,6 +31,8 @@ for more detailed information about that. That's why the workflow "release-publi
        release already
      * Copy the draft release into this file
      * Make sure to replace `(#123)` with the corresponding links to PRs/issues
+     * In case, liquibase-core was updated, add bullet point "Support for Liquibase x.y.z." directly under "Changes".
+     * Fix the "Full Changelog" links
    * docker/README.md
      * Create new version entry
      * for the old version, take the commit id of the last "chore: Prepare release ..." commit
@@ -67,12 +69,14 @@ for more detailed information about that. That's why the workflow "release-publi
 6. Edit the draft release on <https://github.com/liquibase/liquibase-percona/releases>
    * Select the just created tag instead of letting github create a new tag: vx.y.z
    * Change the name of the release to match the tag name: vx.y.z
+   * If necessary, add the "Support for Liquibase x.y.z." directly under Changes.
+   * Fix the "Full Changelog" links at the end.
    * Don't care about the attached assets, they will be removed with the next step and replaced by
      a new build.
    * Save it as a draft, don't publish yet.
 
 7. Run the action [manual-release-from-tag](https://github.com/liquibase/liquibase-percona/actions/workflows/manual-release-from-tag.yml)
-   and select the tag "vx.y.z". This action will
+   from branch "main" and enter the tag "vx.y.z". This action will
    * checkout the tag
    * build liquibase-percona
    * attach the jar files to the draft release
