@@ -1,12 +1,16 @@
 name: Manual Release from Tag
 
+permissions:
+  contents: write # Required to read the repository contents
+  id-token: write # Required to create a release
+
 on:
   workflow_dispatch:
     inputs:
       tagName:
-        description: 'Name of an existing tag from which the release should be done, e.g. v4.26.0'
+        description: "Name of an existing tag from which the release should be done, e.g. v4.26.0"
         required: true
-        default: ''
+        default: ""
         type: string
 
 jobs:
@@ -15,15 +19,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref:  ${{ inputs.tagName }}
+          ref: ${{ inputs.tagName }}
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'maven'
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
       - name: maven-settings-xml-action
@@ -69,12 +73,12 @@ jobs:
               {
                 "id": "liquibase-pro",
                 "username": "liquibot",
-                "password": "${{ secrets.LIQUIBOT_PAT }}"
+                "password": "${{ secrets.LIQUIBOT_PAT_GPM_ACCESS }}"
               },
               {
                 "id": "liquibase",
                 "username": "liquibot",
-                "password": "${{ secrets.LIQUIBOT_PAT }}"
+                "password": "${{ secrets.LIQUIBOT_PAT_GPM_ACCESS }}"
               },
               {
                 "id": "sonatype-nexus-staging",
@@ -107,7 +111,7 @@ jobs:
       - name: Get release ID and upload url
         id: get-release
         run: |
-          releases=$(curl -X GET -H "Authorization: token ${{ secrets.BOT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases?per_page=10")
+          releases=$(curl -X GET -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases?per_page=10")
           FOUND_RELEASE_ID=$(echo $releases | jq -r '.[] | select(.name == "${{ inputs.tagName }}") | .id')
           FOUND_UPLOAD_URL=$(echo $releases | jq -r '.[] | select(.name == "${{ inputs.tagName }}") | .upload_url')
           FOUND_UPLOAD_URL="${FOUND_UPLOAD_URL//{?name,label\}}"
@@ -121,7 +125,7 @@ jobs:
         id: list-artifacts
         run: |
           RELEASE_ID="${{ env.RELEASE_ID }}"
-          ARTIFACTS=$(curl -X GET -H "Authorization: token ${{ secrets.BOT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets" | jq -r '.[].id')
+          ARTIFACTS=$(curl -X GET -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets" | jq -r '.[].id')
           echo "Artifacts to delete: $ARTIFACTS"
           ARTIFACTS_CLEANED=$(echo "$ARTIFACTS" | tr -s '[:space:]' ',' | sed 's/,$//')
           echo "ARTIFACTS_TO_DELETE=$ARTIFACTS_CLEANED" >> $GITHUB_ENV
@@ -134,7 +138,7 @@ jobs:
           ARTIFACTS_TO_DELETE="${{ env.ARTIFACTS_TO_DELETE }}"
           IFS=',' read -ra values <<< "$ARTIFACTS_TO_DELETE"
           for value in "${values[@]}"; do
-            curl -X DELETE -H "Authorization: token ${{ secrets.BOT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/assets/$value"
+            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/assets/$value"
             echo "Deleted artifact ID: $value"
           done
 
@@ -156,7 +160,7 @@ jobs:
           for FILE in $(find target/nexus-staging -name "${{ env.artifact_id }}-${{ env.artifact_version }}*.jar*" -o -name "${{ env.artifact_id }}-${{ env.artifact_version }}.pom*"); do
             files+=($FILE)
           done
-          
+
           for FILE in ${files[*]}; do
             SIZE=$(stat -c "%s" $FILE)
             if [[ $SIZE -eq 0 ]]; then
@@ -166,7 +170,7 @@ jobs:
             MIME=$(file -b --mime-type $FILE)
             echo "Uploading $FILE (size=$SIZE, mime=$MIME)..."
             curl \
-              -H "Authorization: token ${{ secrets.BOT_TOKEN }}" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Length: $SIZE"\
               -H "Content-Type: $MIME" \
               --data-binary @$FILE "${{ env.RELEASE_UPLOAD_URL }}?name=$(basename $FILE)"

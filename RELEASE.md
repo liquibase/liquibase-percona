@@ -117,11 +117,9 @@ The action [manual-release-from-tag](https://github.com/liquibase/liquibase-perc
 executes the same commands as the actions from [Liquibase Reusable Workflows](https://github.com/liquibase/build-logic/) do.
 The same secrets are reused. This allows to publish to maven central.
 
-### LIQUIBOT_PAT
+### LIQUIBOT_PAT_GPM_ACCESS
 Used to access liquibase maven repository on GitHub (https://github.com/orgs/liquibase/packages)
 
-### BOT_TOKEN
-Used to access GitHub API to query releases, add/remove release assets.
 
 ### GPG_SECRET
 According to [the advanced java setup docs for github actions](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#gpg)
