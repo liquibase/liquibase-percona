@@ -176,5 +176,5 @@ jobs:
               --data-binary @$FILE "${{ env.RELEASE_UPLOAD_URL }}?name=$(basename $FILE)"
           done
 
-      - name: Publish to Maven Central
-        run: ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged -DautoReleaseAfterClose=true -DautoDropAfterRelease=true
+      # - name: Publish to Maven Central
+      #   run: ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged -DautoReleaseAfterClose=true -DautoDropAfterRelease=true
