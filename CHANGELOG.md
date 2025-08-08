@@ -13,6 +13,25 @@ For Issues:
 Replace: [#$1](https://github.com/liquibase/liquibase-percona/issues/$1)
 -->
 
+## [v4.33.0](https://github.com/liquibase/liquibase-percona/tree/v4.33.0) (2025-08-08)
+
+Support for Liquibase 4.33.0.
+
+## 📗 Notable Changes
+
+- ([#572](https://github.com/liquibase/liquibase-percona/pull/572)) build(deps): bump org.liquibase:liquibase-core from 4.32.0 to 4.33.0 @adangel
+
+## 🧰 Maintenance
+
+- ([#571](https://github.com/liquibase/liquibase-percona/pull/571)) chore: fix manual-release-from-tag.yml @adangel
+
+## 🤖 Security Driver and Other Updates
+
+- ([#573](https://github.com/liquibase/liquibase-percona/pull/573)) build(deps): Bump maven from 3.9.0 to 3.9.11 @adangel
+- ([#572](https://github.com/liquibase/liquibase-percona/pull/572)) build(deps): bump org.liquibase:liquibase-core from 4.32.0 to 4.33.0 @adangel
+
+**Full Changelog**: https://github.com/liquibase/liquibase-percona/compare/v4.32.0...v4.33.0
+
 ## [v4.32.0](https://github.com/liquibase/liquibase-percona/tree/v4.32.0) (2025-08-08)
 
 Support for Liquibase 4.32.0.
