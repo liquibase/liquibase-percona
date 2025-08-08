@@ -103,12 +103,17 @@ jobs:
 
       - name: Convert escaped newlines and set GPG key
         run: |
+          GPG_KEY_CONTENT="$(printf '%b' "${{ env.GPG_SECRET }}")"
           {
             echo "GPG_KEY_CONTENT<<GPG_EOF"
-            printf '%b' "${{ env.GPG_SECRET }}"
+            echo "$GPG_KEY_CONTENT"
             echo
             echo "GPG_EOF"
           } >> $GITHUB_ENV
+          GPG_KEY_CONTENT="${GPG_KEY_CONTENT//%/%25}"
+          GPG_KEY_CONTENT="${GPG_KEY_CONTENT//$'\r'/%0D}"
+          GPG_KEY_CONTENT="${GPG_KEY_CONTENT//$'\n'/%0A}"
+          echo "::add-mask::${GPG_KEY_CONTENT}"
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
       - name: Import GPG key
@@ -121,7 +126,7 @@ jobs:
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
       - name: Build release artifacts
         id: build-release-artifacts
-        run: ./mvnw clean deploy -DskipTests -Dpmd.skip -Dcpd.skip -Dspotbugs.skip=true -DsignWithMavenGPGPlugin=true -DskipRemoteStaging=true
+        run: ./mvnw -V -B clean verify -DskipTests -Dpmd.skip -Dcpd.skip -Dspotbugs.skip=true -DsignWithMavenGPGPlugin=true
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
       - name: Get Artifact ID and Version
@@ -168,7 +173,7 @@ jobs:
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/sign_artifact.sh
       - name: Create checksums
         run: |
-          for FILE in $(find target/nexus-staging -name "${{ env.artifact_id }}-${{ env.artifact_version }}*.jar" -o -name "${{ env.artifact_id }}-${{ env.artifact_version }}.pom"); do
+          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*; do
             shasum -b -a 1 "$FILE" | cut -d " " -f 1 > "target/$(basename $FILE).sha1"
             md5sum -b "$FILE" | cut -d " " -f 1 > "target/$(basename $FILE).md5"
           done
@@ -177,18 +182,15 @@ jobs:
         id: upload-release-asset
         run: |
           files=()
-          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*.{sha1,md5}; do
-            files+=($FILE)
-          done
-          for FILE in $(find target/nexus-staging -name "${{ env.artifact_id }}-${{ env.artifact_version }}*.jar*" -o -name "${{ env.artifact_id }}-${{ env.artifact_version }}.pom*"); do
+          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*; do
             files+=($FILE)
           done
 
           for FILE in ${files[*]}; do
             SIZE=$(stat -c "%s" $FILE)
             if [[ $SIZE -eq 0 ]]; then
-            echo "$FILE is empty."
-            exit 1;
+              echo "$FILE is empty."
+              exit 1;
             fi
             MIME=$(file -b --mime-type $FILE)
             echo "Uploading $FILE (size=$SIZE, mime=$MIME)..."
@@ -199,5 +201,57 @@ jobs:
               --data-binary @$FILE "${{ env.RELEASE_UPLOAD_URL }}?name=$(basename $FILE)"
           done
 
+      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
       - name: Publish to Maven Central
-        run: ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged -DautoReleaseAfterClose=true -DautoDropAfterRelease=true
+        env:
+          MAVEN_USERNAME: ${{ env.SONATYPE_USERNAME }}
+          MAVEN_PASSWORD: ${{ env.SONATYPE_TOKEN }}
+        run: |
+          version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          groupId=$(mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout)
+
+          # Create Maven repository layout structure for the bundle
+          # Convert groupId dots to directory separators
+          groupPath=$(echo "$groupId" | tr '.' '/')
+          mkdir -p "bundle/${groupPath}/${{ env.artifact_id }}/${version}"
+
+          # Copy all artifacts and their signatures/checksums to proper Maven repository layout
+          # Skip files containing "-full" in their names
+          for file in target/${{ env.artifact_id }}-${version}*; do
+            if [[ ! "$file" == *"-full"* ]]; then
+              cp "$file" "bundle/${groupPath}/${{ env.artifact_id }}/${version}/"
+            fi
+          done
+
+          # Create the bundle zip file
+          cd bundle
+          zip -r ../central-bundle.zip .
+          cd ..
+
+          # Create base64 encoded credentials for Bearer auth
+          AUTH_HEADER=$(printf "%s:%s" "${MAVEN_USERNAME}" "${MAVEN_PASSWORD}" | base64 -w 0)
+
+          # Upload bundle to Central Portal using curl with proper authentication
+          echo "Uploading bundle to Central Portal..."
+          UPLOAD_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer ${AUTH_HEADER}" \
+            -F "bundle=@central-bundle.zip" \
+            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC&name=${{ env.artifact_id }}-${version}")
+
+          # Parse response
+          HTTP_CODE=$(echo "$UPLOAD_RESPONSE" | tail -n1)
+          DEPLOYMENT_ID=$(echo "$UPLOAD_RESPONSE" | head -n1)
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Deployment ID: $DEPLOYMENT_ID"
+
+          if [ "$HTTP_CODE" != "201" ]; then
+            echo "Upload failed with HTTP status $HTTP_CODE"
+            echo "Response: $DEPLOYMENT_ID"
+            exit 1
+          fi
+
+          echo "Bundle uploaded successfully to Central Portal"
+          echo "Deployment ID: $DEPLOYMENT_ID"
+          echo "Visit https://central.sonatype.com/publishing/deployments to view and publish your deployment"
