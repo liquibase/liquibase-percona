@@ -23,6 +23,7 @@ Support for Liquibase 4.33.0.
 
 ## 🧰 Maintenance
 
+- ([#574](https://github.com/liquibase/liquibase-percona/pull/574)) chore: Prepare release 4.33.0 @adangel
 - ([#571](https://github.com/liquibase/liquibase-percona/pull/571)) chore: fix manual-release-from-tag.yml @adangel
 
 ## 🤖 Security Driver and Other Updates
