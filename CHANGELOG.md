@@ -28,6 +28,7 @@ Support for Liquibase 4.32.0.
 
 ### 🧰 Maintenance
 
+- ([#570](https://github.com/liquibase/liquibase-percona/pull/570)) chore: Prepare release 4.32.0 @adangel
 - ([#544](https://github.com/liquibase/liquibase-percona/pull/544)) Update RELEASE documentation @adangel
 
 ### 🤖 Security Driver and Other Updates
