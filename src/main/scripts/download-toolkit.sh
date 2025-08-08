@@ -106,7 +106,7 @@ function determine_latest_toolkit()
     latest=$(curl --silent https://docs.percona.com/percona-toolkit/release_notes.html)
 
     local version
-    version=$(echo "$latest"|grep -i '<section id="v'|head -1|sed 's/.*v\([0-9][0-9]*\)-\([0-9][0-9]*\)-\([0-9][0-9]*\).*/\1.\2.\3/')
+    version=$(echo "$latest"|grep -i '<section id="v'|head -1|sed 's/.*v\([0-9][0-9]*\)-\([0-9][0-9]*\)-\([0-9][0-9]*\)\(-[0-9][0-9]*\)\?.*/\1.\2.\3\4/')
 
     if [ "$version" = "" ]; then
       echo "Couldn't determine latest toolkit version!" >&2
@@ -135,8 +135,8 @@ function determine_latest_toolkit()
 function download_toolkit()
 {
     local version="$1"
-    local filename="percona-toolkit-${version}.tar.gz"
-    local cached_file="${CACHE_DIR}/${filename}"
+    local filename="percona-toolkit-${version%-*}.tar.gz"
+    local cached_file="${CACHE_DIR}/${version}_${filename}"
 
     if is_cache_enabled
     then
@@ -147,14 +147,14 @@ function download_toolkit()
         fi
     fi
 
-    url=https://downloads.percona.com/downloads/percona-toolkit/${version}/source/tarball/percona-toolkit-${version}.tar.gz
+    url=https://downloads.percona.com/downloads/percona-toolkit/${version}/source/tarball/percona-toolkit-${version%-*}.tar.gz
     # the tags on github are unfortunately wrong and can't be used to download the source...
     #url=https://github.com/percona/percona-toolkit/archive/v${version}.tar.gz
     
     echo "Downloading ${filename}..."
     if ! curl \
       --location \
-      --output "${TARGET}/${filename}" \
+      --output "${TARGET}/${version}_${filename}" \
         "${url}"; then
         echo "Download from ${url} failed..."
         exit 1
@@ -163,16 +163,16 @@ function download_toolkit()
     if is_cache_enabled
     then
         echo "Caching ${filename}"
-        cp "${TARGET}/${filename}" "${cached_file}"
+        cp "${TARGET}/${version}_${filename}" "${cached_file}"
     fi
 }
 
 function extract_toolkit() {
     local version="$1"
     local name="$2"
-    local filename="percona-toolkit-${version}.tar.gz"
+    local filename="${version}_percona-toolkit-${version%-*}.tar.gz"
     local cached_file="${CACHE_DIR}/${filename}"
-    local extract_target_dir="percona-toolkit-${version}"
+    local extract_target_dir="percona-toolkit-${version%-*}"
     local extract_target_dir2="percona-toolkit-${name}"
 
     echo "Extracting..."
@@ -188,8 +188,8 @@ function extract_toolkit() {
 
         local downloaded_version
         downloaded_version=$(tail -3 "${extract_target_dir}/bin/pt-online-schema-change" |head -1)
-        if [ "${downloaded_version}" != "pt-online-schema-change ${version}" ]; then
-          echo "Wrong version downloaded: '${downloaded_version}' but expected to be '${version}'"
+        if [ "${downloaded_version}" != "pt-online-schema-change ${version%-*}" ]; then
+          echo "Wrong version downloaded: '${downloaded_version}' but expected to be '${version%-*}'"
           exit 1
         fi
 
