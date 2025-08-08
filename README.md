@@ -64,7 +64,7 @@ This liquibase extension supports the following changeset formats:
 
 ## Liquibase version(s) tested against
 
-* Liquibase 4.31.0 (liquibase-percona 4.31.0). Percona Toolkit 3.7.0.
+* Liquibase 4.32.0 (liquibase-percona 4.32.0). Percona Toolkit 3.7.0-2.
 
 <details>
 <summary>Old Versions</summary>
@@ -99,6 +99,7 @@ This liquibase extension supports the following changeset formats:
 * Liquibase 4.28.0 (liquibase-percona 4.28.0). Percona Toolkit 3.5.7.
 * Liquibase 4.29.2 (liquibase-percona 4.29.2). Percona Toolkit 3.6.0.
 * Liquibase 4.30.0 (liquibase-percona 4.30.0). Percona Toolkit 3.6.0.
+* Liquibase 4.31.0 (liquibase-percona 4.31.0). Percona Toolkit 3.7.0.
 
 </details>
 
@@ -576,7 +577,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.31.0</version>
+    <version>4.32.0</version>
 </dependency>
 ```
 
@@ -619,7 +620,7 @@ And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. 
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.31.1-SNAPSHOT</version>
+    <version>4.32.1-SNAPSHOT</version>
 </dependency>
 ```
 
