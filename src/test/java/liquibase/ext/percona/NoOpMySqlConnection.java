@@ -24,8 +24,8 @@ import com.mysql.cj.conf.DefaultPropertySet;
 import com.mysql.cj.conf.HostInfo;
 import com.mysql.cj.conf.PropertyKey;
 import com.mysql.cj.jdbc.ConnectionImpl;
-import com.mysql.cj.jdbc.JdbcPropertySet;
 import com.mysql.cj.jdbc.JdbcPropertySetImpl;
+import com.mysql.cj.jdbc.MockDatabaseMetaData;
 import com.mysql.cj.protocol.NetworkResources;
 
 public class NoOpMySqlConnection extends ConnectionImpl {
@@ -77,18 +77,14 @@ public class NoOpMySqlConnection extends ConnectionImpl {
     }
 
     @Override
+    public boolean storesLowerCaseTableName() {
+        // overridden, so that this connection doesn't really try to connect
+        return false;
+    }
+
+    @Override
     public DatabaseMetaData getMetaData() throws SQLException {
         final String user = info.getProperty(PropertyKey.USER.getKeyName());
-        return new com.mysql.cj.jdbc.DatabaseMetaData(this, "testdb", null) {
-            @Override
-            public String getURL() throws SQLException {
-                return "jdbc:mysql://user@localhost:3306/testdb";
-            }
-
-            @Override
-            public String getUserName() throws SQLException {
-                return user;
-            }
-        };
+        return new MockDatabaseMetaData(this, user);
     }
 }
