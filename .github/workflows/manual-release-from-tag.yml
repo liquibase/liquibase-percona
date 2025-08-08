@@ -126,7 +126,7 @@ jobs:
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
       - name: Build release artifacts
         id: build-release-artifacts
-        run: ./mvnw clean package -DskipTests -Dpmd.skip -Dcpd.skip -Dspotbugs.skip=true -DsignWithMavenGPGPlugin=true
+        run: ./mvnw -V -B clean verify -DskipTests -Dpmd.skip -Dcpd.skip -Dspotbugs.skip=true -DsignWithMavenGPGPlugin=true
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
       - name: Get Artifact ID and Version
@@ -173,7 +173,7 @@ jobs:
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/sign_artifact.sh
       - name: Create checksums
         run: |
-          for FILE in $(find target -name "${{ env.artifact_id }}-${{ env.artifact_version }}*.jar" -o -name "${{ env.artifact_id }}-${{ env.artifact_version }}.pom"); do
+          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*; do
             shasum -b -a 1 "$FILE" | cut -d " " -f 1 > "target/$(basename $FILE).sha1"
             md5sum -b "$FILE" | cut -d " " -f 1 > "target/$(basename $FILE).md5"
           done
@@ -182,15 +182,15 @@ jobs:
         id: upload-release-asset
         run: |
           files=()
-          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*.{jar,pom,sha1,md5}; do
+          for FILE in target/${{ env.artifact_id }}-${{ env.artifact_version }}*; do
             files+=($FILE)
           done
 
           for FILE in ${files[*]}; do
             SIZE=$(stat -c "%s" $FILE)
             if [[ $SIZE -eq 0 ]]; then
-            echo "$FILE is empty."
-            exit 1;
+              echo "$FILE is empty."
+              exit 1;
             fi
             MIME=$(file -b --mime-type $FILE)
             echo "Uploading $FILE (size=$SIZE, mime=$MIME)..."
