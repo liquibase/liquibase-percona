@@ -93,6 +93,7 @@ for more detailed information about that. That's why the workflow "release-publi
    cd docker
    IMAGE=andreasdangel/liquibase-percona
    docker build \
+     --load \
      -t $IMAGE:latest -t $IMAGE:x.y.z -t $IMAGE:x.y \
      .
    docker push $IMAGE:latest
