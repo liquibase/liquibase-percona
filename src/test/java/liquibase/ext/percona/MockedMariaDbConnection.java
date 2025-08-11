@@ -218,6 +218,11 @@ public class MockedMariaDbConnection {
         }
 
         @Override
+        public Boolean isLoopbackAddress() {
+            return null;
+        }
+
+        @Override
         public int getStateFlag() {
             return 0;
         }
@@ -309,6 +314,16 @@ public class MockedMariaDbConnection {
         @Override
         public void setAutoIncrement(long l) {
 
+        }
+
+        @Override
+        public void setMaxscaleVersion(String s) {
+
+        }
+
+        @Override
+        public String getMaxscaleVersion() {
+            return "";
         }
 
         @Override
