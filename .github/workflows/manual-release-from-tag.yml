@@ -23,7 +23,7 @@ jobs:
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
       - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
