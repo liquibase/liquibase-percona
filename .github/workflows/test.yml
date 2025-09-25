@@ -34,7 +34,7 @@ jobs:
         mysql: ["8.0", "8.4"]
         mariadb: [10, 11]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         ref: ${{ github.event.pull_request.head.sha || github.ref }}
     - name: Install Perl modules
