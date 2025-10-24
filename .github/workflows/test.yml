@@ -19,7 +19,7 @@ jobs:
     needs: authorize
     secrets: inherit
     with:
-      java: "[11, 17, 21]"
+      java: "[11, 17, 21, 25]"
       os: '["ubuntu-latest", "windows-latest"]'
       extraMavenArgs: 'verify'
 
@@ -30,7 +30,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [8, 11, 17, 21]
+        java: [8, 11, 17, 21, 25]
         mysql: ["8.0", "8.4"]
         mariadb: [10, 11]
     steps:
