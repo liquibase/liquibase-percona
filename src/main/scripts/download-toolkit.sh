@@ -174,12 +174,13 @@ function extract_toolkit() {
     local cached_file="${CACHE_DIR}/${filename}"
     local extract_target_dir="percona-toolkit-${version%-*}"
     local extract_target_dir2="percona-toolkit-${name}"
+    local filename_in_target_dir="percona-toolkit-${version%-*}.tar.gz"
 
     echo "Extracting..."
     (
         cd "${TARGET}"
         rm -rf "${extract_target_dir}"
-        tar xfz "${filename}"
+        tar xfz "${filename_in_target_dir}"
 
         if [ ! -d "${extract_target_dir}" ]; then
             echo "The directory ${extract_target_dir} doesn't exist - something went wrong!"
