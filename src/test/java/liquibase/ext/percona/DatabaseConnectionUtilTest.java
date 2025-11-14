@@ -91,7 +91,6 @@ public class DatabaseConnectionUtilTest {
     }
 
     @Test
-    @EnabledForJreRange(min = JRE.JAVA_17, disabledReason = "Tomcat JDBC 11.x requires at least Java 17")
     public void testTomcatJdbcConnection() throws Exception {
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(
                 new JdbcConnection(MockedTomcatJdbcConnection.create("user", "xyz")));
