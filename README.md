@@ -54,6 +54,9 @@ MySQL and MariaDB (since 4.3.2) are the only supported databases.
 The extension checks whether it is being run against a MySQL/MariaDB database. If not, it falls back to the default
 changes provided by liquibase-core.
 
+The integration tests run against the LTS versions of MySQL and MariaDB.
+See <https://endoflife.date/mysql> and <https://endoflife.date/mariadb>.
+
 ## Supported Changeset Formats
 
 This liquibase extension supports the following changeset formats:
