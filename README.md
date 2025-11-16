@@ -667,6 +667,12 @@ See the properties *config_...* in `pom.xml` for connection details for the mysq
 
 To run a single integration test, execute maven like this: `./mvnw verify -Prun-its -Dinvoker.test=sharedScripts,addColumn*,dropColumn`
 
+If you use "podman" instead of docker, run these commands before executing the integration tests:
+```
+export DOCKER_HOST="unix:/run/user/$(id -u)/podman/podman.sock"
+podman system service -t 3600 &
+```
+
 ## Common Problems
 
 ### NoSuchMethodError: PerconaDropColumnChange.getColumns()Ljava/util/List
