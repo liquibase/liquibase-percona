@@ -42,7 +42,7 @@
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
         <project.build.outputTimestamp>2025-08-08T19:23:22Z</project.build.outputTimestamp>
 
-        <java.version>1.8</java.version>
+        <maven.compiler.release>17</maven.compiler.release>
         <liquibase.version>4.33.0</liquibase.version>
         <mysql.connector.version>9.5.0</mysql.connector.version>
         <mariadb.connector.version>3.5.6</mariadb.connector.version>
@@ -232,9 +232,6 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <optimize>true</optimize>
                     <debug>true</debug>
                 </configuration>
             </plugin>
@@ -251,7 +248,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>${java.version}</version>
+                                    <version>${maven.compiler.release}</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -273,7 +270,7 @@
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
-                    <targetJdk>${java.version}</targetJdk>
+                    <targetJdk>${maven.compiler.release}</targetJdk>
                     <printFailingErrors>true</printFailingErrors>
                     <linkXRef>false</linkXRef>
                 </configuration>
