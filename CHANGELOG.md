@@ -33,6 +33,7 @@ Support for Liquibase 5.0.1.
 
 ### 🧰 Maintenance
 
+- ([#629](https://github.com/liquibase/liquibase-percona/pull/629)) chore: Prepare release 5.0.1 @adangel
 - ([#622](https://github.com/liquibase/liquibase-percona/pull/622)) doc: how to use podman for integration tests @adangel
 - ([#626](https://github.com/liquibase/liquibase-percona/pull/626)) chore: reduce integration test jobs @adangel
 - ([#623](https://github.com/liquibase/liquibase-percona/pull/623)) chore: update mariadb integration test coverage @adangel
