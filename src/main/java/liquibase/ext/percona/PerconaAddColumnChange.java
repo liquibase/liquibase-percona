@@ -32,6 +32,7 @@ import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
+import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
@@ -238,7 +239,18 @@ public class PerconaAddColumnChange extends AddColumnChange implements PerconaCh
 
     @Override
     public ValidationErrors validate(Database database) {
-        return PerconaChangeUtil.validate(super.validate(database), database);
+        ValidationErrors validationErrors = PerconaChangeUtil.validate(super.validate(database), database);
+        if (database instanceof MySQLDatabase) {
+            for (ColumnConfig columnConfig : getColumns()) {
+                if (Boolean.TRUE.equals(columnConfig.isAutoIncrement())) {
+                    validationErrors.addError("Autoincrement is not supported with liquibase-percona.");
+                }
+                if (columnConfig.getConstraints() != null && Boolean.TRUE.equals(columnConfig.getConstraints().isPrimaryKey())) {
+                    validationErrors.addError("Primary Key constraint is not supported with liquibase-percona.");
+                }
+            }
+        }
+        return validationErrors;
     }
 
     @SuppressWarnings("PMD.UselessOverridingMethod")

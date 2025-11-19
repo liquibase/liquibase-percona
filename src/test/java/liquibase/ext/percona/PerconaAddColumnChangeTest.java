@@ -14,9 +14,10 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ConstraintsConfig;
@@ -319,5 +320,27 @@ public class PerconaAddColumnChangeTest extends AbstractPerconaChangeTest<Percon
 
         Assertions.assertEquals("ADD COLUMN address VARCHAR(255) NULL, ADD UNIQUE (address)",
                 change.convertColumnToSql(column, database));
+    }
+
+    @Test
+    void testAddColumnWithPrimaryKeyAndAutoIncrement() {
+        PerconaAddColumnChange c = getChange();
+
+        AddColumnConfig column = new AddColumnConfig();
+        column.setName("id");
+        column.setType("INT(10)");
+        column.setAutoIncrement(true);
+
+        ConstraintsConfig constraints = new ConstraintsConfig();
+        constraints.setNullable(true);
+        constraints.setPrimaryKey(true);
+        column.setConstraints(constraints);
+
+        c.setColumns(Collections.singletonList(column));
+
+        ValidationErrors errors = validate();
+        Assertions.assertTrue(errors.hasErrors());
+        Assertions.assertEquals("Autoincrement is not supported with liquibase-percona.", errors.getErrorMessages().get(0));
+        Assertions.assertEquals("Primary Key constraint is not supported with liquibase-percona.", errors.getErrorMessages().get(1));
     }
 }
