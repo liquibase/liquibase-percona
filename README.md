@@ -67,7 +67,7 @@ This liquibase extension supports the following changeset formats:
 
 ## Liquibase version(s) tested against
 
-* Liquibase 4.33.0 (liquibase-percona 4.33.0). Percona Toolkit 3.7.0-2.
+* Liquibase 5.0.1 (liquibase-percona 5.0.1). Percona Toolkit 3.7.0-2.
 
 <details>
 <summary>Old Versions</summary>
@@ -104,6 +104,7 @@ This liquibase extension supports the following changeset formats:
 * Liquibase 4.30.0 (liquibase-percona 4.30.0). Percona Toolkit 3.6.0.
 * Liquibase 4.31.0 (liquibase-percona 4.31.0). Percona Toolkit 3.7.0.
 * Liquibase 4.32.0 (liquibase-percona 4.32.0). Percona Toolkit 3.7.0-2.
+* Liquibase 4.33.0 (liquibase-percona 4.33.0). Percona Toolkit 3.7.0-2.
 
 </details>
 
@@ -570,7 +571,7 @@ The jar files can be downloaded manually from maven:
 
 ### Command line liquibase
 
-After extracting the zip file of liquibase, place `liquibase-percona-4.31.0.jar` file in the sub directory `lib`.
+After extracting the zip file of liquibase, place `liquibase-percona-5.0.1.jar` file in the sub directory `lib`.
 The shell script `liquibase` / `liquibase.bat` will automatically pick this up and the extension is available.
 
 ### Via Maven
@@ -581,7 +582,7 @@ Add the following dependency to the liquibase plugin:
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.33.0</version>
+    <version>5.0.1</version>
 </dependency>
 ```
 
@@ -618,13 +619,13 @@ Enable the snapshot repository via Maven:
 
 See also <https://maven.apache.org/guides/development/guide-testing-development-plugins.html>.
 
-And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `4.31.1-SNAPSHOT`:
+And just use the latest SNAPSHOT version for liquibase-percona dependency, e.g. `5.0.2-SNAPSHOT`:
 
 ```xml
 <dependency>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>4.33.1-SNAPSHOT</version>
+    <version>5.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
