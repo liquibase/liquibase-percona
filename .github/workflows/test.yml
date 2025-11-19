@@ -31,8 +31,23 @@ jobs:
     strategy:
       matrix:
         java: [17, 21, 25]
-        mysql: ["8.0", "8.4"]
-        mariadb: ["10.6", "10.11", "11.4", "11.8"]
+        mysql: ["8.4"]
+        mariadb: ["11.8"]
+        include:
+          # older mysql versions
+          - java: "25"
+            mysql: "8.0"
+            mariadb: "11.8"
+          # older mariadb versions
+          - java: "25"
+            mysql: "8.4"
+            mariadb: "11.4"
+          - java: "25"
+            mysql: "8.4"
+            mariadb: "10.11"
+          - java: "25"
+            mysql: "8.4"
+            mariadb: "10.6"
     steps:
     - uses: actions/checkout@v5
       with:
