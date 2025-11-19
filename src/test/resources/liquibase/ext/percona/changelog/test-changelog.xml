@@ -27,4 +27,16 @@
             <column name="email" type="varchar(255)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="4" author="Alice">
+        <preConditions  onFail="WARN">
+            <not>
+                <tableExists tableName="example_table" />
+            </not>
+        </preConditions>
+        <comment>Comments should go after the precondition. Otherwise, Liquibase returns an error.</comment>
+        <addColumn tableName="person">
+            <column name="nickname" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

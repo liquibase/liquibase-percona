@@ -29,6 +29,10 @@ import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
+import liquibase.precondition.Precondition;
+import liquibase.precondition.core.NotPrecondition;
+import liquibase.precondition.core.PreconditionContainer;
+import liquibase.precondition.core.SqlPrecondition;
 import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
@@ -59,11 +63,16 @@ public class ChangeLogParserTest {
     }
 
     private static void assertChangeLog(DatabaseChangeLog changelog) {
-        Assertions.assertEquals(3, changelog.getChangeSets().size());
+        Assertions.assertEquals(4, changelog.getChangeSets().size());
         Change change = changelog.getChangeSets().get(1).getChanges().get(0);
         assertChange(change, PerconaAddColumnChange.class, Boolean.FALSE, null);
         change = changelog.getChangeSets().get(2).getChanges().get(0);
         assertChange(change, PerconaAddColumnChange.class, null, "--foo");
+
+        ChangeSet changeSet = changelog.getChangeSets().get(3);
+        Assertions.assertEquals(PreconditionContainer.FailOption.WARN, changeSet.getPreconditions().getOnFail());
+        Assertions.assertInstanceOf(NotPrecondition.class, changeSet.getPreconditions().getNestedPreconditions().get(0));
+        Assertions.assertEquals("Comments should go after the precondition. Otherwise, Liquibase returns an error.", changeSet.getComments());
     }
 
     @Test
@@ -81,7 +90,7 @@ public class ChangeLogParserTest {
     @Test
     public void testReadLiquibaseUsePerconaFlagSQL() throws Exception {
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
-        Assertions.assertEquals(4, changelog.getChangeSets().size());
+        Assertions.assertEquals(5, changelog.getChangeSets().size());
 
         // changeset 1
         ChangeSet changeSet = changelog.getChangeSets().get(0);
@@ -111,13 +120,23 @@ public class ChangeLogParserTest {
         assertChange(change, PerconaRawSQLChange.class, Boolean.TRUE, null);
         rollback = changeSet.getRollback().getChanges().get(0);
         assertChange(rollback, PerconaRawSQLChange.class, Boolean.TRUE, null);
+
+        // changeset 5 - with preconditions
+        changeSet = changelog.getChangeSets().get(4);
+        change = changeSet.getChanges().get(0);
+        assertChange(change, PerconaRawSQLChange.class, null, null);
+        Assertions.assertEquals(PreconditionContainer.FailOption.WARN, changeSet.getPreconditions().getOnFail());
+        Precondition precondition = changeSet.getPreconditions().getNestedPreconditions().get(0);
+        Assertions.assertInstanceOf(SqlPrecondition.class, precondition);
+        Assertions.assertEquals("SELECT COUNT(*) FROM example_table", ((SqlPrecondition) precondition).getSql());
+        Assertions.assertEquals("/* Comments should go after the precondition. Otherwise, Liquibase returns an error. */", changeSet.getComments());
     }
 
     @Test
     public void testReadLiquibaseUsePerconaFlagSQL_defaultOff() throws Exception {
         System.setProperty(Configuration.DEFAULT_ON, "false");
         DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
-        Assertions.assertEquals(4, changelog.getChangeSets().size());
+        Assertions.assertEquals(5, changelog.getChangeSets().size());
 
         // changeset 1
         ChangeSet changeSet = changelog.getChangeSets().get(0);
@@ -153,5 +172,15 @@ public class ChangeLogParserTest {
         assertChange(change, PerconaRawSQLChange.class, Boolean.TRUE, null);
         rollback = changeSet.getRollback().getChanges().get(0);
         assertChange(rollback, PerconaRawSQLChange.class, Boolean.TRUE, null);
+
+        // changeset 5 - with preconditions
+        changeSet = changelog.getChangeSets().get(4);
+        change = changeSet.getChanges().get(0);
+        Assertions.assertSame(RawSQLChange.class, change.getClass());
+        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        Assertions.assertEquals(PreconditionContainer.FailOption.WARN, changeSet.getPreconditions().getOnFail());
+        Precondition precondition = changeSet.getPreconditions().getNestedPreconditions().get(0);
+        Assertions.assertInstanceOf(SqlPrecondition.class, precondition);
+        Assertions.assertEquals("SELECT COUNT(*) FROM example_table", ((SqlPrecondition) precondition).getSql());
     }
 }

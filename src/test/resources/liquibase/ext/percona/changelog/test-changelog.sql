@@ -18,3 +18,9 @@ ALTER TABLE person ADD email VARCHAR(255) NULL;
 --liquibasePercona:usePercona="true"
 --rollback ALTER TABLE person DROP COLUMN phone;
 ALTER TABLE person ADD phone VARCHAR(255) NULL;
+
+--changeset Alice:5
+--preconditions onFail:WARN
+--precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM example_table
+--comment: /* Comments should go after the precondition. Otherwise, Liquibase returns an error. */
+ALTER TABLE person ADD nickname VARCHAR(255) NULL;

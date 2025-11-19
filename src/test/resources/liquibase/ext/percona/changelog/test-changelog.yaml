@@ -33,3 +33,20 @@ databaseChangeLog:
               - column:
                   name: email
                   type: varchar(255)
+
+  - changeSet:
+      id: 4
+      author: Alice
+      preConditions:
+        - onFail: WARN
+        - not:
+            - tableExists:
+                tableName: example_table
+      comment: Comments should go after the precondition. Otherwise, Liquibase returns an error.
+      changes:
+        - addColumn:
+            tableName: person
+            columns:
+              - column:
+                  name: nickname
+                  type: varchar(255)

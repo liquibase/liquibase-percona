@@ -63,6 +63,9 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
                     changeSet.getChanges().size(),
                     changeSet.getRollback().getChanges().size()));
 
+            perconaChangeSet.setPreconditions(changeSet.getPreconditions());
+            perconaChangeSet.setComments(changeSet.getComments());
+
             boolean usePerconaChangeSet = Configuration.getDefaultOn();
             for (Change change : changeSet.getChanges()) {
                 RawSQLChange rawSQLChange = (RawSQLChange) change;
