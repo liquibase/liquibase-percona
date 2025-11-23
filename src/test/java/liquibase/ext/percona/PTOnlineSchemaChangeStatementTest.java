@@ -156,4 +156,16 @@ public class PTOnlineSchemaChangeStatementTest {
                 "[pt-online-schema-change, --arg1=val1 val2, --alter-foreign-keys-method=auto, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,D=testdb,t=person]",
                 String.valueOf(statement.buildCommand(database)));
     }
+
+    @Test
+    public void testSslDsnOption() {
+        DatabaseConnection conn = new MockDatabaseConnection("jdbc:mysql://user@localhost:3306/testdb?useSSL=true&allowPublicKeyRetrieval=true",
+                "user@localhost");
+        database.setConnection(conn);
+        PTOnlineSchemaChangeStatement statement = new PTOnlineSchemaChangeStatement(database, "testdb", "person",
+                "ADD COLUMN new_column INT NULL", Optional.empty());
+        Assertions.assertEquals(
+                "[pt-online-schema-change, --alter-foreign-keys-method=auto, --nocheck-unique-key-change, --alter=ADD COLUMN new_column INT NULL, --password=root, --execute, h=localhost,P=3306,u=user,s=yes,D=testdb,t=person]",
+                String.valueOf(statement.buildCommand(database)));
+    }
 }
