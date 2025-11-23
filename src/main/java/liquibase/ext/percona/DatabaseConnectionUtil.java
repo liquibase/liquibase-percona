@@ -47,12 +47,14 @@ public class DatabaseConnectionUtil {
     private final String port;
     private final String user;
     private final String password;
+    private final boolean isSsl;
 
     public DatabaseConnectionUtil(DatabaseConnection connection) {
         this.host = determineHost(connection.getURL());
         this.port = determinePort(connection.getURL());
         this.user = determineUser(connection.getConnectionUserName());
         this.password = determinePassword(connection);
+        this.isSsl = determineUseSsl(connection.getURL());
     }
 
     public String getHost() {
@@ -71,6 +73,10 @@ public class DatabaseConnectionUtil {
         return this.password;
     }
 
+    public boolean isSsl() {
+        return isSsl;
+    }
+
     private static String determineHost(String url) {
         Pattern p = Pattern.compile("jdbc:(?:mysql|mariadb):(?:replication:|loadbalance:|sequential:|aurora:)?//([^@]+@)?([^:/]+)");
         Matcher m = p.matcher(url);
@@ -87,6 +93,15 @@ public class DatabaseConnectionUtil {
             return m.group(1);
         }
         return "3306";
+    }
+
+    private static boolean determineUseSsl(String url) {
+        Pattern p = Pattern.compile("jdbc:(?:mysql|mariadb):(?:replication:|loadbalance:|sequential:|aurora:)?//.+?[?&]useSSL=([^&]+)");
+        Matcher m = p.matcher(url);
+        if (m.find()) {
+            return "true".equals(m.group(1));
+        }
+        return false;
     }
 
     private static String determineUser(String connectionUserName) {

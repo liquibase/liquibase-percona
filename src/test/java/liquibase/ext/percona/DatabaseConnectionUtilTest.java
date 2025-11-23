@@ -20,8 +20,6 @@ import java.util.Properties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledForJreRange;
-import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.database.jvm.JdbcConnection;
@@ -61,7 +59,7 @@ public class DatabaseConnectionUtilTest {
 
         util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mariadb://127.0.0.1:3307/testdb"));
         Assertions.assertEquals("3307", util.getPort());
-}
+    }
 
     @Test
     public void testGetUser() {
@@ -144,5 +142,30 @@ public class DatabaseConnectionUtilTest {
         System.setProperty(Configuration.LIQUIBASE_PASSWORD, "password-via-system-property");
         DatabaseConnectionUtil util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl("jdbc:mysql://user@localhost:3306/testdb"));
         Assertions.assertEquals("password-via-system-property", util.getPassword());
+    }
+
+    @Test
+    public void testDetermineUseSsl() {
+        DatabaseConnectionUtil util;
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl(
+                "jdbc:mysql://localhost:3306/testdb"));
+        Assertions.assertFalse(util.isSsl());
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl(
+                "jdbc:mysql://localhost/testdb?useSSL=true"));
+        Assertions.assertTrue(util.isSsl());
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl(
+                "jdbc:mariadb://localhost:3306/testdb?useSSL=true&allowPublicKeyRetrieval=true"));
+        Assertions.assertTrue(util.isSsl());
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl(
+                "jdbc:mysql://localhost/testdb?useSSL=false"));
+        Assertions.assertFalse(util.isSsl());
+
+        util = new DatabaseConnectionUtil(MockDatabaseConnection.fromUrl(
+                "jdbc:mariadb://localhost/testdb?allowPublicKeyRetrieval=true&useSSL=false"));
+        Assertions.assertFalse(util.isSsl());
     }
 }
