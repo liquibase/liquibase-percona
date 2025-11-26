@@ -147,6 +147,9 @@ public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatemen
             dsn.append("h=").append(connection.getHost());
             dsn.append(",P=").append(connection.getPort());
             dsn.append(",u=").append(connection.getUser());
+            if (connection.isSsl()) {
+                dsn.append(",s=yes");
+            }
             dsn.append(',');
 
             String pw = connection.getPassword();
