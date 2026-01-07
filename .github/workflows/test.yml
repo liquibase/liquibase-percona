@@ -20,7 +20,7 @@ jobs:
     secrets: inherit
     with:
       java: "[17, 21, 25]"
-      os: '["ubuntu-latest", "windows-latest"]'
+      os: '["ubuntu-latest", "blacksmith-2vcpu-windows-2025"]'
       extraMavenArgs: 'verify'
 
   integration-tests:
