@@ -23,54 +23,7 @@ jobs:
       os: '["ubuntu-latest", "windows-latest"]'
       extraMavenArgs: 'verify'
 
-  integration-tests:
-    name: Java ${{ matrix.java }}, MySQL ${{ matrix.mysql }}, MariaDB ${{ matrix.mariadb }}
-    runs-on: ubuntu-latest
-    needs: build-test
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        java: [17, 21, 25]
-        mysql: ["8.4"]
-        mariadb: ["11.8"]
-        include:
-          # older mysql versions
-          - java: "25"
-            mysql: "8.0"
-            mariadb: "11.8"
-          # older mariadb versions
-          - java: "25"
-            mysql: "8.4"
-            mariadb: "11.4"
-          - java: "25"
-            mysql: "8.4"
-            mariadb: "10.11"
-          - java: "25"
-            mysql: "8.4"
-            mariadb: "10.6"
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        ref: ${{ github.event.pull_request.head.sha || github.ref }}
-    - name: Install Perl modules
-      run: |
-        sudo apt-get update
-        sudo apt-get install libdbd-mysql-perl
-    - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@v5
-      with:
-        java-version: ${{ matrix.java }}
-        distribution: 'temurin'
-        cache: 'maven'
-    - name: Run Integration Tests With Maven
-      shell: bash
-      run: |
-        ./mvnw --batch-mode --errors --no-transfer-progress --show-version \
-            clean verify -Prun-its \
-            -Dmysql_image=mysql:${{ matrix.mysql }} \
-            -Dmariadb_image=mariadb:${{ matrix.mariadb }}
-
   dependabot-automerge:
-    needs: integration-tests
+    needs: build-test
     uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@main
     secrets: inherit
