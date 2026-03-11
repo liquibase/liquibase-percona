@@ -118,7 +118,7 @@ jobs:
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-attach-artifact-release.yml
       - name: Import GPG key
         id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ env.GPG_KEY_CONTENT }}
           passphrase: ${{ env.GPG_PASSPHRASE }}
