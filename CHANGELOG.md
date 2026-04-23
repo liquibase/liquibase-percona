@@ -25,10 +25,11 @@ Support for Liqubase 5.0.2.
 
 - ([#660](https://github.com/liquibase/liquibase-percona/pull/660)) fix(DAT-22684): pin all GitHub Actions to immutable commit SHAs @jnewton03
 - ([#631](https://github.com/liquibase/liquibase-percona/pull/631)) Fix: Add SSL flag (s=yes) to Percona DSN when useSSL=true @grijeshsaini
-- ([#665](https://github.com/liquibase/liquibase-percona/issues/665)) pt-osc failure not propagated as changeset error when using formatted SQL changesets
+- ([#665](https://github.com/liquibase/liquibase-percona/issues/665)) pt-osc failure not propagated as changeset error when using formatted SQL changesets @jiawei-hong
 
 ### 🧰 Maintenance
 
+- ([#672](https://github.com/liquibase/liquibase-percona/pull/672)) chore: Prepare release 5.0.2 @adangel
 - ([#643](https://github.com/liquibase/liquibase-percona/pull/643)) chore: Migrate Windows runners to Blacksmith for cost and performance @jandroav
 - ([#670](https://github.com/liquibase/liquibase-percona/pull/670)) test: Add IT for [#665](https://github.com/liquibase/liquibase-percona/issues/665) in case pt-osc fails @adangel
 - ([#668](https://github.com/liquibase/liquibase-percona/pull/668)) chore: Fix download-toolkit.sh @adangel
