@@ -44,7 +44,7 @@
 
         <maven.compiler.release>17</maven.compiler.release>
         <liquibase.version>5.0.2</liquibase.version>
-        <mysql.connector.version>9.6.0</mysql.connector.version>
+        <mysql.connector.version>9.7.0</mysql.connector.version>
         <mariadb.connector.version>3.5.8</mariadb.connector.version>
         <percona.toolkit.version>3.7.0</percona.toolkit.version>
 
