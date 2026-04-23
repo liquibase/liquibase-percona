@@ -15,7 +15,7 @@ Replace: [#$1](https://github.com/liquibase/liquibase-percona/issues/$1)
 
 ## [v5.0.2](https://github.com/liquibase/liquibase-percona/tree/v5.0.2) (2026-04-23)
 
-Support for Liqubase 5.0.2.
+Support for Liquibase 5.0.2.
 
 ### 📗 Notable Changes
 
