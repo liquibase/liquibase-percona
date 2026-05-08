@@ -101,106 +101,109 @@ function determine_latest_toolkit()
         fi
     fi
 
-    # percona way:
-    local latest
-    latest=$(curl --silent https://docs.percona.com/percona-toolkit/release_notes.html)
+    echo "Determining latest version..." >&2
+    local release_notes
+    release_notes=$(curl --silent https://docs.percona.com/percona-toolkit/release_notes.html)
+    local all_versions
+    all_versions=$(echo "$release_notes"|grep -i '<h2 id="v'|sed 's/.*v\([0-9.-]\+\) released.*/\1/')
 
+    # find the first version, that is available for download. Not all versions might exist yet for download.
     local version
-    version=$(echo "$latest"|grep -i '<section id="v'|head -1|sed 's/.*v\([0-9][0-9]*\)-\([0-9][0-9]*\)-\([0-9][0-9]*\)\(-[0-9][0-9]*\)\?.*/\1.\2.\3\4/')
+    local latest_version=""
+    for version in $all_versions; do
+      echo -n " checking version $version for availability..." >&2
+      if curl --head --fail --silent "https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz" >/dev/null; then
+        if curl --head --fail --silent "https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz.sha256sum" >/dev/null; then
+          echo " OK" >&2
+          latest_version="$version"
+          break
+        fi
+        echo " missing sha256sum" >&2
+      else
+        echo " missing tar.gz" >&2
+      fi
+    done
 
-    if [ "$version" = "" ]; then
+    if [ "$latest_version" = "" ]; then
       echo "Couldn't determine latest toolkit version!" >&2
       exit 1
     fi
 
-    # github way:
-    # ask github for the tags, use the first tag - hope, it is the latest
-    #
-    #local version=$(curl \
-    #  --silent \
-    #  --header "Accept: application/vnd.github.v3+json" \
-    #  https://api.github.com/repos/percona/percona-toolkit/tags \
-    #  | jq ".[0].name" --raw-output)
-    #
-    # output version, removing potential "v" prefix from version
-    #version="${version##v}"
-    
+    echo "Determined latest available version as: ${latest_version}" >&2
+
     if is_cache_enabled
     then
-        echo "$version" > "$cached_version"
+        echo "$latest_version" > "$cached_version"
     fi
-    echo "$version"
+    echo "$latest_version"
 }
 
 function download_toolkit()
 {
     local version="$1"
-    local filename="percona-toolkit-${version%-*}.tar.gz"
-    local cached_file="${CACHE_DIR}/${version}_${filename}"
+    local filename="percona-toolkit-${version}.tar.gz"
+    local cached_file="${CACHE_DIR}/${filename}"
 
     if is_cache_enabled
     then
         if [ -e "${cached_file}" ]; then
-            echo "${filename} already exists in ${CACHE_DIR}, not downloading"
+            echo "${filename} already exists in ${CACHE_DIR}, not downloading" >&2
             cp "${cached_file}" "${TARGET}/${filename}"
             return
         fi
     fi
 
-    url=https://downloads.percona.com/downloads/percona-toolkit/${version}/source/tarball/percona-toolkit-${version%-*}.tar.gz
-    # the tags on github are unfortunately wrong and can't be used to download the source...
-    #url=https://github.com/percona/percona-toolkit/archive/v${version}.tar.gz
-    
-    echo "Downloading ${filename}..."
+    local url="https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz"
+    echo "Downloading ${filename} from ${url}..." >&2
     if ! curl \
       --location \
-      --output "${TARGET}/${version}_${filename}" \
+      --output "${TARGET}/${filename}" \
         "${url}"; then
-        echo "Download from ${url} failed..."
+        echo "Download from ${url} failed..." >&2
         exit 1
     fi
 
     if is_cache_enabled
     then
-        echo "Caching ${filename}"
-        cp "${TARGET}/${version}_${filename}" "${cached_file}"
+        echo "Caching ${filename}" >&2
+        cp "${TARGET}/${filename}" "${cached_file}"
     fi
 }
 
 function extract_toolkit() {
     local version="$1"
     local name="$2"
-    local filename="${version}_percona-toolkit-${version%-*}.tar.gz"
+    local filename="percona-toolkit-${version}.tar.gz"
     local cached_file="${CACHE_DIR}/${filename}"
-    local extract_target_dir="percona-toolkit-${version%-*}"
+    local extract_target_dir="percona-toolkit-${version}"
     local extract_target_dir2="percona-toolkit-${name}"
 
-    echo "Extracting..."
+    echo "Extracting..." >&2
     (
         cd "${TARGET}"
         rm -rf "${extract_target_dir}"
         tar xfz "${filename}"
 
         if [ ! -d "${extract_target_dir}" ]; then
-            echo "The directory ${extract_target_dir} doesn't exist - something went wrong!"
+            echo "The directory ${extract_target_dir} doesn't exist - something went wrong!" >&2
             exit 1
         fi
 
         local downloaded_version
         downloaded_version=$(tail -3 "${extract_target_dir}/bin/pt-online-schema-change" |head -1)
-        if [ "${downloaded_version}" != "pt-online-schema-change ${version%-*}" ]; then
-          echo "Wrong version downloaded: '${downloaded_version}' but expected to be '${version%-*}'"
+        if [ "${downloaded_version}" != "pt-online-schema-change ${version}" ]; then
+          echo "Wrong version downloaded: '${downloaded_version}' but expected to be '${version}'" >&2
           exit 1
         fi
 
         if [ "${extract_target_dir}" != "${extract_target_dir2}" ]; then
-            echo "Renaming to ${extract_target_dir2}"
+            echo "Renaming to ${extract_target_dir2}" >&2
             rm -rf "${extract_target_dir2}"
             mv "${extract_target_dir}" "${extract_target_dir2}"
             extract_target_dir="${extract_target_dir2}"
         fi
 
-        echo "--> Percona Toolkit ${name} is available at: $(realpath "${extract_target_dir}")"
+        echo "--> Percona Toolkit ${name} is available at: $(realpath "${extract_target_dir}")" >&2
     )
 }
 

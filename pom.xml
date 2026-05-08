@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-percona</artifactId>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>5.0.3-SNAPSHOT</version>
     <name>Liquibase Percona Extension</name>
     <description>A Liquibase extension that makes use of the percona toolkit</description>
     <url>https://liquibase.jira.com/wiki/display/CONTRIB/Percona+Online+Schema+Change</url>
@@ -40,13 +40,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Note: this needs to be updated for each release: "date -u -Iseconds" -->
-        <project.build.outputTimestamp>2025-11-19T19:35:15Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-04-23T13:11:15Z</project.build.outputTimestamp>
 
         <maven.compiler.release>17</maven.compiler.release>
         <liquibase.version>5.0.2</liquibase.version>
-        <mysql.connector.version>9.6.0</mysql.connector.version>
+        <mysql.connector.version>9.7.0</mysql.connector.version>
         <mariadb.connector.version>3.5.8</mariadb.connector.version>
-        <percona.toolkit.version>3.7.0-2</percona.toolkit.version>
+        <percona.toolkit.version>3.7.1</percona.toolkit.version>
 
         <config_host>127.0.0.1</config_host>
         <!--
@@ -117,7 +117,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>11.0.20</version>
+            <version>11.0.22</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -172,7 +172,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.9.1</version>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -223,7 +223,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.6.2</version>
+                    <version>3.6.3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
