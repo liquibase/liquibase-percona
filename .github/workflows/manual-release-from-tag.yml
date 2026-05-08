@@ -44,61 +44,35 @@ jobs:
           parse-json-secrets: true
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
-      - name: maven-settings-xml-action
-        uses: whelk-io/maven-settings-xml-action@9dc09b23833fa9aa7f27b63db287951856f3433d # v22
+      - name: Set up Maven settings.xml
+        uses: liquibase/build-logic/.github/actions/setup-maven-settings@main
         with:
           repositories: |
             [
               {
                 "id": "liquibase",
                 "url": "https://maven.pkg.github.com/liquibase/liquibase",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "true",
-                  "updatePolicy": "always"
-                }
+                "releases": {"enabled": "true"},
+                "snapshots": {"enabled": "true", "updatePolicy": "always"}
               },
               {
                 "id": "liquibase-pro",
                 "url": "https://maven.pkg.github.com/liquibase/liquibase-pro",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "true",
-                  "updatePolicy": "always"
-                }
+                "releases": {"enabled": "true"},
+                "snapshots": {"enabled": "true", "updatePolicy": "always"}
               },
               {
                 "id": "sonatype-nexus-staging",
                 "url": "https://oss.sonatype.org/service/local/staging/deploy/maven2/",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "false"
-                }
+                "releases": {"enabled": "true"},
+                "snapshots": {"enabled": "false"}
               }
             ]
           servers: |
             [
-              {
-                "id": "liquibase-pro",
-                "username": "liquibot",
-                "password": "${{ env.LIQUIBOT_PAT_GPM_ACCESS }}"
-              },
-              {
-                "id": "liquibase",
-                "username": "liquibot",
-                "password": "${{ env.LIQUIBOT_PAT_GPM_ACCESS }}"
-              },
-              {
-                "id": "sonatype-nexus-staging",
-                "username": "${{ env.SONATYPE_USERNAME }}",
-                "password": "${{ env.SONATYPE_TOKEN }}"
-              }
+              {"id": "liquibase-pro", "username": "liquibot", "password": "${{ env.LIQUIBOT_PAT_GPM_ACCESS }}"},
+              {"id": "liquibase", "username": "liquibot", "password": "${{ env.LIQUIBOT_PAT_GPM_ACCESS }}"},
+              {"id": "sonatype-nexus-staging", "username": "${{ env.SONATYPE_USERNAME }}", "password": "${{ env.SONATYPE_TOKEN }}"}
             ]
 
       - name: Convert escaped newlines and set GPG key
