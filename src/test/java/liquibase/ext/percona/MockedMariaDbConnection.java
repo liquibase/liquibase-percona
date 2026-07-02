@@ -340,5 +340,10 @@ public class MockedMariaDbConnection {
         public Long getAutoIncrement() {
             return null;
         }
+
+        @Override
+        public void setInitialized() {
+
+        }
     }
 }
