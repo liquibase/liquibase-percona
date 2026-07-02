@@ -49,6 +49,7 @@ import liquibase.util.StreamUtil;
  */
 public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatement {
     public static final String COMMAND = "pt-online-schema-change";
+    private static final Object LOCK = new Object();
     static PerconaToolkitVersion perconaToolkitVersion = null;
     static Boolean available = null;
 
@@ -352,11 +353,13 @@ public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatemen
         }
     }
 
-    public static synchronized PerconaToolkitVersion getVersion() {
-        if (available == null) {
-            checkIsAvailableAndGetVersion();
+    public static PerconaToolkitVersion getVersion() {
+        synchronized (LOCK) {
+            if (available == null) {
+                checkIsAvailableAndGetVersion();
+            }
+            return perconaToolkitVersion != null ? perconaToolkitVersion : new PerconaToolkitVersion(null);
         }
-        return perconaToolkitVersion != null ? perconaToolkitVersion : new PerconaToolkitVersion(null);
     }
 
     /**
@@ -368,12 +371,14 @@ public class PTOnlineSchemaChangeStatement implements ExecutablePreparedStatemen
      * @return <code>true</code> if it is available and executable, <code>false</code> otherwise
      * @see #COMMAND
      */
-    public static synchronized boolean isAvailable() {
-        if (available != null) {
+    public static boolean isAvailable() {
+        synchronized (LOCK) {
+            if (available != null) {
+                return available.booleanValue();
+            }
+            checkIsAvailableAndGetVersion();
             return available.booleanValue();
         }
-        checkIsAvailableAndGetVersion();
-        return available.booleanValue();
     }
 
     private static String getFullToolkitPath() {
