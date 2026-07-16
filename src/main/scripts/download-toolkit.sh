@@ -110,17 +110,33 @@ function determine_latest_toolkit()
     # find the first version, that is available for download. Not all versions might exist yet for download.
     local version
     local latest_version=""
+    local shortversion
     for version in $all_versions; do
-      echo -n " checking version $version for availability..." >&2
-      if curl --head --fail --silent "https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz" >/dev/null; then
-        if curl --head --fail --silent "https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz.sha256sum" >/dev/null; then
+      echo " checking version $version for availability..." >&2
+      shortversion="$version"
+      if [[ $version == *"-"* ]]; then
+        shortversion="${version%%-*}"
+      fi
+
+      local urls=""
+      urls="https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz"
+      urls="$urls https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${shortversion}_x86_64.tar.gz"
+
+      for url in $urls; do
+        echo -n "  using url $url: " >&2
+        if curl --head --fail --silent "$url" >/dev/null; then
           echo " OK" >&2
           latest_version="$version"
           break
+        else
+          echo " missing tar.gz!" >&2
         fi
-        echo " missing sha256sum" >&2
+      done
+
+      if [ "$latest_version" == "" ]; then
+        echo " failed to download" >&2
       else
-        echo " missing tar.gz" >&2
+        break
       fi
     done
 
@@ -153,14 +169,34 @@ function download_toolkit()
         fi
     fi
 
-    local url="https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz"
-    echo "Downloading ${filename} from ${url}..." >&2
-    if ! curl \
-      --location \
-      --output "${TARGET}/${filename}" \
-        "${url}"; then
-        echo "Download from ${url} failed..." >&2
-        exit 1
+    local shortversion="$version"
+    if [[ $version == *"-"* ]]; then
+      shortversion="${version%%-*}"
+    fi
+
+    local urls=""
+    urls="https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${version}_x86_64.tar.gz"
+    urls="$urls https://downloads.percona.com/downloads/percona-toolkit/${version}/binary/tarball/percona-toolkit-${shortversion}_x86_64.tar.gz"
+    for url in $urls; do
+      echo -n "Downloading ${filename} from ${url} ..." >&2
+      if curl --head --fail --silent "$url" >/dev/null; then
+        echo " starting" >&2
+        if ! curl \
+          --location \
+          --output "${TARGET}/${filename}" \
+            "${url}"; then
+            echo "Download from ${url} failed..." >&2
+            exit 1
+        fi
+        break
+      else
+        echo " NOT FOUND!" >&2
+      fi
+    done
+
+    if [ ! -e "${TARGET}/${filename}" ]; then
+      echo "Download for ${version} failed!" >&2
+      exit 1
     fi
 
     if is_cache_enabled
@@ -177,6 +213,10 @@ function extract_toolkit() {
     local cached_file="${CACHE_DIR}/${filename}"
     local extract_target_dir="percona-toolkit-${version}"
     local extract_target_dir2="percona-toolkit-${name}"
+    local shortversion="$version"
+    if [[ $version == *"-"* ]]; then
+      shortversion="${version%%-*}"
+    fi
 
     echo "Extracting..." >&2
     (
@@ -185,8 +225,12 @@ function extract_toolkit() {
         tar xfz "${filename}"
 
         if [ ! -d "${extract_target_dir}" ]; then
+          if [ -d "percona-toolkit-${shortversion}" ]; then
+            mv "percona-toolkit-${shortversion}" "${extract_target_dir}"
+          else
             echo "The directory ${extract_target_dir} doesn't exist - something went wrong!" >&2
             exit 1
+          fi
         fi
 
         local downloaded_version
