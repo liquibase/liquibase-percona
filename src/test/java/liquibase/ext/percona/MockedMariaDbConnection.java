@@ -345,5 +345,15 @@ public class MockedMariaDbConnection {
         public void setInitialized() {
 
         }
+
+        @Override
+        public boolean isServerReadOnly() {
+            return false;
+        }
+
+        @Override
+        public void setServerReadOnly(boolean serverReadOnly) {
+
+        }
     }
 }
