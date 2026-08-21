@@ -43,7 +43,7 @@
         <project.build.outputTimestamp>2026-04-23T13:11:15Z</project.build.outputTimestamp>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <liquibase.version>5.0.3</liquibase.version>
+        <liquibase.version>5.0.4</liquibase.version>
         <mysql.connector.version>26.7.0</mysql.connector.version>
         <mariadb.connector.version>3.5.10</mariadb.connector.version>
         <percona.toolkit.version>3.7.1-4</percona.toolkit.version>
