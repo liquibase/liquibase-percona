@@ -29,6 +29,7 @@ GPG verification requires Liquibase Community 5.0.4 or later. Past releases are 
 
 ### 🧰 Maintenance
 
+- ([#749](https://github.com/liquibase/liquibase-percona/pull/749)) chore: Prepare release 5.0.4 @adangel
 - ([#722](https://github.com/liquibase/liquibase-percona/pull/722)) chore: Fix download-toolkit.sh script @adangel
 - ([#710](https://github.com/liquibase/liquibase-percona/pull/710)) chore: Use private lock for synchronization @adangel
 - ([#687](https://github.com/liquibase/liquibase-percona/pull/687)) ci: SHA-pin step-level build-logic action ref [TECHOPS-81] @sayaliM0412
