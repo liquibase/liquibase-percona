@@ -1,22 +1,21 @@
 name: Build and Test
 
+permissions:
+  contents: read
+  pull-requests: write
+  packages: read
+  id-token: write
+
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - reopened
       - synchronize
 
 jobs:
-  authorize:
-    environment: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: true
-
   build-test:
     uses: liquibase/build-logic/.github/workflows/os-extension-test.yml@main
-    needs: authorize
     secrets: inherit
     with:
       java: "[17, 21, 25]"
@@ -69,8 +68,3 @@ jobs:
             clean verify -Prun-its \
             -Dmysql_image=mysql:${{ matrix.mysql }} \
             -Dmariadb_image=mariadb:${{ matrix.mariadb }}
-
-  dependabot-automerge:
-    needs: integration-tests
-    uses: liquibase/build-logic/.github/workflows/dependabot-automerge.yml@main
-    secrets: inherit
