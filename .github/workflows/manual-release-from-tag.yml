@@ -45,7 +45,7 @@ jobs:
 
       # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
       - name: Set up Maven settings.xml
-        uses: liquibase/build-logic/.github/actions/setup-maven-settings@0d56860f162d1d32c976d179e1dbd1663e18733b # main
+        uses: liquibase/build-logic/.github/actions/setup-maven-settings@9e420b2d6250527d22449b7ec1f53236b704a857 # main
         with:
           repositories: |
             [
