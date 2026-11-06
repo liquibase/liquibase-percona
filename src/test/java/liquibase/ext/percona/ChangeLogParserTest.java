@@ -23,6 +23,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.change.Change;
+import liquibase.statement.core.RawSqlStatement;
+import liquibase.statement.SqlStatement;
+import liquibase.database.core.MySQLDatabase;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
@@ -180,5 +183,23 @@ public class ChangeLogParserTest {
         Precondition precondition = changeSet.getPreconditions().getNestedPreconditions().get(0);
         Assertions.assertInstanceOf(SqlPrecondition.class, precondition);
         Assertions.assertEquals("SELECT COUNT(*) FROM example_table", ((SqlPrecondition) precondition).getSql());
+    }
+
+    @Test
+    public void testDirectiveLinesNotSentWhenPerconaIsOff() throws Exception {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog-directives.sql");
+
+        ChangeSet keepsComments = changelog.getChangeSets().get(0);
+        PerconaRawSQLChange change = (PerconaRawSQLChange) keepsComments.getChanges().get(0);
+        Assertions.assertSame(keepsComments, change.getChangeSet());
+        Assertions.assertFalse(change.isStripCommentsUsedDefaultValue());
+        SqlStatement[] statements = change.generateStatements(new MySQLDatabase());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals("CREATE TABLE person (id INT)", ((RawSqlStatement) statements[0]).getSql());
+
+        ChangeSet usesDefault = changelog.getChangeSets().get(1);
+        PerconaRawSQLChange defaultChange = (PerconaRawSQLChange) usesDefault.getChanges().get(0);
+        Assertions.assertTrue(defaultChange.isStripCommentsUsedDefaultValue());
     }
 }

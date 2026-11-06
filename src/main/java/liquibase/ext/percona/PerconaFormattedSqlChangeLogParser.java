@@ -153,7 +153,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
         PerconaRawSQLChange perconaChange = new PerconaRawSQLChange();
         perconaChange.setSql(rawSQLChange.getSql());
         perconaChange.setSplitStatements(rawSQLChange.isSplitStatements());
-        perconaChange.setStripComments(rawSQLChange.isStripComments());
+        perconaChange.setStripComments(rawSQLChange.isStripComments(), rawSQLChange.isStripCommentsUsedDefaultValue());
         perconaChange.setEndDelimiter(rawSQLChange.getEndDelimiter());
         perconaChange.setRerunnable(rawSQLChange.isRerunnable());
         perconaChange.setComment(rawSQLChange.getComment());

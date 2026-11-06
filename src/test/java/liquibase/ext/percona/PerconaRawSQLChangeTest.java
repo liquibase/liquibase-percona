@@ -324,6 +324,8 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         change.setUsePercona(false);
 
         assertEquals(new RawSQLChange(sql).generateCheckSum(), change.generateCheckSum());
+        change.generateStatements(new MySQLDatabase());
+        assertEquals(new RawSQLChange(sql).generateCheckSum(), change.generateCheckSum());
         assertEquals(sql, change.getSql());
     }
 }

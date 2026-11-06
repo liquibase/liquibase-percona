@@ -79,7 +79,7 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
         RawSQLChange withoutDirectives = new RawSQLChange(DIRECTIVE_LINE.matcher(sql).replaceAll(""));
         withoutDirectives.setChangeSet(getChangeSet());
         withoutDirectives.setSplitStatements(isSplitStatements());
-        withoutDirectives.setStripComments(isStripComments());
+        withoutDirectives.setStripComments(isStripComments(), isStripCommentsUsedDefaultValue());
         withoutDirectives.setEndDelimiter(getEndDelimiter());
         withoutDirectives.setRerunnable(isRerunnable());
         withoutDirectives.setDbms(getDbms());
