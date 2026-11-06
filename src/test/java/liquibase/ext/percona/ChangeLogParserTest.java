@@ -17,6 +17,7 @@ package liquibase.ext.percona;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.change.Change;
 import liquibase.change.core.RawSQLChange;
+import liquibase.change.core.TagDatabaseChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
@@ -47,6 +49,14 @@ public class ChangeLogParserTest {
         resourceAccessor = new DirectoryResourceAccessor(
                 new File("target/test-classes/" + packagePath + "/changelog/")
                         .getCanonicalFile());
+    }
+
+    @AfterEach
+    public void unregisterDelegate() {
+        ChangeLogParserFactory.getInstance().getParsers().stream()
+                .filter(DelegatingTestFormattedSqlChangeLogParser.class::isInstance)
+                .forEach(ChangeLogParserFactory.getInstance()::unregister);
+        DelegatingTestFormattedSqlChangeLogParser.CREATED.clear();
     }
 
     private DatabaseChangeLog loadChangeLog(String filename) throws Exception {
@@ -182,5 +192,48 @@ public class ChangeLogParserTest {
         Precondition precondition = changeSet.getPreconditions().getNestedPreconditions().get(0);
         Assertions.assertInstanceOf(SqlPrecondition.class, precondition);
         Assertions.assertEquals("SELECT COUNT(*) FROM example_table", ((SqlPrecondition) precondition).getSql());
+    }
+
+    @Test
+    public void testReadLiquibaseUsePerconaFlagSQL_keepsLabelsAndContexts() throws Exception {
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog-labels.sql");
+        ChangeSet changeSet = changelog.getChangeSets().get(0);
+        assertChange(changeSet.getChanges().get(0), PerconaRawSQLChange.class, Boolean.TRUE, null);
+        Assertions.assertTrue(changeSet.getLabels().getLabels().contains("keep"));
+        Assertions.assertEquals("ctx", changeSet.getContextFilter().toString());
+    }
+
+    @Test
+    public void testReadLiquibaseUsePerconaFlagSQL_delegatesToNextFormattedSqlParser() throws Exception {
+        ChangeLogParserFactory.getInstance().register(new DelegatingTestFormattedSqlChangeLogParser());
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog-delegated-root.sql");
+
+        Assertions.assertEquals(3, changelog.getChangeSets().size());
+        ChangeSet included = changelog.getChangeSets().get(0);
+        Assertions.assertEquals("included", included.getId());
+        assertChange(included.getChanges().get(0), PerconaRawSQLChange.class, Boolean.TRUE, null);
+        Assertions.assertEquals(1, included.getRollback().getChanges().size());
+        assertChange(included.getRollback().getChanges().get(0), PerconaRawSQLChange.class, Boolean.TRUE, null);
+
+        ChangeSet root = changelog.getChangeSets().get(1);
+        Assertions.assertEquals("root", root.getId());
+        assertChange(root.getChanges().get(0), PerconaRawSQLChange.class, Boolean.TRUE, null);
+
+        for (ChangeSet changeSet : changelog.getChangeSets()) {
+            Assertions.assertTrue(DelegatingTestFormattedSqlChangeLogParser.CREATED.stream().anyMatch(c -> c == changeSet),
+                    "changeset " + changeSet.getId() + " was replaced instead of kept");
+        }
+    }
+
+    @Test
+    public void testReadLiquibaseUsePerconaFlagSQL_leavesChangeSetsWithOtherChangesAlone() throws Exception {
+        ChangeLogParserFactory.getInstance().register(new DelegatingTestFormattedSqlChangeLogParser());
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog-delegated-root.sql");
+
+        ChangeSet tagged = changelog.getChangeSets().get(2);
+        Assertions.assertEquals("tagged", tagged.getId());
+        Assertions.assertEquals(2, tagged.getChanges().size());
+        Assertions.assertSame(RawSQLChange.class, tagged.getChanges().get(0).getClass());
+        Assertions.assertInstanceOf(TagDatabaseChange.class, tagged.getChanges().get(1));
     }
 }
