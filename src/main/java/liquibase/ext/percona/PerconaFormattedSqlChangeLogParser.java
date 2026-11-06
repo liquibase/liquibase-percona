@@ -14,6 +14,8 @@ package liquibase.ext.percona;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -89,6 +91,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
             if (!usePerconaChangeSet) {
                 LOG.fine(String.format("Not using percona toolkit for changeset %s::%s::%s, because no change requests it",
                         perconaChangeSet.getFilePath(), perconaChangeSet.getId(), perconaChangeSet.getAuthor()));
+                useConvertedChangesWithDirectives(changeSet, perconaChangeSet.getChanges());
                 continue;
             }
 
@@ -122,11 +125,35 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
         return changeLog;
     }
 
+    /**
+     * Swaps, in place, the changes that carry a {@code --liquibasePercona:} directive line for their converted
+     * counterparts, so the directive line is not sent to the database even though percona is not used.
+     * The other changes stay as parsed.
+     */
+    private static void useConvertedChangesWithDirectives(ChangeSet changeSet, List<Change> convertedChanges) {
+        List<Change> originalChanges = new ArrayList<>(changeSet.getChanges());
+        List<Change> changes = new ArrayList<>();
+        boolean swapped = false;
+        for (int i = 0; i < originalChanges.size(); i++) {
+            Change original = originalChanges.get(i);
+            if (PerconaRawSQLChange.hasDirectives(((RawSQLChange) original).getSql())) {
+                changes.add(convertedChanges.get(i));
+                swapped = true;
+            } else {
+                changes.add(original);
+            }
+        }
+        if (swapped) {
+            changeSet.removeAllChanges(originalChanges);
+            changes.forEach(changeSet::addChange);
+        }
+    }
+
     private static PerconaRawSQLChange convert(RawSQLChange rawSQLChange) {
         PerconaRawSQLChange perconaChange = new PerconaRawSQLChange();
         perconaChange.setSql(rawSQLChange.getSql());
         perconaChange.setSplitStatements(rawSQLChange.isSplitStatements());
-        perconaChange.setStripComments(rawSQLChange.isStripComments());
+        perconaChange.setStripComments(rawSQLChange.isStripComments(), rawSQLChange.isStripCommentsUsedDefaultValue());
         perconaChange.setEndDelimiter(rawSQLChange.getEndDelimiter());
         perconaChange.setRerunnable(rawSQLChange.isRerunnable());
         perconaChange.setComment(rawSQLChange.getComment());
