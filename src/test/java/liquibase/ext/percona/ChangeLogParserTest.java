@@ -148,20 +148,18 @@ public class ChangeLogParserTest {
         Assertions.assertSame(RawSQLChange.class, rollback.getClass());
         Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-        // changeset 2
+        // changeset 2 - converted although percona is not used, so its directive line is not sent to the database
         changeSet = changelog.getChangeSets().get(1);
         change = changeSet.getChanges().get(0);
-        Assertions.assertSame(RawSQLChange.class, change.getClass());
-        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        assertChange(change, PerconaRawSQLChange.class, Boolean.FALSE, null);
         rollback = changeSet.getRollback().getChanges().get(0);
         Assertions.assertSame(RawSQLChange.class, rollback.getClass());
         Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-        // changeset 3
+        // changeset 3 - also carries a directive line
         changeSet = changelog.getChangeSets().get(2);
         change = changeSet.getChanges().get(0);
-        Assertions.assertSame(RawSQLChange.class, change.getClass());
-        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        assertChange(change, PerconaRawSQLChange.class, null, "--foo");
         rollback = changeSet.getRollback().getChanges().get(0);
         Assertions.assertSame(RawSQLChange.class, rollback.getClass());
         Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
