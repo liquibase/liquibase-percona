@@ -17,6 +17,7 @@ package liquibase.ext.percona;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import liquibase.Scope;
 import liquibase.change.ChangeMetaData;
@@ -40,21 +41,49 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
 
     private static Logger log = Scope.getCurrentScope().getLog(PerconaRawSQLChange.class);
 
+    private static final Pattern DIRECTIVE_LINE = Pattern.compile("(?im)^[ \\t]*--[ \\t]*liquibasePercona:.*(?:\\r?\\n|$)");
+
     private boolean determinedTargetNames;
     private String targetDatabaseName;
     private String targetTableName;
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
+        SqlStatement[] statements = generateStatementsWithoutDirectives(database);
         String table = getTargetTableName();
         if (table == null) {
             // can't use percona toolkit for whatever reason
-            return super.generateStatements(database);
+            return statements;
         }
 
-        return PerconaChangeUtil.generateStatements(this,
-                database,
-                super.generateStatements(database));
+        return PerconaChangeUtil.generateStatements(this, database, statements);
+    }
+
+    /**
+     * Whether the sql contains a {@code --liquibasePercona:} directive line.
+     */
+    static boolean hasDirectives(String sql) {
+        return sql != null && DIRECTIVE_LINE.matcher(sql).find();
+    }
+
+    /**
+     * The statements of this change without its {@code --liquibasePercona:} directive lines. The parser already read
+     * them, and they are not valid comments in MySQL (no space after {@code --}), so they must not reach the database
+     * when comments are kept. The sql of the change, and so its checksum, stays as written.
+     */
+    private SqlStatement[] generateStatementsWithoutDirectives(Database database) {
+        String sql = getSql();
+        if (!hasDirectives(sql)) {
+            return super.generateStatements(database);
+        }
+        RawSQLChange withoutDirectives = new RawSQLChange(DIRECTIVE_LINE.matcher(sql).replaceAll(""));
+        withoutDirectives.setChangeSet(getChangeSet());
+        withoutDirectives.setSplitStatements(isSplitStatements());
+        withoutDirectives.setStripComments(isStripComments(), isStripCommentsUsedDefaultValue());
+        withoutDirectives.setEndDelimiter(getEndDelimiter());
+        withoutDirectives.setRerunnable(isRerunnable());
+        withoutDirectives.setDbms(getDbms());
+        return withoutDirectives.generateStatements(database);
     }
 
     /**
