@@ -35,7 +35,7 @@ import org.mariadb.jdbc.client.ServerVersion;
 import org.mariadb.jdbc.export.ExceptionFactory;
 import org.mariadb.jdbc.export.Prepare;
 import org.mariadb.jdbc.message.ClientMessage;
-import org.mariadb.jdbc.message.server.util.ServerVersionUtility;
+import org.mariadb.jdbc.util.Version;
 
 public class MockedMariaDbConnection {
 
@@ -159,7 +159,7 @@ public class MockedMariaDbConnection {
 
         @Override
         public ServerVersion getVersion() {
-            return new ServerVersionUtility("0", false);
+            return new Version("0", false);
         }
 
         @Override
@@ -274,6 +274,11 @@ public class MockedMariaDbConnection {
         @Override
         public void setCharset(String s) {
 
+        }
+
+        @Override
+        public void setCharsetResults(String charset) throws SQLException {
+            
         }
 
         @Override
