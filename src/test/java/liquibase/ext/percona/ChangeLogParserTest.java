@@ -27,6 +27,7 @@ import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.database.core.MySQLDatabase;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
 import liquibase.precondition.Precondition;
@@ -35,6 +36,8 @@ import liquibase.precondition.core.PreconditionContainer;
 import liquibase.precondition.core.SqlPrecondition;
 import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.core.RawSqlStatement;
 
 @ExtendWith(RestoreSystemPropertiesExtension.class)
 public class ChangeLogParserTest {
@@ -148,20 +151,18 @@ public class ChangeLogParserTest {
         Assertions.assertSame(RawSQLChange.class, rollback.getClass());
         Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-        // changeset 2
+        // changeset 2 - converted although percona is not used, so its directive line is not sent to the database
         changeSet = changelog.getChangeSets().get(1);
         change = changeSet.getChanges().get(0);
-        Assertions.assertSame(RawSQLChange.class, change.getClass());
-        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        assertChange(change, PerconaRawSQLChange.class, Boolean.FALSE, null);
         rollback = changeSet.getRollback().getChanges().get(0);
         Assertions.assertSame(RawSQLChange.class, rollback.getClass());
         Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
 
-        // changeset 3
+        // changeset 3 - also carries a directive line
         changeSet = changelog.getChangeSets().get(2);
         change = changeSet.getChanges().get(0);
-        Assertions.assertSame(RawSQLChange.class, change.getClass());
-        Assertions.assertFalse(change instanceof PerconaRawSQLChange);
+        assertChange(change, PerconaRawSQLChange.class, null, "--foo");
         rollback = changeSet.getRollback().getChanges().get(0);
         Assertions.assertSame(RawSQLChange.class, rollback.getClass());
         Assertions.assertFalse(rollback instanceof PerconaRawSQLChange);
@@ -182,5 +183,23 @@ public class ChangeLogParserTest {
         Precondition precondition = changeSet.getPreconditions().getNestedPreconditions().get(0);
         Assertions.assertInstanceOf(SqlPrecondition.class, precondition);
         Assertions.assertEquals("SELECT COUNT(*) FROM example_table", ((SqlPrecondition) precondition).getSql());
+    }
+
+    @Test
+    public void testDirectiveLinesNotSentWhenPerconaIsOff() throws Exception {
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog-directives.sql");
+
+        ChangeSet keepsComments = changelog.getChangeSets().get(0);
+        PerconaRawSQLChange change = (PerconaRawSQLChange) keepsComments.getChanges().get(0);
+        Assertions.assertSame(keepsComments, change.getChangeSet());
+        Assertions.assertFalse(change.isStripCommentsUsedDefaultValue());
+        SqlStatement[] statements = change.generateStatements(new MySQLDatabase());
+        Assertions.assertEquals(1, statements.length);
+        Assertions.assertEquals("CREATE TABLE person (id INT)", ((RawSqlStatement) statements[0]).getSql());
+
+        ChangeSet usesDefault = changelog.getChangeSets().get(1);
+        PerconaRawSQLChange defaultChange = (PerconaRawSQLChange) usesDefault.getChanges().get(0);
+        Assertions.assertTrue(defaultChange.isStripCommentsUsedDefaultValue());
     }
 }

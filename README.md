@@ -406,6 +406,10 @@ Since liquibase-percona 4.19.1, you can use it in SQL changeset as follows:
 ALTER TABLE person ADD address VARCHAR(255) NULL;
 ```
 
+The `--liquibasePercona:` lines are read by the extension and are not sent to the database, also when the comments of
+the changeset are kept (`stripComments:false`). They don't appear in the output of `update-sql` either. They are still
+part of the checksum of the changeset.
+
 ### PerconaOptions flag
 
 Each change allows to specify options that are used when executing pt-osc. If specified, this option

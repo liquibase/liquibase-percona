@@ -25,6 +25,8 @@ assert buildLogText.contains("ChangeSet test-changelog.sql::2::Alice ran success
 assert buildLogText.contains("Successfully altered `testdb`.`person`.")
 // email is marked with usePercona="false"
 assert !buildLogText.contains("ADD email VARCHAR(255) NULL");
+// phone keeps its comments, but the directive line must not reach the database
+assert buildLogText.contains("ChangeSet test-changelog.sql::4::Alice ran successfully")
 
 
 File sql = new File( basedir, 'target/liquibase/migrate.sql' )
@@ -33,3 +35,4 @@ def sqlText = sql.text
 assert sqlText.contains("pt-online-schema-change")
 assert sqlText.contains("pt-online-schema-change")
 assert !sqlText.contains("password=${config_password}")
+assert !sqlText.contains("--liquibasePercona:")

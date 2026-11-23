@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import liquibase.change.core.RawSQLChange;
+import liquibase.database.core.MySQLDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CommentStatement;
@@ -199,6 +201,40 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    void toolkitIsNotRequiredWhenUsePerconaIsFalse() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        PTOnlineSchemaChangeStatement.available = false;
+        getChange().setUsePercona(false);
+
+        ValidationErrors errors = validate();
+        Assertions.assertFalse(errors.hasErrors(), errors.getErrorMessages().toString());
+        Assertions.assertTrue(errors.getWarningMessages().isEmpty(), errors.getWarningMessages().toString());
+    }
+
+    @Test
+    void toolkitIsNotRequiredWhenDefaultIsOff() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        PTOnlineSchemaChangeStatement.available = false;
+
+        ValidationErrors errors = validate();
+        Assertions.assertFalse(errors.hasErrors(), errors.getErrorMessages().toString());
+        Assertions.assertTrue(errors.getWarningMessages().isEmpty(), errors.getWarningMessages().toString());
+    }
+
+    @Test
+    void toolkitIsRequiredWhenUsePerconaIsTrueAndDefaultIsOff() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        PTOnlineSchemaChangeStatement.available = false;
+        getChange().setUsePercona(true);
+
+        ValidationErrors errors = validate();
+        Assertions.assertTrue(errors.hasErrors());
+        assertEquals("No percona toolkit found!", errors.getErrorMessages().get(0));
+    }
+
+    @Test
     public void testReal() {
         assertPerconaChange(alterText);
     }
@@ -267,5 +303,63 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
         SqlStatement[] statements = generateStatements();
         assertEquals(1, statements.length);
         assertEquals(RawSqlStatement.class, statements[0].getClass());
+    }
+
+    // comments are sent to the database when stripComments is false, but a directive line like
+    // --liquibasePercona:usePercona="false" is not a valid comment in mysql (no space after --)
+    @Test
+    void directiveLinesAreNotSentToTheDatabaseWhenNotUsingPercona() {
+        PerconaRawSQLChange change = getChange();
+        change.setSql("--liquibasePercona:usePercona=\"false\"\nCREATE TABLE person (id INT)");
+        change.setUsePercona(false);
+        change.setStripComments(false);
+
+        // no connection, so the statements are not passed through the mock's nativeSQL
+        SqlStatement[] statements = change.generateStatements(new MySQLDatabase());
+
+        assertEquals(1, statements.length);
+        assertEquals("CREATE TABLE person (id INT)", ((RawSqlStatement) statements[0]).getSql());
+    }
+
+    @Test
+    void directiveLinesAreNotSentToTheDatabaseWithoutToolkit() {
+        PTOnlineSchemaChangeStatement.available = false;
+        PerconaRawSQLChange change = getChange();
+        change.setSql("--liquibasePercona:usePercona=\"true\"\n--liquibasePercona:perconaOptions=\"--foo\"\nalter table person " + alterText);
+        change.setUsePercona(true);
+        change.setStripComments(false);
+
+        // no connection, so the statements are not passed through the mock's nativeSQL
+        SqlStatement[] statements = change.generateStatements(new MySQLDatabase());
+
+        assertEquals(1, statements.length);
+        assertEquals("alter table person " + alterText, ((RawSqlStatement) statements[0]).getSql());
+    }
+
+    @Test
+    void otherCommentsAreStillSentWhenNotStrippingComments() {
+        PerconaRawSQLChange change = getChange();
+        change.setSql("--liquibasePercona:usePercona=\"false\"\n-- keep me\nCREATE TABLE person (id INT)");
+        change.setUsePercona(false);
+        change.setStripComments(false);
+
+        // no connection, so the statements are not passed through the mock's nativeSQL
+        SqlStatement[] statements = change.generateStatements(new MySQLDatabase());
+
+        assertEquals(1, statements.length);
+        assertEquals("-- keep me\nCREATE TABLE person (id INT)", ((RawSqlStatement) statements[0]).getSql());
+    }
+
+    @Test
+    void checksumStillIncludesTheDirectiveLines() {
+        String sql = "--liquibasePercona:usePercona=\"false\"\nCREATE TABLE person (id INT)";
+        PerconaRawSQLChange change = getChange();
+        change.setSql(sql);
+        change.setUsePercona(false);
+
+        assertEquals(new RawSQLChange(sql).generateCheckSum(), change.generateCheckSum());
+        change.generateStatements(new MySQLDatabase());
+        assertEquals(new RawSQLChange(sql).generateCheckSum(), change.generateCheckSum());
+        assertEquals(sql, change.getSql());
     }
 }
