@@ -29,21 +29,23 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
-      - name: Configure AWS credentials for vault access
-        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+      - name: Get the GPM token from vault
+        uses: liquibase/build-logic/.github/actions/setup-aws-vault@2003fece51886ec69cda3df1cb4520b3ceeb2e0c # main
         with:
-          role-to-assume: ${{ secrets.LIQUIBASE_VAULT_OIDC_ROLE_ARN }}
-          aws-region: us-east-1
+          group: liquibot-github-pat
+          role-arn: ${{ secrets.VAULT_GROUPED_LIQUIBOT_GITHUB_PAT_ROLE_ARN }}
 
-      - name: Get secrets from vault
-        id: vault-secrets
-        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+      - name: Get the Sonatype credentials from vault
+        uses: liquibase/build-logic/.github/actions/setup-aws-vault@2003fece51886ec69cda3df1cb4520b3ceeb2e0c # main
         with:
-          secret-ids: |
-            ,/vault/liquibase
-          parse-json-secrets: true
+          group: sonatype
+          role-arn: ${{ secrets.VAULT_GROUPED_SONATYPE_ROLE_ARN }}
 
-      # taken from https://github.com/liquibase/build-logic/blob/main/.github/workflows/extension-release-published.yml
+      - name: Get the GPG signing key from vault
+        uses: liquibase/build-logic/.github/actions/setup-aws-vault@2003fece51886ec69cda3df1cb4520b3ceeb2e0c # main
+        with:
+          group: gpg-signing
+          role-arn: ${{ secrets.VAULT_GROUPED_GPG_SIGNING_ROLE_ARN }}
       - name: Set up Maven settings.xml
         uses: liquibase/build-logic/.github/actions/setup-maven-settings@0d56860f162d1d32c976d179e1dbd1663e18733b # main
         with:
