@@ -201,6 +201,40 @@ public class PerconaRawSQLChangeTest extends AbstractPerconaChangeTest<PerconaRa
     }
 
     @Test
+    void toolkitIsNotRequiredWhenUsePerconaIsFalse() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        PTOnlineSchemaChangeStatement.available = false;
+        getChange().setUsePercona(false);
+
+        ValidationErrors errors = validate();
+        Assertions.assertFalse(errors.hasErrors(), errors.getErrorMessages().toString());
+        Assertions.assertTrue(errors.getWarningMessages().isEmpty(), errors.getWarningMessages().toString());
+    }
+
+    @Test
+    void toolkitIsNotRequiredWhenDefaultIsOff() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        PTOnlineSchemaChangeStatement.available = false;
+
+        ValidationErrors errors = validate();
+        Assertions.assertFalse(errors.hasErrors(), errors.getErrorMessages().toString());
+        Assertions.assertTrue(errors.getWarningMessages().isEmpty(), errors.getWarningMessages().toString());
+    }
+
+    @Test
+    void toolkitIsRequiredWhenUsePerconaIsTrueAndDefaultIsOff() {
+        System.setProperty(Configuration.FAIL_IF_NO_PT, "true");
+        System.setProperty(Configuration.DEFAULT_ON, "false");
+        PTOnlineSchemaChangeStatement.available = false;
+        getChange().setUsePercona(true);
+
+        ValidationErrors errors = validate();
+        Assertions.assertTrue(errors.hasErrors());
+        assertEquals("No percona toolkit found!", errors.getErrorMessages().get(0));
+    }
+
+    @Test
     public void testReal() {
         assertPerconaChange(alterText);
     }

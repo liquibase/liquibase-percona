@@ -231,9 +231,15 @@ public class PerconaRawSQLChange extends RawSQLChange implements PerconaChange {
         return Collections.unmodifiableSet(fields);
     }
 
+    /**
+     * A change that will not use percona, because its flag is false or it has no flag and the default is off, does
+     * not need the toolkit, so a missing toolkit is not reported for it.
+     */
     @Override
     public ValidationErrors validate(Database database) {
-        return PerconaChangeUtil.validate(super.validate(database), database);
+        ValidationErrors errors = super.validate(database);
+        boolean wantsPercona = usePercona != null ? usePercona : Configuration.getDefaultOn();
+        return wantsPercona ? PerconaChangeUtil.validate(errors, database) : errors;
     }
 
     @SuppressWarnings("PMD.UselessOverridingMethod")

@@ -23,13 +23,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import liquibase.change.Change;
-import liquibase.statement.core.RawSqlStatement;
-import liquibase.statement.SqlStatement;
-import liquibase.database.core.MySQLDatabase;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.database.core.MySQLDatabase;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
 import liquibase.precondition.Precondition;
@@ -38,6 +36,8 @@ import liquibase.precondition.core.PreconditionContainer;
 import liquibase.precondition.core.SqlPrecondition;
 import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.core.RawSqlStatement;
 
 @ExtendWith(RestoreSystemPropertiesExtension.class)
 public class ChangeLogParserTest {
