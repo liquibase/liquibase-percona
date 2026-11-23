@@ -62,8 +62,8 @@ public class DelegatingTestFormattedSqlChangeLogParser extends FormattedSqlChang
     }
 
     @Override
-    protected boolean handleAdditionalLines(DatabaseChangeLog changeLog, ResourceAccessor resourceAccessor, String line)
-            throws ChangeLogParseException {
+    protected boolean handleAdditionalLines(DatabaseChangeLog changeLog, ResourceAccessor resourceAccessor, String line,
+            StringBuilder currentSequence) throws ChangeLogParseException {
         Matcher matcher = TEST_INCLUDE.matcher(line);
         if (!matcher.matches()) {
             return false;

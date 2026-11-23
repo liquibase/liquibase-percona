@@ -44,8 +44,9 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
     }
 
     /**
-     * Parses the file with the next formatted SQL parser in line, so the directives a platform's own parser adds keep
-     * working, then swaps the raw SQL changes of each changeset for percona ones in place.
+     * Parses the file with the next formatted SQL parser in line, then swaps the raw SQL changes of each changeset for
+     * percona ones in place. Liquibase Secure ships such a parser, ranked below this one, that resolves includes and
+     * other directives the core parser does not know.
      */
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
@@ -62,6 +63,7 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
             if (!onlyRawSqlChanges(changeSet)) {
                 // other change types, or a changeset already converted when its own file was parsed
+                warnIfPerconaRequested(changeSet);
                 continue;
             }
 
@@ -122,7 +124,8 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
             changeSet.removeAllChanges(originalChanges);
             perconaChanges.forEach(changeSet::addChange);
-            changeSet.getRollback().setChanges(rollbackChanges);
+            changeSet.getRollback().getChanges().clear();
+            rollbackChanges.forEach(changeSet::addRollbackChange);
         }
 
         return changeLog;
@@ -130,7 +133,8 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
     /**
      * The parser that would read this file if this one were not installed, or {@code null} when that is the core
-     * formatted SQL parser, which {@code super.parse} already is.
+     * formatted SQL parser, which {@code super.parse} already is. A delegate that asks the factory for the parser of
+     * the same file gets this parser back and recurses.
      */
     private ChangeLogParser findDelegate(String physicalChangeLogLocation, ResourceAccessor resourceAccessor) {
         return ChangeLogParserFactory.getInstance().getParsers().stream()
@@ -144,6 +148,19 @@ public class PerconaFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
     private static boolean onlyRawSqlChanges(ChangeSet changeSet) {
         return changeSet.getChanges().stream()
                 .allMatch(change -> change instanceof RawSQLChange && !(change instanceof PerconaRawSQLChange));
+    }
+
+    /** A changeset mixing SQL with other change types is left as parsed, so a request for percona in it is lost. */
+    private static void warnIfPerconaRequested(ChangeSet changeSet) {
+        boolean requested = changeSet.getChanges().stream()
+                .filter(change -> change instanceof RawSQLChange && !(change instanceof PerconaRawSQLChange))
+                .map(change -> USE_PERCONA_PATTERN.matcher(String.valueOf(((RawSQLChange) change).getSql())))
+                .anyMatch(matcher -> matcher.find() && Boolean.parseBoolean(matcher.group(1)));
+        if (requested) {
+            LOG.warning(String.format("Not using percona toolkit for changeset %s::%s::%s, because it mixes sql "
+                            + "with other change types",
+                    changeSet.getFilePath(), changeSet.getId(), changeSet.getAuthor()));
+        }
     }
 
     private static PerconaRawSQLChange convert(RawSQLChange rawSQLChange) {

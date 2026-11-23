@@ -16,6 +16,12 @@ package liquibase.ext.percona;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -29,6 +35,7 @@ import liquibase.change.core.TagDatabaseChange;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changeset.ChangeSetServiceFactory;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.ChangeLogParserFactory;
 import liquibase.precondition.Precondition;
@@ -57,6 +64,7 @@ public class ChangeLogParserTest {
                 .filter(DelegatingTestFormattedSqlChangeLogParser.class::isInstance)
                 .forEach(ChangeLogParserFactory.getInstance()::unregister);
         DelegatingTestFormattedSqlChangeLogParser.CREATED.clear();
+        CastingTestChangeSetService.setActive(false);
     }
 
     private DatabaseChangeLog loadChangeLog(String filename) throws Exception {
@@ -235,5 +243,69 @@ public class ChangeLogParserTest {
         Assertions.assertEquals(2, tagged.getChanges().size());
         Assertions.assertSame(RawSQLChange.class, tagged.getChanges().get(0).getClass());
         Assertions.assertInstanceOf(TagDatabaseChange.class, tagged.getChanges().get(1));
+    }
+
+    @Test
+    public void testReadLiquibaseUsePerconaFlagSQL_warnsWhenPerconaIsRequestedWithOtherChanges() throws Exception {
+        List<String> warnings = new ArrayList<>();
+        Handler handler = new Handler() {
+            @Override
+            public void publish(LogRecord logRecord) {
+                if (logRecord.getLevel() == Level.WARNING) {
+                    warnings.add(logRecord.getMessage());
+                }
+            }
+
+            @Override
+            public void flush() {
+                // nothing is buffered
+            }
+
+            @Override
+            public void close() {
+                // nothing to release
+            }
+        };
+        // liquibase names its java.util.logging loggers after the first two package segments
+        Logger logger = Logger.getLogger("liquibase.ext");
+        logger.addHandler(handler);
+        try {
+            ChangeLogParserFactory.getInstance().register(new DelegatingTestFormattedSqlChangeLogParser());
+            loadChangeLog("test-changelog-delegated-root.sql");
+        } finally {
+            logger.removeHandler(handler);
+        }
+
+        Assertions.assertEquals(1, warnings.size(), warnings.toString());
+        Assertions.assertTrue(warnings.get(0).contains("::tagged::Bob"), warnings.get(0));
+    }
+
+    @Test
+    public void testReadLiquibaseUsePerconaFlagSQL_keepsChangeSetsOfAnotherChangeSetService() throws Exception {
+        ChangeSetServiceFactory.getInstance().register(new CastingTestChangeSetService());
+        CastingTestChangeSetService.setActive(true);
+        DatabaseChangeLog changelog = loadChangeLog("test-changelog.sql");
+
+        Assertions.assertEquals(5, changelog.getChangeSets().size());
+        int rollbackChanges = 0;
+        for (ChangeSet changeSet : changelog.getChangeSets()) {
+            Assertions.assertInstanceOf(CastingTestChangeSetService.CastingTestChangeSet.class, changeSet);
+            Assertions.assertFalse(changeSet.getChanges().isEmpty());
+            for (Change change : changeSet.getChanges()) {
+                assertBelongsTo(changeSet, change);
+            }
+            for (Change change : changeSet.getRollback().getChanges()) {
+                assertBelongsTo(changeSet, change);
+                rollbackChanges++;
+            }
+        }
+        Assertions.assertEquals(4, rollbackChanges);
+    }
+
+    private static void assertBelongsTo(ChangeSet changeSet, Change change) {
+        Assertions.assertSame(PerconaRawSQLChange.class, change.getClass());
+        Assertions.assertSame(changeSet, change.getChangeSet());
+        Assertions.assertEquals(CastingTestChangeSetService.END_DELIMITER, ((PerconaRawSQLChange) change).getEndDelimiter());
+        Assertions.assertDoesNotThrow(((PerconaRawSQLChange) change)::getTargetTableName);
     }
 }
