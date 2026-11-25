@@ -47,7 +47,7 @@ jobs:
           group: gpg-signing
           role-arn: ${{ secrets.VAULT_GROUPED_GPG_SIGNING_ROLE_ARN }}
       - name: Set up Maven settings.xml
-        uses: liquibase/build-logic/.github/actions/setup-maven-settings@0d56860f162d1d32c976d179e1dbd1663e18733b # main
+        uses: liquibase/build-logic/.github/actions/setup-maven-settings@adee5f2b8709f6cd43684a5de0a8e0128bafc4eb # main
         with:
           repositories: |
             [
